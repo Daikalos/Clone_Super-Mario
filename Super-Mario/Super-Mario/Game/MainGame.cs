@@ -14,8 +14,6 @@ namespace Super_Mario
 
         State myGameState;
 
-        Camera myCamera;
-
         public void ChangeState(State aNewState)
         {
             myGameState = aNewState;
@@ -30,16 +28,19 @@ namespace Super_Mario
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferWidth = 960;
             graphics.PreferredBackBufferHeight = 704;
             graphics.ApplyChanges();
 
-            GraphicsDevice.Viewport = new Viewport(0, 0, 960, 704);
-
             ResourceManager.Initialize();
 
-            ChangeState(new PlayState(this, Window));
-            myCamera = new Camera(GraphicsDevice.Viewport);
+            GameInfo.Initialize(Window, 0.5f);
+            GameInfo.CurrentLevel = "Level01.txt";
+            GameInfo.FolderLevels = "../../../../Levels/";
+
+            Level.LoadLevel(new Point(32));
+
+            myGameState = new PlayState(this, Window);
 
             base.Initialize();
         }
@@ -49,6 +50,14 @@ namespace Super_Mario
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ResourceManager.AddFont("8-bit", this.Content.Load<SpriteFont>("Fonts/8bit"));
+
+            ResourceManager.AddTexture("Grass-00", this.Content.Load<Texture2D>("Tileset/tile-grass-00"));
+
+            ResourceManager.AddTexture("Mario_Walking", this.Content.Load<Texture2D>("Sprites/mario_walking"));
+
+            Level.SetTileTexture();
+
+            myGameState.LoadContent();
         }
 
         protected override void UnloadContent()
@@ -58,7 +67,8 @@ namespace Super_Mario
 
         protected override void Update(GameTime gameTime)
         {
-            myCamera.UpdateCamera(GraphicsDevice.Viewport);
+            KeyMouseReader.Update();
+
             myGameState.Update(Window, gameTime);
 
             base.Update(gameTime);
@@ -66,7 +76,7 @@ namespace Super_Mario
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.DodgerBlue);
 
             spriteBatch.Begin();
 

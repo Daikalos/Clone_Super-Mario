@@ -1,66 +1,60 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Super_Mario
 {
-    class Camera
+    static class Camera
     {
-        public float Zoom { get; set; }
-        public Vector2 Position { get; set; }
-        public Rectangle Bounds { get; protected set; }
-        public Rectangle VisibleArea { get; protected set; }
-        public Matrix Transform { get; protected set; }
+        private static Vector2 myPosition;
 
-        public Camera(Viewport viewport)
+        public static Vector2 Position
         {
-            Bounds = viewport.Bounds;
-            Zoom = 1f;
-            Position = Vector2.Zero;
+            get => myPosition;
+            set => myPosition = value;
+        }
+        public static Matrix TranslationMatrix
+        {
+            get
+            {
+                return Matrix.CreateTranslation(new Vector3(-myPosition, 0));
+            }
         }
 
-
-        private void UpdateVisibleArea()
+        public static void MoveCamera(GameWindow aWindow, Vector2 aNewPosition)
         {
-            var inverseViewMatrix = Matrix.Invert(Transform);
-
-            var tl = Vector2.Transform(Vector2.Zero, inverseViewMatrix);
-            var tr = Vector2.Transform(new Vector2(Bounds.X, 0), inverseViewMatrix);
-            var bl = Vector2.Transform(new Vector2(0, Bounds.Y), inverseViewMatrix);
-            var br = Vector2.Transform(new Vector2(Bounds.Width, Bounds.Height), inverseViewMatrix);
-
-            var min = new Vector2(
-                MathHelper.Min(tl.X, MathHelper.Min(tr.X, MathHelper.Min(bl.X, br.X))),
-                MathHelper.Min(tl.Y, MathHelper.Min(tr.Y, MathHelper.Min(bl.Y, br.Y))));
-            var max = new Vector2(
-                MathHelper.Max(tl.X, MathHelper.Max(tr.X, MathHelper.Max(bl.X, br.X))),
-                MathHelper.Max(tl.Y, MathHelper.Max(tr.Y, MathHelper.Max(bl.Y, br.Y))));
-            VisibleArea = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
+            if (SnapToMap(aWindow, aNewPosition))
+            {
+                Vector2 tempNewPosition = myPosition + aNewPosition;
+                myPosition = tempNewPosition;
+            }
         }
 
-        private void UpdateMatrix()
+        public static void FollowObject(GameWindow aWindow, GameObject aObject)
         {
-            Transform = Matrix.CreateTranslation(new Vector3(-Position.X, -Position.Y, 0)) *
-                    Matrix.CreateScale(Zoom) *
-                    Matrix.CreateTranslation(new Vector3(Bounds.Width * 0.5f, Bounds.Height * 0.5f, 0));
-            UpdateVisibleArea();
+            if (aObject.Position.X - (aWindow.ClientBounds.Width / 8) < myPosition.X)
+            {
+                MoveCamera(aWindow, new Vector2(-2, 0));
+            }
+            if (aObject.Position.X + aObject.Size.X + (aWindow.ClientBounds.Width / 4) > myPosition.X + aWindow.ClientBounds.Width)
+            {
+                MoveCamera(aWindow, new Vector2(2, 0));
+            }
         }
 
-        public void MoveCamera(Vector2 movePosition)
+        private static bool SnapToMap(GameWindow aWindow, Vector2 aNewPosition)
         {
-            Vector2 newPosition = Position + movePosition;
-            Position = newPosition;
-        }
-
-        public void UpdateCamera(Viewport bounds)
-        {
-            Bounds = bounds.Bounds;
-            UpdateMatrix();
-
-            Vector2 cameraMovement = Vector2.Zero;
-            int moveSpeed;
+            if (myPosition.X + aNewPosition.X + aWindow.ClientBounds.Width > Level.MapSize.X)
+            {
+                myPosition.X = Level.MapSize.X - aWindow.ClientBounds.Width;
+                return false;
+            }
+            if (myPosition.X + aNewPosition.X < 0)
+            {
+                myPosition.X = 0;
+                return false;
+            }
+            return true;
         }
     }
 }

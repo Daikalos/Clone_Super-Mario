@@ -12,6 +12,15 @@ namespace Super_Mario
         protected Rectangle myBoundingBox;
         protected Point mySize;
 
+        public Vector2 Position
+        {
+            get => myPosition;
+        }
+        public Point Size
+        {
+            get => mySize;
+        }
+
         protected GameObject(Vector2 aPosition, Point aSize)
         {
             this.myPosition = aPosition;

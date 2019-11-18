@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Content/Fonts/8bit_spritefont.spritefont</SourceFile>
+  <SourceFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Fonts/8bit_spritefont.spritefont</SourceFile>
   <SourceTime>2019-11-11T12:36:09.2618467+01:00</SourceTime>
-  <DestFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Content/bin/Windows/Content/Fonts/8bit.xnb</DestFile>
-  <DestTime>2019-11-14T14:47:56.5145163+01:00</DestTime>
+  <DestFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Fonts/8bit.xnb</DestFile>
+  <DestTime>2019-11-18T13:16:54.1570369+01:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

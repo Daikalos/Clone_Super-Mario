@@ -52,18 +52,21 @@ namespace Super_Mario
             if (myTexture != null)
             {
                 aSpriteBatch.Draw(myTexture, myBoundingBox,
-                    mySourceRect, Color.White, myRotation, myOrigin, SpriteEffects.None, 0.0f);
+                    null, Color.White, myRotation, myOrigin, SpriteEffects.None, 0.0f);
             }
         }
 
         public void SetTexture()
         {
-
-        }
-
-        public void SetTextureEditor()
-        {
-
+            switch(myTileType)
+            {
+                case '#':
+                    myTexture = ResourceManager.RequestTexture("Grass-00");
+                    break;
+                case '-':
+                    myTexture = null;
+                    break;
+            }
         }
     }
 }

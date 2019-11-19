@@ -50,13 +50,15 @@
     <Compile Include="Functions\StaticRandom.cs" />
     <Compile Include="Functions\StringManager.cs" />
     <Compile Include="Game\Camera.cs" />
+    <Compile Include="Inheritance\DynamicObject.cs" />
     <Compile Include="Game\Enemy.cs" />
     <Compile Include="Game\EnemyManager.cs" />
     <Compile Include="Game\GameInfo.cs" />
-    <Compile Include="Game\GameObject.cs" />
+    <Compile Include="Inheritance\GameObject.cs" />
     <Compile Include="Game\Level.cs" />
     <Compile Include="Game\MainGame.cs" />
     <Compile Include="Game\Player.cs" />
+    <Compile Include="Inheritance\StaticObject.cs" />
     <Compile Include="Game\Tile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -65,7 +67,7 @@
     <Compile Include="States\LeaderboardState.cs" />
     <Compile Include="States\MenuState.cs" />
     <Compile Include="States\PlayState.cs" />
-    <Compile Include="States\State.cs" />
+    <Compile Include="Inheritance\State.cs" />
     <Compile Include="States\WinState.cs" />
   </ItemGroup>
   <ItemGroup>

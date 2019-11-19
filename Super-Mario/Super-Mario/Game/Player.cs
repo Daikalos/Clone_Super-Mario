@@ -36,11 +36,11 @@ namespace Super_Mario
             switch (myPlayerState)
             {
                 case PlayerState.isWalking:
-                    if (KeyMouseReader.KeyHold(Keys.Left))
+                    if (KeyMouseReader.KeyHold(Keys.Left) && !OutsideBounds(new Vector2(-2, 0)))
                     {
                         myPosition.X -= 2;
                     }
-                    if (KeyMouseReader.KeyHold(Keys.Right))
+                    if (KeyMouseReader.KeyHold(Keys.Right) && !OutsideBounds(new Vector2(2, 0)))
                     {
                         myPosition.X += 2;
                     }
@@ -68,6 +68,21 @@ namespace Super_Mario
 
                     break;
             }
+        }
+
+        private bool OutsideBounds(Vector2 aDirection)
+        {
+            if (myPosition.X + aDirection.X < 0)
+            {
+                myPosition.X = 0;
+                return false;
+            }
+            if (myPosition.X + aDirection.X > Level.MapSize.X)
+            {
+                myPosition.X = Level.MapSize.X;
+                return false;
+            }
+            return true;
         }
     }
 }

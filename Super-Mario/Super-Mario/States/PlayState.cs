@@ -12,14 +12,14 @@ namespace Super_Mario
 
         public PlayState(MainGame aGame, GameWindow aWindow) : base(aGame)
         {
-            myPlayer = new Player(new Vector2(100, aWindow.ClientBounds.Height / 2), new Point(32));
+            myPlayer = new Player(new Vector2(100, aWindow.ClientBounds.Height / 2), new Point(32), 12.0f);
         }
 
         public override void Update(GameWindow aWindow, GameTime aGameTime)
         {
             Level.Update();
             Camera.FollowObject(aWindow, myPlayer);
-            myPlayer.Update();
+            myPlayer.Update(aGameTime);
         }
 
         public override void Draw(SpriteBatch aSpriteBatch, GameWindow aWindow, GameTime aGameTime)

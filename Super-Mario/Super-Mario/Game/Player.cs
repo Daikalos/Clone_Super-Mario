@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Super_Mario
 {
-    class Player : GameObject
+    class Player : DynamicObject
     {
         enum PlayerState
         {
@@ -22,7 +22,7 @@ namespace Super_Mario
 
         private AnimationManager myWalkingAnimation;
 
-        public Player(Vector2 aPosition, Point aSize) : base(aPosition, aSize)
+        public Player(Vector2 aPosition, Point aSize, float aSpeed) : base(aPosition, aSize, aSpeed)
         {
             this.myPosition = aPosition;
             this.mySize = aSize;
@@ -31,18 +31,18 @@ namespace Super_Mario
             this.myPlayerState = PlayerState.isWalking;
         }
 
-        public void Update()
+        public void Update(GameTime aGameTime)
         {
             switch (myPlayerState)
             {
                 case PlayerState.isWalking:
-                    if (KeyMouseReader.KeyHold(Keys.Left) && !OutsideBounds(new Vector2(-2, 0)))
+                    if (KeyMouseReader.KeyHold(Keys.Left) && !OutsideBounds(new Vector2(-mySpeed, 0)))
                     {
-                        myPosition.X -= 2;
+                        myPosition.X -= mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                     }
-                    if (KeyMouseReader.KeyHold(Keys.Right) && !OutsideBounds(new Vector2(2, 0)))
+                    if (KeyMouseReader.KeyHold(Keys.Right) && !OutsideBounds(new Vector2(mySpeed, 0)))
                     {
-                        myPosition.X += 2;
+                        myPosition.X += mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                     }
                     break;
                 case PlayerState.isJumping:
@@ -75,14 +75,14 @@ namespace Super_Mario
             if (myPosition.X + aDirection.X < 0)
             {
                 myPosition.X = 0;
-                return false;
+                return true;
             }
-            if (myPosition.X + aDirection.X > Level.MapSize.X)
+            if (myPosition.X + aDirection.X + mySize.X > Level.MapSize.X)
             {
-                myPosition.X = Level.MapSize.X;
-                return false;
+                myPosition.X = Level.MapSize.X - mySize.X;
+                return true;
             }
-            return true;
+            return false;
         }
     }
 }

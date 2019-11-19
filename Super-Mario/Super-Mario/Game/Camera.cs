@@ -21,35 +21,35 @@ namespace Super_Mario
             }
         }
 
-        public static void MoveCamera(GameWindow aWindow, Vector2 aNewPosition)
+        public static void MoveCamera(GameWindow aWindow, float aNewPosition)
         {
             if (SnapToMap(aWindow, aNewPosition))
             {
-                Vector2 tempNewPosition = myPosition + aNewPosition;
-                myPosition = tempNewPosition;
+                float tempNewPosition = myPosition.X + aNewPosition;
+                myPosition.X = tempNewPosition;
             }
         }
 
-        public static void FollowObject(GameWindow aWindow, GameObject aObject)
+        public static void FollowObject(GameWindow aWindow, DynamicObject aObject)
         {
             if (aObject.Position.X - (aWindow.ClientBounds.Width / 8) < myPosition.X)
             {
-                MoveCamera(aWindow, new Vector2(-2, 0));
+                MoveCamera(aWindow, -aObject.Speed);
             }
             if (aObject.Position.X + aObject.Size.X + (aWindow.ClientBounds.Width / 4) > myPosition.X + aWindow.ClientBounds.Width)
             {
-                MoveCamera(aWindow, new Vector2(2, 0));
+                MoveCamera(aWindow, aObject.Speed);
             }
         }
 
-        private static bool SnapToMap(GameWindow aWindow, Vector2 aNewPosition)
+        private static bool SnapToMap(GameWindow aWindow, float aNewPosition)
         {
-            if (myPosition.X + aNewPosition.X + aWindow.ClientBounds.Width > Level.MapSize.X)
+            if (myPosition.X + aNewPosition + aWindow.ClientBounds.Width > Level.MapSize.X)
             {
                 myPosition.X = Level.MapSize.X - aWindow.ClientBounds.Width;
                 return false;
             }
-            if (myPosition.X + aNewPosition.X < 0)
+            if (myPosition.X + aNewPosition < 0)
             {
                 myPosition.X = 0;
                 return false;

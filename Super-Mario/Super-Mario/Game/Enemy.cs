@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Super_Mario
 {
-    class Enemy
+    class Enemy : DynamicObject
     {
+        public Enemy(Vector2 aPosition, Point aSize, float aSpeed) : base(aPosition, aSize, aSpeed)
+        {
 
+        }
     }
 }

@@ -52,6 +52,7 @@ namespace Super_Mario
             ResourceManager.AddFont("8-bit", this.Content.Load<SpriteFont>("Fonts/8bit"));
 
             ResourceManager.AddTexture("Grass-00", this.Content.Load<Texture2D>("Tileset/tile-grass-00"));
+            ResourceManager.AddTexture("Grass-01", this.Content.Load<Texture2D>("Tileset/tile-grass-01"));
 
             ResourceManager.AddTexture("Mario_Walking", this.Content.Load<Texture2D>("Sprites/mario_walking"));
 

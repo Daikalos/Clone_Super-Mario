@@ -149,6 +149,14 @@ namespace Super_Mario
             {
                 for (int j = 0; j < myTiles.GetLength(1); j++)
                 {
+                    if (CheckIn(i, j - 1))
+                    {
+                        if (myTiles[i, j - 1].TileType != '#')
+                        {
+                            myTiles[i, j].TileForm = 1;
+                        }
+                    }
+
                     myTiles[i, j].SetTexture();
                 }
             }

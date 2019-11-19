@@ -50,3 +50,4 @@ C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\obj\x86\Debu
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\obj\x86\Debug\Super-Mario.exe
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\obj\x86\Debug\Super-Mario.pdb
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\tile-grass-00.xnb
+C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\tile-grass-01.xnb

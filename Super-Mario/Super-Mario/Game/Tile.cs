@@ -25,6 +25,12 @@ namespace Super_Mario
             set => myTileType = value;
         }
 
+        public int TileForm
+        {
+            get => myTileForm;
+            set => myTileForm = value;
+        }
+
         public Vector2 GetCenter()
         {
             return new Rectangle(myBoundingBox.X - (int)myOrigin.X, myBoundingBox.Y - (int)myOrigin.Y, mySize.X, mySize.Y).Center.ToVector2();
@@ -61,7 +67,7 @@ namespace Super_Mario
             switch(myTileType)
             {
                 case '#':
-                    myTexture = ResourceManager.RequestTexture("Grass-00");
+                    myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());
                     break;
                 case '-':
                     myTexture = null;

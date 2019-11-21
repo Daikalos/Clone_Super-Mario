@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -40,6 +41,51 @@ namespace Super_Mario
                 }
             }
             return new Tuple<Tile, bool>(myTiles[0, 0], false);
+        }
+        public static List<Tile> GetTilesAroundObject(DynamicObject aObject)
+        {
+            List<Tile> tempTiles = new List<Tile>();
+
+            for (int x = 0; x < (aObject.Size.X / Level.TileSize.X) + 2; x++)
+            {
+                Vector2 tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X + (Level.TileSize.X * x), aObject.BoundingBox.Center.Y - Level.TileSize.Y);
+                Tuple<Tile, bool> tempTile = GetTileAtPos(tempPosition);
+
+                if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
+                {
+                    tempTiles.Add(tempTile.Item1);
+                }
+
+                tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X + (Level.TileSize.X * x), aObject.BoundingBox.Center.Y + aObject.Size.Y + Level.TileSize.Y);
+                tempTile = GetTileAtPos(tempPosition);
+
+                if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
+                {
+                    tempTiles.Add(tempTile.Item1);
+                }
+            }
+
+
+            for (int y = 0; y < (aObject.Size.Y / Level.TileSize.Y) + 2; y++)
+            {
+                Vector2 tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y + (Level.TileSize.Y * y));
+                Tuple<Tile, bool> tempTile = GetTileAtPos(tempPosition);
+
+                if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
+                {
+                    tempTiles.Add(tempTile.Item1);
+                }
+
+                tempPosition = new Vector2(aObject.BoundingBox.Center.X + aObject.Size.X + Level.TileSize.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y + (Level.TileSize.Y * y));
+                tempTile = GetTileAtPos(tempPosition);
+
+                if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
+                {
+                    tempTiles.Add(tempTile.Item1);
+                }
+            }
+
+            return tempTiles;
         }
         public static Tile GetClosestTile(Vector2 aPos)
         {
@@ -106,6 +152,11 @@ namespace Super_Mario
                             new Vector2(x * myTileSize.X, y * myTileSize.Y),
                             myTileSize);
                         myTiles[x, y].TileType = myLevelBuilder[y][x];
+
+                        if (myTiles[x, y].TileType == '?')
+                        {
+                            GameInfo.PlayerSpawn = myTiles[x, y].Position;
+                        }
                     }
                 }
 
@@ -130,6 +181,11 @@ namespace Super_Mario
                             new Vector2(x * myTileSize.X, y * myTileSize.Y),
                             myTileSize);
                         myTiles[x, y].TileType = '-';
+
+                        if (myTiles[x, y].TileType == '?')
+                        {
+                            GameInfo.PlayerSpawn = myTiles[x, y].Position;
+                        }
                     }
                 }
 

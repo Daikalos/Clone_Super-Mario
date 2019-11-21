@@ -4,11 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Super_Mario
 {
-    class Tile : GameObject
+    class Tile : StaticObject
     {
         private List<Tile> myHistory; //Used for pathfinding
 
-        private Rectangle mySourceRect;
         private char myTileType;
         private float myRotation;
         private int myTileForm;

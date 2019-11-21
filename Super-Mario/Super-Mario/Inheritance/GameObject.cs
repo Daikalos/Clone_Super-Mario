@@ -16,6 +16,10 @@ namespace Super_Mario
         {
             get => myPosition;
         }
+        public Rectangle BoundingBox
+        {
+            get => myBoundingBox;
+        }
         public Point Size
         {
             get => mySize;

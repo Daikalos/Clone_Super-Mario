@@ -12,7 +12,7 @@ namespace Super_Mario
 
         public PlayState(MainGame aGame, GameWindow aWindow) : base(aGame)
         {
-            myPlayer = new Player(new Vector2(100, aWindow.ClientBounds.Height / 2), new Point(32), 12.0f);
+            myPlayer = new Player(GameInfo.PlayerSpawn, new Point(32), 4.0f, 14.0f, -440.0f);
         }
 
         public override void Update(GameWindow aWindow, GameTime aGameTime)

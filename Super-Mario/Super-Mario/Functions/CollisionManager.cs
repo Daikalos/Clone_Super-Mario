@@ -4,7 +4,7 @@ namespace Super_Mario
 {
     static class CollisionManager
     {
-        public static bool Collision(Rectangle aRectangle1, Rectangle aRectangle2) //Does not serve a direct purpose atm 
+        public static bool Collision(Rectangle aRectangle1, Rectangle aRectangle2)
         {
             if (aRectangle1.Intersects(aRectangle2))
             {
@@ -13,40 +13,40 @@ namespace Super_Mario
             return false;
         }
 
-        public static bool CheckAbove(Rectangle aRectangle1, Rectangle aRectangle2)
+        public static bool CheckAbove(Rectangle aRectangle1, Rectangle aRectangle2, float aSpeed)
         {
-            if (aRectangle1.Bottom > aRectangle1.Top && aRectangle1.Bottom < aRectangle2.Bottom)
-            {
-                return true;
-            }
-            return false;
+            return
+                aRectangle1.Top + aSpeed < aRectangle2.Bottom &&
+                aRectangle1.Bottom - aSpeed > aRectangle2.Bottom &&
+                aRectangle1.Right > aRectangle2.Left &&
+                aRectangle1.Left < aRectangle2.Right;
         }
 
-        public static bool CheckBelow(Rectangle aRectangle1, Rectangle aRectangle2)
+        public static bool CheckBelow(Rectangle aRectangle1, Rectangle aRectangle2, float aSpeed)
         {
-            if (aRectangle1.Top < aRectangle2.Bottom && aRectangle1.Top > aRectangle2.Top)
-            {
-                return true;
-            }
-            return false;
+            return 
+                aRectangle1.Bottom + aSpeed > aRectangle2.Top &&
+                aRectangle1.Bottom - aSpeed < aRectangle2.Top &&
+                aRectangle1.Right > aRectangle2.Left &&
+                aRectangle1.Left < aRectangle2.Right;
         }
 
-        public static bool CheckLeft(Rectangle aRectangle1, Rectangle aRectangle2)
+        public static bool CheckLeft(Rectangle aRectangle1, Rectangle aRectangle2, float aSpeed)
         {
-            if (aRectangle1.Left < aRectangle2.Right && aRectangle1.Left > aRectangle2.Left)
-            {
-                return true;
-            }
-            return false;
+            return
+                aRectangle1.Left - aSpeed < aRectangle2.Right &&
+                aRectangle1.Right > aRectangle2.Left &&
+                aRectangle1.Bottom > aRectangle2.Top &&
+                aRectangle1.Top < aRectangle2.Bottom;
         }
 
-        public static bool CheckRight(Rectangle aRectangle1, Rectangle aRectangle2)
+        public static bool CheckRight(Rectangle aRectangle1, Rectangle aRectangle2, float aSpeed)
         {
-            if (aRectangle1.Right > aRectangle2.Left && aRectangle1.Right < aRectangle2.Right)
-            {
-                return true;
-            }
-            return false;
+            return
+                aRectangle1.Right + aSpeed > aRectangle2.Left &&
+                aRectangle1.Left < aRectangle2.Left &&
+                aRectangle1.Bottom > aRectangle2.Top &&
+                aRectangle1.Top < aRectangle2.Bottom;
         }
     }
 }

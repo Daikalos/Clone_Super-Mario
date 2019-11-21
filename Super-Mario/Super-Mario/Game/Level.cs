@@ -45,10 +45,11 @@ namespace Super_Mario
         public static List<Tile> GetTilesAroundObject(DynamicObject aObject)
         {
             List<Tile> tempTiles = new List<Tile>();
+            Vector2 tempOffset = new Vector2((aObject.Size.X / 2) - (Level.TileSize.X / 2), (aObject.Size.Y / 2) - (Level.TileSize.Y / 2));
 
             for (int x = 0; x < (aObject.Size.X / Level.TileSize.X) + 2; x++)
             {
-                Vector2 tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X + (Level.TileSize.X * x), aObject.BoundingBox.Center.Y - Level.TileSize.Y);
+                Vector2 tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y - tempOffset.Y);
                 Tuple<Tile, bool> tempTile = GetTileAtPos(tempPosition);
 
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
@@ -56,7 +57,7 @@ namespace Super_Mario
                     tempTiles.Add(tempTile.Item1);
                 }
 
-                tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X + (Level.TileSize.X * x), aObject.BoundingBox.Center.Y + aObject.Size.Y + Level.TileSize.Y);
+                tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y + Level.TileSize.Y + tempOffset.Y);
                 tempTile = GetTileAtPos(tempPosition);
 
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
@@ -65,10 +66,9 @@ namespace Super_Mario
                 }
             }
 
-
             for (int y = 0; y < (aObject.Size.Y / Level.TileSize.Y) + 2; y++)
             {
-                Vector2 tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y + (Level.TileSize.Y * y));
+                Vector2 tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X - tempOffset.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y + (Level.TileSize.Y * y) - tempOffset.Y);
                 Tuple<Tile, bool> tempTile = GetTileAtPos(tempPosition);
 
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
@@ -76,7 +76,7 @@ namespace Super_Mario
                     tempTiles.Add(tempTile.Item1);
                 }
 
-                tempPosition = new Vector2(aObject.BoundingBox.Center.X + aObject.Size.X + Level.TileSize.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y + (Level.TileSize.Y * y));
+                tempPosition = new Vector2(aObject.BoundingBox.Center.X + Level.TileSize.X + tempOffset.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y + (Level.TileSize.Y * y) - tempOffset.Y);
                 tempTile = GetTileAtPos(tempPosition);
 
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)

@@ -34,11 +34,6 @@ namespace Super_Mario
         {
             return new Rectangle(myBoundingBox.X - (int)myOrigin.X, myBoundingBox.Y - (int)myOrigin.Y, mySize.X, mySize.Y).Center.ToVector2();
         }
-        public Vector2 Position
-        {
-            get => myPosition;
-            set => myPosition = value;
-        }
 
         public Tile(Vector2 aPosition, Point aSize) : base(aPosition, aSize)
         {

@@ -41,7 +41,7 @@ namespace Super_Mario
 
             if (KeyMouseReader.KeyPressed(Keys.Back))
             {
-                myGame.ChangeState(new MenuState(myGame));
+                myGame.ChangeState(new MenuState(myGame, aWindow));
             }
 
             if (myLevelNames.Length > 0)

@@ -4,9 +4,6 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Super_Mario
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class MainGame : Game
     {
         GraphicsDeviceManager graphics;
@@ -38,9 +35,7 @@ namespace Super_Mario
             GameInfo.CurrentLevel = "Level01.txt";
             GameInfo.FolderLevels = "../../../../Levels/";
 
-            Level.LoadLevel(new Point(32));
-
-            myGameState = new PlayState(this, Window);
+            myGameState = new MenuState(this, Window);
 
             base.Initialize();
         }
@@ -55,8 +50,10 @@ namespace Super_Mario
             ResourceManager.AddTexture("Grass-01", this.Content.Load<Texture2D>("Tileset/tile-grass-01"));
 
             ResourceManager.AddTexture("Mario_Walking", this.Content.Load<Texture2D>("Sprites/mario_walking"));
+            ResourceManager.AddTexture("Border", this.Content.Load<Texture2D>("Sprites/border"));
+            ResourceManager.AddTexture("Background", this.Content.Load<Texture2D>("Sprites/background"));
 
-            Level.SetTileTexture();
+            Background.SetTexture("Background");
 
             myGameState.LoadContent();
         }
@@ -70,6 +67,8 @@ namespace Super_Mario
         {
             KeyMouseReader.Update();
 
+            Background.Update();
+
             myGameState.Update(Window, gameTime);
 
             base.Update(gameTime);
@@ -80,6 +79,8 @@ namespace Super_Mario
             GraphicsDevice.Clear(Color.DodgerBlue);
 
             spriteBatch.Begin();
+
+            Background.Draw(spriteBatch);
 
             myGameState.Draw(spriteBatch, Window, gameTime);
 

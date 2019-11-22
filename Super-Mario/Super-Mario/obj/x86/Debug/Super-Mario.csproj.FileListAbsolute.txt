@@ -79,3 +79,5 @@ C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\obj\x86\Deb
 C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\obj\x86\Debug\Super-Mario.csproj.CopyComplete
 C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\obj\x86\Debug\Super-Mario.exe
 C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\obj\x86\Debug\Super-Mario.pdb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\border.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\background.xnb

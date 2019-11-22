@@ -7,7 +7,7 @@ namespace Super_Mario
     {
         public StaticObject(Vector2 aPosition, Point aSize) : base(aPosition, aSize)
         {
-
+            myBoundingBox = new Rectangle((int)aPosition.X, (int)aPosition.Y, aSize.X, aSize.Y);
         }
     }
 }

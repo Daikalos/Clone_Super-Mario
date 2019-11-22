@@ -9,7 +9,6 @@ namespace Super_Mario
         private List<Tile> myHistory; //Used for pathfinding
 
         private char myTileType;
-        private float myRotation;
         private int myTileForm;
 
         public List<Tile> History
@@ -42,7 +41,7 @@ namespace Super_Mario
             this.myBoundingBox = new Rectangle((int)aPosition.X, (int)aPosition.Y, aSize.X, aSize.Y);
         }
 
-        public void Update()
+        public override void Update()
         {
             myBoundingBox = new Rectangle((int)myPosition.X + (int)myOrigin.X, (int)myPosition.Y + (int)myOrigin.Y, mySize.X, mySize.Y);
         }
@@ -52,7 +51,7 @@ namespace Super_Mario
             if (myTexture != null)
             {
                 aSpriteBatch.Draw(myTexture, myBoundingBox,
-                    null, Color.White, myRotation, myOrigin, SpriteEffects.None, 0.0f);
+                    null, Color.White, 0.0f, myOrigin, SpriteEffects.None, 0.0f);
             }
         }
 

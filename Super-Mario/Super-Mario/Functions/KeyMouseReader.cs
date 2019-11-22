@@ -4,10 +4,10 @@ namespace Super_Mario
 {
     static class KeyMouseReader
     {
-        public static KeyboardState
+        private static KeyboardState
             myCurrentKeyState,
             myPreviousKeyState = Keyboard.GetState();
-        public static MouseState
+        private static MouseState
             myCurrentMouseState,
             myPreviousMouseState = Mouse.GetState();
 
@@ -19,7 +19,7 @@ namespace Super_Mario
         {
             return myCurrentKeyState.IsKeyDown(aKey);
         }
-        public static KeyboardState GetPreviousState
+        public static KeyboardState GetPreviousKeyState
         {
             get => myPreviousKeyState;
         }
@@ -41,6 +41,11 @@ namespace Super_Mario
         public static bool RightHold()
         {
             return myCurrentMouseState.RightButton == ButtonState.Pressed;
+        }
+
+        public static MouseState GetCurrentMouseState
+        {
+            get => myCurrentMouseState;
         }
 
         //Should be called at beginning of Update in Game

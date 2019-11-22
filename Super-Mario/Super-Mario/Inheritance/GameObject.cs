@@ -33,9 +33,14 @@ namespace Super_Mario
             this.myOrigin = Vector2.Zero;
         }
 
+        public virtual void Update()
+        {
+            myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
+        }
+
         public virtual void Draw(SpriteBatch aSpriteBatch) //Override if needed
         {
-            aSpriteBatch.Draw(myTexture, myPosition, null, Color.White);
+            aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White);
         }
 
         public virtual void SetTexture(string aName)

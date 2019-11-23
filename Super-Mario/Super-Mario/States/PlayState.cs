@@ -13,6 +13,7 @@ namespace Super_Mario
         public PlayState(MainGame aGame, GameWindow aWindow) : base(aGame)
         {
             Level.LoadLevel(new Point(32));
+            Background.Reset();
 
             myPlayer = new Player(GameInfo.PlayerSpawn, new Point(32), 4.0f, 14.0f, -440.0f);
         }

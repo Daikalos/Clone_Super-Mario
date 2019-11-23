@@ -12,6 +12,7 @@ namespace Super_Mario
         public MenuState(MainGame aGame, GameWindow aWindow) : base(aGame)
         {
             aGame.IsMouseVisible = true;
+            Background.Reset();
 
             myButtons = new Button[]
             {
@@ -32,6 +33,8 @@ namespace Super_Mario
 
         public override void Update(GameWindow aWindow, GameTime aGameTime)
         {
+            Background.Scrolling(aGameTime, -2.0f);
+
             Array.ForEach(myButtons, b => b.Update(myGame, aWindow));
         }
 

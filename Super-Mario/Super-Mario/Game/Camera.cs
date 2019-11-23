@@ -21,24 +21,24 @@ namespace Super_Mario
             }
         }
 
-        public static void MoveCamera(GameWindow aWindow, float aNewPosition)
+        public static void MoveCamera(GameWindow aWindow, GameTime aGameTime, float aNewPosition)
         {
             if (SnapToMap(aWindow, aNewPosition))
             {
-                float tempNewPosition = myPosition.X + aNewPosition;
-                myPosition.X = tempNewPosition;
+                Background.MoveBackground(aWindow, aGameTime, -(aNewPosition / 12));
+                myPosition.X += aNewPosition * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
             }
         }
 
-        public static void FollowObject(GameWindow aWindow, DynamicObject aObject)
+        public static void FollowObject(GameWindow aWindow, GameTime aGameTime, DynamicObject aObject)
         {
             if (aObject.Position.X - (aWindow.ClientBounds.Width / 8) < myPosition.X)
             {
-                MoveCamera(aWindow, -aObject.Speed);
+                MoveCamera(aWindow, aGameTime, -aObject.Speed);
             }
             if (aObject.Position.X + aObject.Size.X + (aWindow.ClientBounds.Width / 4) > myPosition.X + aWindow.ClientBounds.Width)
             {
-                MoveCamera(aWindow, aObject.Speed);
+                MoveCamera(aWindow, aGameTime, aObject.Speed);
             }
         }
 

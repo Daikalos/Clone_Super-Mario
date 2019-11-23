@@ -20,7 +20,7 @@ namespace Super_Mario
         public override void Update(GameWindow aWindow, GameTime aGameTime)
         {
             Level.Update();
-            Camera.FollowObject(aWindow, myPlayer);
+            Camera.FollowObject(aWindow, aGameTime, myPlayer);
             myPlayer.Update(aGameTime);
         }
 

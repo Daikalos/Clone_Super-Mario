@@ -16,19 +16,19 @@ namespace Super_Mario
             myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
         }
 
-        public static void Parallax(DynamicObject aObject)
-        {
-
-        }
-
         public static void Draw(SpriteBatch aSpriteBatch)
         {
-            for (int i = 0; i < (Level.MapSize.X / mySize.X) + 1; i++)
+            for (int i = -3; i < (Level.MapSize.X / mySize.X) + 1; i++)
             {
                 aSpriteBatch.Draw(myTexture, 
                     new Rectangle((int)myPosition.X + mySize.X * i, (int)myPosition.Y, mySize.X, mySize.Y), 
                     null, Color.White);
             }
+        }
+
+        public static void MoveBackground(GameWindow aWindow, GameTime aGameTime, float aNewPosition)
+        {
+            myPosition.X += aNewPosition * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
         }
 
         public static void SetTexture(string aName)

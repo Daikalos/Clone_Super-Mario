@@ -13,14 +13,13 @@ namespace Super_Mario
             isDead
         }
 
-        private PlayerState myPlayerState;
-
         private AnimationManager myWalkingAnimation;
 
+        private PlayerState myPlayerState;
+        private SpriteEffects myFlipSprite;
+
         float myJumpHeight;
-        bool 
-            myCanJump,
-            myIsMoving;
+        bool myIsMoving;
 
         public Player(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aJumpHeight) : base(aPosition, aSize, aSpeed, aGravity)
         {
@@ -29,7 +28,7 @@ namespace Super_Mario
             this.myWalkingAnimation = new AnimationManager(new Point(3, 1), 0.1f, true);
             this.myPosition += new Vector2(0, Level.TileSize.Y - mySize.Y);
             this.myPlayerState = PlayerState.isWalking;
-            this.myCanJump = true;
+            this.myFlipSprite = SpriteEffects.None;
         }
 
         public void Update(GameTime aGameTime)
@@ -40,6 +39,7 @@ namespace Super_Mario
             {
                 case PlayerState.isWalking:
                     Movement(aGameTime);
+                    Idle();
                     Jump();
                     break;
                 case PlayerState.isFalling:
@@ -52,8 +52,8 @@ namespace Super_Mario
                     break;
             }
 
-            Level.GetTilesAroundObject(this);
             Collisions(aGameTime);
+            TextureState(aGameTime); //Create post-update instead?
         }
 
         public void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime)
@@ -61,10 +61,17 @@ namespace Super_Mario
             switch (myPlayerState)
             {
                 case PlayerState.isWalking:
-                    myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, myOrigin, new Point(32, 34), mySize, Color.White, 0.0f);
+                    if (myIsMoving)
+                    {
+                        myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, mySize, new Point(32, 34), Color.White, 0.0f, myOrigin, myFlipSprite);
+                    }
+                    else
+                    {
+                        aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
+                    }
                     break;
                 case PlayerState.isFalling:
-                    myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, myOrigin, new Point(32, 34), mySize, Color.White, 0.0f);
+                    aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                     break;
                 case PlayerState.isDead:
 
@@ -74,13 +81,13 @@ namespace Super_Mario
 
         private void Collisions(GameTime aGameTime)
         {
-            IsFalling(aGameTime);
+            IsFalling();
             CollisionBlock(aGameTime);
         }
-        private void IsFalling(GameTime aGameTime)
+        private void IsFalling()
         {
             bool tempFall = true;
-            foreach (Tile tile in Level.GetTilesAroundObject(this))
+            foreach (Tile tile in Level.TilesAround(this))
             {
                 Rectangle tempColRectBelow = new Rectangle(myBoundingBox.X, myBoundingBox.Y, myBoundingBox.Width, myBoundingBox.Height + mySize.Y / 4);
                 if (CollisionManager.Collision(tempColRectBelow, tile.BoundingBox))
@@ -89,7 +96,6 @@ namespace Super_Mario
                     {
                         tempFall = false;
                     }
-
                 }
             }
             if (tempFall)
@@ -99,7 +105,7 @@ namespace Super_Mario
         }
         private void CollisionBlock(GameTime aGameTime)
         {
-            foreach (Tile tile in Level.GetTilesAroundObject(this))
+            foreach (Tile tile in Level.TilesAround(this))
             {
                 float tempVelocity = (myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds);
 
@@ -112,11 +118,10 @@ namespace Super_Mario
                     }
                     if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, tempVelocity) && myVelocity > 0)
                     {
-                        myPlayerState = PlayerState.isWalking;
                         myVelocity = 0.0f;
-
                         myPosition.Y = tile.Position.Y - mySize.Y;
-                        myCanJump = true;
+
+                        myPlayerState = PlayerState.isWalking;
                     }          
                 }
             }
@@ -128,25 +133,30 @@ namespace Super_Mario
             {
                 myPosition.X -= mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                 myIsMoving = true;
+
+                myFlipSprite = SpriteEffects.FlipHorizontally;
             }
             if (KeyMouseReader.KeyHold(Keys.Right) && !OutsideBounds(new Vector2(mySpeed, 0)) && CanMove(aGameTime))
             {
                 myPosition.X += mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                 myIsMoving = true;
-            }
 
-            if (!KeyMouseReader.KeyHold(Keys.Left) && !KeyMouseReader.KeyHold(Keys.Right))
+                myFlipSprite = SpriteEffects.None;
+            }
+        }
+        private void Idle()
+        {
+            if (!KeyMouseReader.KeyHold(Keys.Left) && !KeyMouseReader.KeyHold(Keys.Right) || KeyMouseReader.KeyHold(Keys.Left) && KeyMouseReader.KeyHold(Keys.Right))
             {
                 myIsMoving = false;
             }
         }
         private void Jump()
         {
-            if (KeyMouseReader.KeyPressed(Keys.Space) && myCanJump)
+            if (KeyMouseReader.KeyPressed(Keys.Space))
             {
-                myPlayerState = PlayerState.isFalling;
                 myVelocity = myJumpHeight;
-                myCanJump = false;
+                myPlayerState = PlayerState.isFalling;
             }
         }
         private bool OutsideBounds(Vector2 aDirection)
@@ -165,23 +175,45 @@ namespace Super_Mario
         }
         private bool CanMove(GameTime aGameTime)
         {
-            foreach (Tile tile in Level.GetTilesAroundObject(this))
+            foreach (Tile tile in Level.TilesAround(this))
             {
-                if (tile.TileType == '#' && myIsMoving)
+                if (tile.TileType == '#')
                 {
                     float tempSpeed = (mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
 
                     if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, tempSpeed) && KeyMouseReader.KeyHold(Keys.Right))
                     {
+                        myPosition.X = tile.BoundingBox.X - tile.Size.X;
                         return false;
                     }
                     if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, tempSpeed) && KeyMouseReader.KeyHold(Keys.Left))
                     {
+                        myPosition.X = tile.BoundingBox.X + tile.Size.X;
                         return false;
                     }
                 }
             }
             return true;
+        }
+
+        private void TextureState(GameTime aGameTime)
+        {
+            switch (myPlayerState)
+            {
+                case PlayerState.isWalking:
+                    if (myIsMoving)
+                    {
+                        myTexture = ResourceManager.RequestTexture("Mario_Walking");
+                    }
+                    else
+                    {
+                        myTexture = ResourceManager.RequestTexture("Mario_Idle");
+                    }
+                    break;
+                case PlayerState.isFalling:
+                    myTexture = ResourceManager.RequestTexture("Mario_Jumping");
+                    break;
+            }
         }
     }
 }

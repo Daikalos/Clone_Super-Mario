@@ -8,12 +8,17 @@ namespace Super_Mario
 {
     static class Level
     {
-        private static string[] myLevelBuilder;
         private static Tile[,] myTiles;
+
+        private static Vector2 myPlayerSpawn;
         private static Point
             myTileSize,
             myMapSize;
 
+        public static Vector2 PlayerSpawn
+        {
+            get => myPlayerSpawn;
+        }
         public static Point TileSize
         {
             get => myTileSize;
@@ -42,7 +47,7 @@ namespace Super_Mario
             }
             return new Tuple<Tile, bool>(myTiles[0, 0], false);
         }
-        public static List<Tile> GetTilesAroundObject(DynamicObject aObject)
+        public static List<Tile> TilesAround(DynamicObject aObject)
         {
             List<Tile> tempTiles = new List<Tile>();
             Vector2 tempOffset = new Vector2((aObject.Size.X / 2) - (Level.TileSize.X / 2), (aObject.Size.Y / 2) - (Level.TileSize.Y / 2));
@@ -90,49 +95,37 @@ namespace Super_Mario
 
             return tempTiles;
         }
-        public static List<Tile> GetTilesOnObject(DynamicObject aObject)
+        public static List<Tile> TilesOn(DynamicObject aObject)
         {
             List<Tile> tempTiles = new List<Tile>();
-            Vector2 tempOffset = new Vector2((aObject.Size.X / 2) - (Level.TileSize.X / 2), (aObject.Size.Y / 2) - (Level.TileSize.Y / 2));
+            Vector2 tempOffset = new Vector2(
+                (aObject.Size.X / 2) - (Level.TileSize.X / 2), 
+                (aObject.Size.Y / 2) - (Level.TileSize.Y / 2));
 
             Vector2 tempPosition;
             Tuple<Tile, bool> tempTile;
 
-            for (int x = 0; x < (aObject.Size.X / Level.TileSize.X) + 2; x++)
+            for (int x = 0; x < (aObject.Size.X / Level.TileSize.X); x++)
             {
-                tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y - tempOffset.Y);
+                tempPosition = new Vector2(aObject.BoundingBox.Center.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y - tempOffset.Y);
                 tempTile = GetTileAtPos(tempPosition);
 
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
                 {
                     tempTiles.Add(tempTile.Item1);
+                    tempTile.Item1.TileType = '#';
+                    tempTile.Item1.SetTexture();
                 }
 
-                tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y + Level.TileSize.Y + tempOffset.Y);
-                tempTile = GetTileAtPos(tempPosition);
-
-                if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
+                for (int y = 0; y < (aObject.Size.Y / Level.TileSize.Y); y++)
                 {
-                    tempTiles.Add(tempTile.Item1);
-                }
-            }
+                    tempPosition = new Vector2(aObject.BoundingBox.Center.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y + (Level.TileSize.Y * y) - tempOffset.Y);
+                    tempTile = GetTileAtPos(tempPosition);
 
-            for (int y = 0; y < (aObject.Size.Y / Level.TileSize.Y) + 2; y++)
-            {
-                tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X - tempOffset.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y + (Level.TileSize.Y * y) - tempOffset.Y);
-                tempTile = GetTileAtPos(tempPosition);
-
-                if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
-                {
-                    tempTiles.Add(tempTile.Item1);
-                }
-
-                tempPosition = new Vector2(aObject.BoundingBox.Center.X + Level.TileSize.X + tempOffset.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y + (Level.TileSize.Y * y) - tempOffset.Y);
-                tempTile = GetTileAtPos(tempPosition);
-
-                if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
-                {
-                    tempTiles.Add(tempTile.Item1);
+                    if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
+                    {
+                        tempTiles.Add(tempTile.Item1);
+                    }
                 }
             }
 
@@ -187,7 +180,7 @@ namespace Super_Mario
         {
             if (File.Exists(GameInfo.FolderLevels + GameInfo.CurrentLevel))
             {
-                myLevelBuilder = File.ReadAllLines(GameInfo.FolderLevels + GameInfo.CurrentLevel);
+                string[] myLevelBuilder = File.ReadAllLines(GameInfo.FolderLevels + GameInfo.CurrentLevel);
                 myTileSize = aTileSize;
 
                 int tempSizeX = myLevelBuilder[0].Length;
@@ -206,7 +199,7 @@ namespace Super_Mario
 
                         if (myTiles[x, y].TileType == '?')
                         {
-                            GameInfo.PlayerSpawn = myTiles[x, y].Position;
+                            myPlayerSpawn = myTiles[x, y].Position;
                         }
                     }
                 }
@@ -235,7 +228,7 @@ namespace Super_Mario
 
                         if (myTiles[x, y].TileType == '?')
                         {
-                            GameInfo.PlayerSpawn = myTiles[x, y].Position;
+                            myPlayerSpawn = myTiles[x, y].Position;
                         }
                     }
                 }
@@ -248,6 +241,19 @@ namespace Super_Mario
         public static void SaveLevel(string aLevelName)
         {
 
+        }
+
+        public static bool CheckIfWon()
+        {
+            return false;
+        }
+        public static bool CheckIn(int anX, int anY)
+        {
+            return 
+                anX >= 0 &&
+                anX < myTiles.GetLength(0) &&
+                anY >= 0 &&
+                anY < myTiles.GetLength(1);
         }
 
         public static void SetTileTexture()
@@ -267,22 +273,6 @@ namespace Super_Mario
                     myTiles[i, j].SetTexture();
                 }
             }
-        }
-
-        public static bool CheckIfWon()
-        {
-            return false;
-        }
-        public static bool CheckIn(int anX, int anY)
-        {
-            if (anX >= 0 && anX < myTiles.GetLength(0))
-            {
-                if (anY >= 0 && anY < myTiles.GetLength(1))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

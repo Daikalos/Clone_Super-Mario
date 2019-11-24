@@ -7,19 +7,15 @@ namespace Super_Mario
     static class EnemyManager
     {
         static List<Enemy> myEnemies;
-        static float[] myRespawnTimer;
-        static bool[] myRespawnEnemy;
-        static float myRespawnDelay;
 
         public static List<Enemy> Enemies
         {
             get => myEnemies;
         }
 
-        public static void Initialize(float aRespawnDelay)
+        public static void Initialize()
         {
             myEnemies = new List<Enemy>();
-            myRespawnDelay = aRespawnDelay;
         }
 
         public static void Update(GameTime aGameTime)

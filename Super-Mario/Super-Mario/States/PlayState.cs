@@ -15,7 +15,7 @@ namespace Super_Mario
             Level.LoadLevel(new Point(32));
             Background.Reset();
 
-            myPlayer = new Player(GameInfo.PlayerSpawn, new Point(32), 4.0f, 14.0f, -440.0f);
+            myPlayer = new Player(Level.PlayerSpawn, new Point(32), 4.0f, 14.0f, -440.0f);
         }
 
         public override void Update(GameWindow aWindow, GameTime aGameTime)
@@ -41,7 +41,7 @@ namespace Super_Mario
             my8bitFont = ResourceManager.RequestFont("8-bit");
 
             Level.SetTileTexture();
-            myPlayer.SetTexture("Mario_Walking");
+            myPlayer.SetTexture("Mario_Idle");
         }
     }
 }

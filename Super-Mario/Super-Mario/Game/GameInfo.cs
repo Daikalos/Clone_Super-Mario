@@ -9,7 +9,6 @@ namespace Super_Mario
     static class GameInfo
     {
         private static Vector2 myDrawPos;
-        private static Vector2 myPlayerSpawn;
         private static string
             myCurrentLevel,
             myFolderLevels,
@@ -25,11 +24,6 @@ namespace Super_Mario
         public static Vector2 DrawPos
         {
             set => myDrawPos = value;
-        }
-        public static Vector2 PlayerSpawn
-        {
-            get => myPlayerSpawn;
-            set => myPlayerSpawn = value;
         }
         public static string CurrentLevel
         {

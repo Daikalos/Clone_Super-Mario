@@ -50,6 +50,8 @@ namespace Super_Mario
             ResourceManager.AddTexture("Grass-01", this.Content.Load<Texture2D>("Tileset/tile-grass-01"));
 
             ResourceManager.AddTexture("Mario_Walking", this.Content.Load<Texture2D>("Sprites/mario_walking"));
+            ResourceManager.AddTexture("Mario_Jumping", this.Content.Load<Texture2D>("Sprites/mario_jumping"));
+            ResourceManager.AddTexture("Mario_Idle", this.Content.Load<Texture2D>("Sprites/mario_idle"));
             ResourceManager.AddTexture("Border", this.Content.Load<Texture2D>("Sprites/border"));
             ResourceManager.AddTexture("Background", this.Content.Load<Texture2D>("Sprites/background"));
 

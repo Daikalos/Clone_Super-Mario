@@ -59,6 +59,28 @@ namespace Super_Mario
         {
             switch(myTileType)
             {
+                case '*':
+                    myTexture = ResourceManager.RequestTexture("Flag");
+                    break;
+                case '#':
+                    myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());
+                    break;
+                case '-':
+                    myTexture = null;
+                    break;
+            }
+        }
+
+        public void SetTextureEditor()
+        {
+            switch (myTileType)
+            {
+                case '*':
+                    myTexture = ResourceManager.RequestTexture("Flag");
+                    break;
+                case '?':
+                    myTexture = ResourceManager.RequestTexture("Mario_Idle");
+                    break;
                 case '#':
                     myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());
                     break;

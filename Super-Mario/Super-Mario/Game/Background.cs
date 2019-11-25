@@ -20,6 +20,7 @@ namespace Super_Mario
         public static void Reset()
         {
             myScrollPosition = Vector2.Zero;
+            myBoundingBox.Location = Point.Zero;
         }
 
         public static void Draw(SpriteBatch aSpriteBatch)

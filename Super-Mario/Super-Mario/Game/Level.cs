@@ -113,8 +113,6 @@ namespace Super_Mario
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
                 {
                     tempTiles.Add(tempTile.Item1);
-                    tempTile.Item1.TileType = '#';
-                    tempTile.Item1.SetTexture();
                 }
 
                 for (int y = 0; y < (aObject.Size.Y / Level.TileSize.Y); y++)
@@ -176,11 +174,11 @@ namespace Super_Mario
             }
         }
 
-        public static void LoadLevel(Point aTileSize)
+        public static void LoadLevel(Point aTileSize, string aLevelName)
         {
-            if (File.Exists(GameInfo.FolderLevels + GameInfo.CurrentLevel))
+            if (File.Exists(GameInfo.FolderLevels + aLevelName + ".txt"))
             {
-                string[] myLevelBuilder = File.ReadAllLines(GameInfo.FolderLevels + GameInfo.CurrentLevel);
+                string[] myLevelBuilder = File.ReadAllLines(GameInfo.FolderLevels + aLevelName + ".txt");
                 myTileSize = aTileSize;
 
                 int tempSizeX = myLevelBuilder[0].Length;
@@ -271,6 +269,24 @@ namespace Super_Mario
                     }
 
                     myTiles[i, j].SetTexture();
+                }
+            }
+        }
+        public static void SetTileTextureEditor()
+        {
+            for (int i = 0; i < myTiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < myTiles.GetLength(1); j++)
+                {
+                    if (CheckIn(i, j - 1))
+                    {
+                        if (myTiles[i, j - 1].TileType != '#')
+                        {
+                            myTiles[i, j].TileForm = 1;
+                        }
+                    }
+
+                    myTiles[i, j].SetTextureEditor();
                 }
             }
         }

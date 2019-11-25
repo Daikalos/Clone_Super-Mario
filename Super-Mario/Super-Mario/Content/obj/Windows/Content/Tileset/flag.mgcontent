@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/tile-grass-00.png</SourceFile>
-  <SourceTime>2019-11-18T14:30:15.5756138+01:00</SourceTime>
-  <DestFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Tileset/tile-grass-00.xnb</DestFile>
-  <DestTime>2019-11-25T13:00:19.6597375+01:00</DestTime>
+  <SourceFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/flag.png</SourceFile>
+  <SourceTime>2019-11-25T14:49:22.8891678+01:00</SourceTime>
+  <DestFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Tileset/flag.xnb</DestFile>
+  <DestTime>2019-11-25T14:49:36.6491933+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

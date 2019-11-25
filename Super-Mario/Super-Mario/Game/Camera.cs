@@ -21,6 +21,11 @@ namespace Super_Mario
             }
         }
 
+        public static void Reset()
+        {
+            myPosition = Vector2.Zero;
+        }
+
         public static void MoveCamera(GameWindow aWindow, GameTime aGameTime, float aNewPosition)
         {
             if (SnapToMap(aWindow, aNewPosition))

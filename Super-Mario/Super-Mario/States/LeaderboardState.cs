@@ -24,6 +24,8 @@ namespace Super_Mario
 
         public override void Update(GameWindow aWindow, GameTime aGameTime)
         {
+            Background.Scrolling(aGameTime, -2.0f);
+
             if (KeyMouseReader.KeyPressed(Keys.Up))
             {
                 if (mySelection > 0)

@@ -39,30 +39,33 @@ namespace Super_Mario
         {
             if (myIsFinished) return;
 
-            myTimer += (float)aGameTime.ElapsedGameTime.TotalSeconds;
-            if (myTimer > myAnimationSpeed)
+            if (!GameInfo.IsPaused)
             {
-                myCurrentFrame++;
-                myCurrentFramePos.X++;
-                if (myCurrentFrame >= (myFrameAmount.X * myFrameAmount.Y))
+                myTimer += (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                if (myTimer > myAnimationSpeed)
                 {
-                    if (myIsLoop)
+                    myCurrentFrame++;
+                    myCurrentFramePos.X++;
+                    if (myCurrentFrame >= (myFrameAmount.X * myFrameAmount.Y))
                     {
-                        myCurrentFrame = 0;
-                        myCurrentFramePos = new Point(0, 0);
+                        if (myIsLoop)
+                        {
+                            myCurrentFrame = 0;
+                            myCurrentFramePos = new Point(0, 0);
+                        }
+                        else
+                        {
+                            myCurrentFrame = (myFrameAmount.X * myFrameAmount.Y) - 1;
+                            myIsFinished = true;
+                        }
                     }
-                    else
+                    if (myCurrentFramePos.X >= myFrameAmount.X) //Animation
                     {
-                        myCurrentFrame = (myFrameAmount.X * myFrameAmount.Y) - 1;
-                        myIsFinished = true;
+                        myCurrentFramePos.Y++;
+                        myCurrentFramePos.X = 0;
                     }
+                    myTimer = 0;
                 }
-                if (myCurrentFramePos.X >= myFrameAmount.X) //Animation
-                {
-                    myCurrentFramePos.Y++;
-                    myCurrentFramePos.X = 0;
-                }
-                myTimer = 0;
             }
 
             aSpriteBatch.Draw(aTexture,

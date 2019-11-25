@@ -13,6 +13,8 @@ namespace Super_Mario
 
         public void ChangeState(State aNewState)
         {
+            myGameState = null;
+
             myGameState = aNewState;
             myGameState.LoadContent();
         }
@@ -32,8 +34,9 @@ namespace Super_Mario
             ResourceManager.Initialize();
 
             GameInfo.Initialize(Window, 0.5f);
-            GameInfo.CurrentLevel = "Level01.txt";
+            GameInfo.CurrentLevel = 1;
             GameInfo.FolderLevels = "../../../../Levels/";
+            GameInfo.FolderHighScores = "../../../../HighScores/";
 
             myGameState = new MenuState(this, Window);
 
@@ -48,6 +51,7 @@ namespace Super_Mario
 
             ResourceManager.AddTexture("Grass-00", this.Content.Load<Texture2D>("Tileset/tile-grass-00"));
             ResourceManager.AddTexture("Grass-01", this.Content.Load<Texture2D>("Tileset/tile-grass-01"));
+            ResourceManager.AddTexture("Flag", this.Content.Load<Texture2D>("Tileset/flag"));
 
             ResourceManager.AddTexture("Mario_Walking", this.Content.Load<Texture2D>("Sprites/mario_walking"));
             ResourceManager.AddTexture("Mario_Jumping", this.Content.Load<Texture2D>("Sprites/mario_jumping"));

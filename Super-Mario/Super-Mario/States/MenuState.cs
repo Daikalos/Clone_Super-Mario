@@ -12,22 +12,32 @@ namespace Super_Mario
         public MenuState(MainGame aGame, GameWindow aWindow) : base(aGame)
         {
             aGame.IsMouseVisible = true;
+
             Background.Reset();
+            Camera.Reset();
 
             myButtons = new Button[]
             {
-                new PlayButton(
+                new Button(
                     new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 - 90), 
-                    new Point(452, 64)),
-                new LeaderboardButton(
-                    new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 - 20), 
-                    new Point(452, 64)),
-                new EditorButton(
-                    new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 + 50), 
-                    new Point(452, 64)),
-                new ExitButton(
-                    new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 + 120), 
-                    new Point(452, 64))
+                    new Point(452, 64),
+                    new Button.OnClick(() => Button.Play(aGame, aWindow)),
+                    "PLAY"),
+                new Button(
+                    new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 - 10),
+                    new Point(452, 64),
+                    new Button.OnClick(() => Button.Editor(aGame)),
+                    "EDITOR"),
+                new Button(
+                    new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 + 70),
+                    new Point(452, 64),
+                    new Button.OnClick(() => Button.Leaderboard(aGame)),
+                    "LEADERBOARD"),
+                new Button(
+                    new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 + 150),
+                    new Point(452, 64),
+                    new Button.OnClick(() => Button.Exit(aGame)),
+                    "EXIT"),
             };
         }
 
@@ -35,7 +45,7 @@ namespace Super_Mario
         {
             Background.Scrolling(aGameTime, -2.0f);
 
-            Array.ForEach(myButtons, b => b.Update(myGame, aWindow));
+            Array.ForEach(myButtons, b => b.Update());
         }
 
         public override void Draw(SpriteBatch aSpriteBatch, GameWindow aWindow, GameTime aGameTime)

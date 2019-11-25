@@ -31,19 +31,19 @@ namespace Super_Mario
             this.myFlipSprite = SpriteEffects.None;
         }
 
-        public void Update(GameTime aGameTime)
+        public void Update(GameWindow aWindow, GameTime aGameTime)
         {
             myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
 
             switch (myPlayerState)
             {
                 case PlayerState.isWalking:
-                    Movement(aGameTime);
+                    Movement(aWindow, aGameTime);
                     Idle();
                     Jump();
                     break;
                 case PlayerState.isFalling:
-                    Movement(aGameTime);
+                    Movement(aWindow, aGameTime);
                     myVelocity += myGravity;
                     myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                     break;
@@ -126,22 +126,42 @@ namespace Super_Mario
                 }
             }
         }
-
-        private void Movement(GameTime aGameTime)
+        public bool CollisionFlag()
         {
-            if (KeyMouseReader.KeyHold(Keys.Left) && !OutsideBounds(new Vector2(-mySpeed, 0)) && CanMove(aGameTime))
+            foreach (Tile tile in Level.TilesOn(this))
+            {
+                if (tile.TileType == '*')
+                {
+                    if (CollisionManager.Collision(myBoundingBox, tile.BoundingBox))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void Movement(GameWindow aWindow, GameTime aGameTime)
+        {
+            if (KeyMouseReader.KeyHold(Keys.Left) && !OutsideBounds(aWindow, new Vector2(-mySpeed, 0)) && CanMove(aGameTime))
             {
                 myPosition.X -= mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                 myIsMoving = true;
 
                 myFlipSprite = SpriteEffects.FlipHorizontally;
             }
-            if (KeyMouseReader.KeyHold(Keys.Right) && !OutsideBounds(new Vector2(mySpeed, 0)) && CanMove(aGameTime))
+            if (KeyMouseReader.KeyHold(Keys.Right) && !OutsideBounds(aWindow, new Vector2(mySpeed, 0)) && CanMove(aGameTime))
             {
                 myPosition.X += mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                 myIsMoving = true;
 
                 myFlipSprite = SpriteEffects.None;
+            }
+
+            if (myPosition.Y > aWindow.ClientBounds.Height)
+            {
+                myPosition = Level.PlayerSpawn;
+                myPosition += new Vector2(0, -mySize.Y);
             }
         }
         private void Idle()
@@ -159,7 +179,7 @@ namespace Super_Mario
                 myPlayerState = PlayerState.isFalling;
             }
         }
-        private bool OutsideBounds(Vector2 aDirection)
+        private bool OutsideBounds(GameWindow aWindow, Vector2 aDirection)
         {
             if (myPosition.X + aDirection.X < 0)
             {
@@ -183,7 +203,7 @@ namespace Super_Mario
 
                     if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, tempSpeed) && KeyMouseReader.KeyHold(Keys.Right))
                     {
-                        myPosition.X = tile.BoundingBox.X - tile.Size.X;
+                        myPosition.X = tile.BoundingBox.X - mySize.X;
                         return false;
                     }
                     if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, tempSpeed) && KeyMouseReader.KeyHold(Keys.Left))

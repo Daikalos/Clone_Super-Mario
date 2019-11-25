@@ -41,10 +41,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Buttons\EditorButton.cs" />
-    <Compile Include="Buttons\ExitButton.cs" />
-    <Compile Include="Buttons\LeaderboardButton.cs" />
-    <Compile Include="Buttons\PlayButton.cs" />
     <Compile Include="Functions\AnimationManager.cs" />
     <Compile Include="Functions\CollisionManager.cs" />
     <Compile Include="Functions\FileReader.cs" />
@@ -55,7 +51,7 @@
     <Compile Include="Functions\StringManager.cs" />
     <Compile Include="Game\Background.cs" />
     <Compile Include="Game\Camera.cs" />
-    <Compile Include="Inheritance\Button.cs" />
+    <Compile Include="Game\Button.cs" />
     <Compile Include="Inheritance\DynamicObject.cs" />
     <Compile Include="Game\Enemy.cs" />
     <Compile Include="Game\EnemyManager.cs" />

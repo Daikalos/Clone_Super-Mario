@@ -8,27 +8,26 @@ namespace Super_Mario
 {
     static class GameInfo
     {
-        private static Vector2 myDrawPos;
+        private static Vector2 
+            myDrawPos;
         private static string
-            myCurrentLevel,
             myFolderLevels,
             myFolderHighScores;
-        private static int[] myHighScores;
+        private static int[] 
+            myHighScores;
         private static int
             myScore,
+            myCurrentLevel,
             myDrawScore;
         private static float
             myDSTimer,
             myDSDelay;
+        private static bool
+            myIsPaused;
 
         public static Vector2 DrawPos
         {
             set => myDrawPos = value;
-        }
-        public static string CurrentLevel
-        {
-            get => myCurrentLevel;
-            set => myCurrentLevel = value;
         }
         public static string FolderLevels
         {
@@ -49,9 +48,28 @@ namespace Super_Mario
             get => myScore;
             set => myScore = value;
         }
+        public static int CurrentLevel
+        {
+            get => myCurrentLevel;
+            set => myCurrentLevel = value;
+        }
         public static int HighScore
         {
             get => myHighScores.Max();
+        }
+        public static bool IsPaused
+        {
+            get => myIsPaused;
+            set => myIsPaused = value;
+        }
+
+        public static string LevelName()
+        {
+            if (myCurrentLevel < 10)
+            {
+                return "Level0" + myCurrentLevel;
+            }
+            return "Level" + myCurrentLevel;
         }
 
         public static void Initialize(GameWindow aWindow, float aDSDelay)
@@ -91,11 +109,12 @@ namespace Super_Mario
 
         public static void Draw(SpriteBatch aSpriteBatch, GameWindow aWindow, SpriteFont aFont, Player aPlayer)
         {
-
+            StringManager.DrawStringLeft(aSpriteBatch, aFont, "Score: " + myScore.ToString(), new Vector2(Camera.Position.X + 32, 32), Color.Black, 0.8f);
 
             if (myDSTimer >= 0)
             {
-                StringManager.DrawStringMid(aSpriteBatch, aFont, myDrawScore.ToString(), myDrawPos, Color.White, 0.3f);
+                StringManager.DrawStringMid(aSpriteBatch, aFont, myDrawScore.ToString(), 
+                    new Vector2(Camera.Position.X + myDrawPos.X, myDrawPos.Y), Color.White, 0.3f);
             }
         }
 

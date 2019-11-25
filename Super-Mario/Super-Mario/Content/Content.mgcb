@@ -83,7 +83,7 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/mario_walking.png
 
-#begin Sprites/mario_walking.png
+#begin Tileset/flag.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -93,7 +93,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/mario_walking.png
+/build:Tileset/flag.png
 
 #begin Tileset/tile-grass-00.png
 /importer:TextureImporter

@@ -65,7 +65,7 @@ namespace Super_Mario
                 case '#':
                     myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());
                     break;
-                case '-':
+                default:
                     myTexture = null;
                     break;
             }
@@ -84,7 +84,7 @@ namespace Super_Mario
                 case '#':
                     myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());
                     break;
-                case '-':
+                default:
                     myTexture = null;
                     break;
             }

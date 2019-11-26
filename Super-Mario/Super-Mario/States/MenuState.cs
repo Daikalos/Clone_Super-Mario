@@ -26,7 +26,7 @@ namespace Super_Mario
                 new Button(
                     new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 - 10),
                     new Point(452, 64),
-                    new Button.OnClick(() => Button.Editor(aGame)),
+                    new Button.OnClick(() => Button.Editor(aGame, aWindow)),
                     "EDITOR"),
                 new Button(
                     new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 + 70),

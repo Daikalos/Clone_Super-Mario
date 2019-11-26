@@ -12,17 +12,24 @@ namespace Super_Mario
         protected Rectangle myBoundingBox;
         protected Point mySize;
 
+        public Texture2D Texture
+        {
+            get => myTexture;
+        }
         public Vector2 Position
         {
             get => myPosition;
+            set => myPosition = value;
         }
         public Rectangle BoundingBox
         {
             get => myBoundingBox;
+            set => myBoundingBox = value;
         }
         public Point Size
         {
             get => mySize;
+            set => mySize = value;
         }
 
         protected GameObject(Vector2 aPosition, Point aSize)

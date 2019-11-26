@@ -88,3 +88,4 @@ C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario_idle.xnb
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario_jumping.xnb
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\flag.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\flag.xnb

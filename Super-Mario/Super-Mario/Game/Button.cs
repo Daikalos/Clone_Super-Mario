@@ -66,9 +66,9 @@ namespace Super_Mario
         {
             aGame.ChangeState(new MenuState(aGame, aWindow));
         }
-        public static void Editor(MainGame aGame)
+        public static void Editor(MainGame aGame, GameWindow aWindow)
         {
-            aGame.ChangeState(new EditorState(aGame));
+            aGame.ChangeState(new EditorState(aGame, aWindow));
         }
         public static void Leaderboard(MainGame aGame)
         {

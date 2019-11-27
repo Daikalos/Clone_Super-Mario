@@ -16,8 +16,10 @@ namespace Super_Mario
         /// 2 = Flag/*;
         /// </summary>
         private Tile[] mySelections;
+        private Button mySaveButton;
         private Rectangle myOffset;
         private char mySelectedTile;
+        private char[,] myLevel;
         private int myTile;
         private float
             myTimer,
@@ -26,6 +28,20 @@ namespace Super_Mario
         public EditorState(MainGame aGame, GameWindow aWindow) : base(aGame)
         {
             Level.LoadLevel(new Point(32), "Level_Template");
+
+            mySaveButton = new Button(new Vector2(32, 32), new Point(192, 64), null, "SAVE");
+
+            myLevel = new char[
+                Level.MapSize.X / Level.TileSize.X,
+                Level.MapSize.Y / Level.TileSize.Y];
+
+            for (int i = 0; i < Level.GetTiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < Level.GetTiles.GetLength(1); j++)
+                {
+                    myLevel[i, j] = Level.GetTiles[i, j].TileType;
+                }
+            }
 
             this.mySelections = new Tile[]
             {
@@ -42,6 +58,7 @@ namespace Super_Mario
         public override void Update(GameWindow aWindow, GameTime aGameTime)
         {
             Level.Update();
+            mySaveButton.Update();
 
             if (KeyMouseReader.KeyHold(Keys.Left))
             {
@@ -99,6 +116,18 @@ namespace Super_Mario
                 tempTile.SetTextureEditor();
             }
 
+            if (mySaveButton.IsClicked())
+            {
+                for (int i = 0; i < myLevel.GetLength(0); i++)
+                {
+                    for (int j = 0; j < myLevel.GetLength(1); j++)
+                    {
+                        myLevel[i, j] = Level.GetTiles[i, j].TileType;
+                    }
+                }
+                Level.SaveLevel("Level05", myLevel);
+            }
+
             if (KeyMouseReader.KeyPressed(Keys.Back))
             {
                 myGame.ChangeState(new MenuState(myGame, aWindow));
@@ -120,6 +149,8 @@ namespace Super_Mario
             {
                 aSpriteBatch.Draw(mySelections[myTile].Texture, (Camera.Position + KeyMouseReader.GetCurrentMouseState.Position.ToVector2()), null, Color.White);
             }
+
+            mySaveButton.Draw(aSpriteBatch);
 
             StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press return to go back to menu", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black * 0.50f, 0.3f);
         }
@@ -147,6 +178,8 @@ namespace Super_Mario
             mySelections[2].TileType = '*';
 
             Array.ForEach(mySelections, t => t.SetTextureEditor());
+
+            mySaveButton.LoadContent();
 
             my8bitFont = ResourceManager.RequestFont("8-bit");
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -236,9 +237,35 @@ namespace Super_Mario
                 myTiles.GetLength(1) * myTileSize.Y);
             }
         }
-        public static void SaveLevel(string aLevelName)
+        public static void SaveLevel(string aLevelName, char[,] aLevel)
         {
+            string tempPathLevels = GameInfo.FolderLevels + aLevelName;
 
+            string tempName = aLevelName;
+            tempName = tempName.Replace(".txt", "");
+
+            string tempPathHighScores = GameInfo.FolderHighScores + tempName + "_HighScores.txt";
+
+            if (File.Exists(tempPathLevels))
+            {
+                File.Delete(tempPathLevels);
+            }
+
+            FileStream tempFS = File.Create(tempPathLevels);
+            tempFS.Close();
+
+            for (int i = 0; i < aLevel.GetLength(1); i++)
+            {
+                string tempLevel = "";
+
+                for (int j = 0; j < aLevel.GetLength(0); j++)
+                {
+                    tempLevel += aLevel[j, i].ToString();
+                }
+
+                File.AppendAllText(tempPathLevels, tempLevel);
+                File.AppendAllText(tempPathLevels, Environment.NewLine);
+            }
         }
 
         public static bool CheckIfWon()

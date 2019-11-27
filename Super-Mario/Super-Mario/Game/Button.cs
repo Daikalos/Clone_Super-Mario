@@ -28,7 +28,10 @@ namespace Super_Mario
 
             if (IsClicked())
             {
-                myIsClicked();
+                if (myIsClicked != null)
+                {
+                    myIsClicked();
+                }
             }
             if (IsHold())
             {
@@ -45,13 +48,13 @@ namespace Super_Mario
             StringManager.DrawStringMid(aSpriteBatch, my8bitFont, myDisplayText, tempDrawRect.Center.ToVector2(), Color.Black, 1.1f);
         }
 
-        protected bool IsClicked()
+        public bool IsClicked()
         {
             return 
                 KeyMouseReader.LeftClick() && 
                 myBoundingBox.Contains(KeyMouseReader.GetCurrentMouseState.Position);
         }
-        protected bool IsHold()
+        public bool IsHold()
         {
             return myBoundingBox.Contains(KeyMouseReader.GetCurrentMouseState.Position);
         }
@@ -77,6 +80,10 @@ namespace Super_Mario
         public static void Exit(MainGame aGame)
         {
             aGame.Exit();
+        }
+        public static void LoadLevel()
+        {
+
         }
 
         public void LoadContent()

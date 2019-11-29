@@ -18,10 +18,10 @@ namespace Super_Mario
             Camera.Reset();
 
             myPlayer = new Player(Level.PlayerSpawn, new Point(32), 4.0f, 14.0f, -440.0f);
-            myBackButton = new Button(new Vector2(aWindow.ClientBounds.Width - 258 - 32, aWindow.ClientBounds.Height - 64 - 32),
-                    new Point(258, 64),
+            myBackButton = new Button(new Vector2(aWindow.ClientBounds.Width - 128 - 16, aWindow.ClientBounds.Height - 48 - 16),
+                    new Point(128, 48),
                     new Button.OnClick(() => Button.Back(aGame, aWindow)),
-                    "MENU");
+                    "MENU", 0.6f);
         }
 
         public override void Update(GameWindow aWindow, GameTime aGameTime)

@@ -9,11 +9,13 @@ namespace Super_Mario
         private Rectangle myOffset;
         private OnClick myIsClicked; //Uncertain about naming
         private string myDisplayText;
+        private float myTextSize;
 
-        public Button(Vector2 aPosition, Point aSize, OnClick aClickFunction, string aDisplayText) : base(aPosition, aSize)
+        public Button(Vector2 aPosition, Point aSize, OnClick aClickFunction, string aDisplayText, float aTextSize) : base(aPosition, aSize)
         {
             this.myIsClicked = aClickFunction;
             this.myDisplayText = aDisplayText;
+            this.myTextSize = aTextSize;
 
             this.myOffset = new Rectangle(
                 (int)aPosition.X - (aSize.X / 96),
@@ -45,7 +47,7 @@ namespace Super_Mario
                 myBoundingBox.Width, myBoundingBox.Height);
 
             aSpriteBatch.Draw(myTexture, tempDrawRect, null, Color.White);
-            StringManager.DrawStringMid(aSpriteBatch, my8bitFont, myDisplayText, tempDrawRect.Center.ToVector2(), Color.Black, 1.1f);
+            StringManager.DrawStringMid(aSpriteBatch, my8bitFont, myDisplayText, tempDrawRect.Center.ToVector2(), Color.Black, myTextSize);
         }
 
         public bool IsClicked()

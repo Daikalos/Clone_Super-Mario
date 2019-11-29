@@ -34,9 +34,10 @@ namespace Super_Mario
             ResourceManager.Initialize();
 
             GameInfo.Initialize(Window, 0.5f);
-            GameInfo.CurrentLevel = 1;
             GameInfo.FolderLevels = "../../../../Levels/";
             GameInfo.FolderHighScores = "../../../../HighScores/";
+            GameInfo.CurrentLevel = 1;
+            GameInfo.LoadHighScore(GameInfo.FolderHighScores + "HighScore_Level01");
 
             myGameState = new MenuState(this, Window);
 

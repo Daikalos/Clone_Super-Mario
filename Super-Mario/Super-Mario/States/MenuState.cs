@@ -22,22 +22,22 @@ namespace Super_Mario
                     new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 - 90), 
                     new Point(452, 64),
                     new Button.OnClick(() => Button.Play(aGame, aWindow)),
-                    "PLAY"),
+                    "PLAY", 1.1f),
                 new Button(
                     new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 - 10),
                     new Point(452, 64),
                     new Button.OnClick(() => Button.Editor(aGame, aWindow)),
-                    "EDITOR"),
+                    "EDITOR", 1.1f),
                 new Button(
                     new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 + 70),
                     new Point(452, 64),
                     new Button.OnClick(() => Button.Leaderboard(aGame)),
-                    "LEADERBOARD"),
+                    "LEADERBOARD", 1.1f),
                 new Button(
                     new Vector2((aWindow.ClientBounds.Width / 2) - 226, (aWindow.ClientBounds.Height / 2) - 32 + 150),
                     new Point(452, 64),
                     new Button.OnClick(() => Button.Exit(aGame)),
-                    "EXIT"),
+                    "EXIT", 1.1f),
             };
         }
 

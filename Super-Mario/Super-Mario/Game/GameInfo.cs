@@ -109,7 +109,8 @@ namespace Super_Mario
 
         public static void Draw(SpriteBatch aSpriteBatch, GameWindow aWindow, SpriteFont aFont, Player aPlayer)
         {
-            StringManager.DrawStringLeft(aSpriteBatch, aFont, "Score: " + myScore.ToString(), new Vector2(Camera.Position.X + 32, 32), Color.Black, 0.8f);
+            StringManager.DrawStringLeft(aSpriteBatch, aFont, "HighScore: " + HighScore.ToString(), new Vector2(Camera.Position.X + 32, 32), Color.Black, 0.5f);
+            StringManager.DrawStringLeft(aSpriteBatch, aFont, "Score: " + myScore.ToString(), new Vector2(Camera.Position.X + 32, 64), Color.Black, 0.5f);
 
             if (myDSTimer >= 0)
             {

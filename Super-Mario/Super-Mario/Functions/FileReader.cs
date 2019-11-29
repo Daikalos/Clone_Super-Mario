@@ -53,6 +53,7 @@ namespace Super_Mario
                 for (int i = 0; i < tempFiles.Length; i++)
                 {
                     tempFileNames[i] = tempFiles[i].Name;
+                    tempFileNames[i] = tempFileNames[i].Replace(".txt", "");
                 }
 
                 return tempFileNames;

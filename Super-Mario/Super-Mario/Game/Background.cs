@@ -6,11 +6,15 @@ namespace Super_Mario
 {
     static class Background
     {
-        private static Texture2D myTexture;
-        private static Rectangle myBoundingBox;
-        private static Vector2 myPosition;
-        private static Vector2 myScrollPosition;
-        private static Point mySize;
+        private static Texture2D 
+            myTexture;
+        private static Rectangle 
+            myBoundingBox;
+        private static Vector2
+            myPosition,
+            myScrollPosition;
+        private static Point 
+            mySize;
 
         public static void Update()
         {

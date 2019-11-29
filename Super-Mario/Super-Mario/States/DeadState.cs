@@ -6,7 +6,7 @@ namespace Super_Mario
 {
     class DeadState : State
     {
-        SpriteFont my8bitFont;
+        private SpriteFont my8bitFont;
 
         public DeadState(MainGame aGame) : base(aGame)
         {

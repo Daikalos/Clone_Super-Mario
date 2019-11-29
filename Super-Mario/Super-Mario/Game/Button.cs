@@ -5,11 +5,21 @@ namespace Super_Mario
 {
     class Button : StaticObject
     {
-        private SpriteFont my8bitFont;
-        private Rectangle myOffset;
-        private OnClick myIsClicked; //Uncertain about naming
-        private string myDisplayText;
-        private float myTextSize;
+        private SpriteFont 
+            my8bitFont;
+        private Rectangle 
+            myOffset;
+        private OnClick 
+            myIsClicked; //Uncertain about naming
+        private string 
+            myDisplayText;
+        private float 
+            myTextSize;
+
+        public string DisplayText
+        {
+            get => myDisplayText;
+        }
 
         public Button(Vector2 aPosition, Point aSize, OnClick aClickFunction, string aDisplayText, float aTextSize) : base(aPosition, aSize)
         {
@@ -30,10 +40,7 @@ namespace Super_Mario
 
             if (IsClicked())
             {
-                if (myIsClicked != null)
-                {
-                    myIsClicked();
-                }
+                myIsClicked?.Invoke();
             }
             if (IsHold())
             {
@@ -63,10 +70,6 @@ namespace Super_Mario
 
         public delegate void OnClick();
 
-        public static void Play(MainGame aGame, GameWindow aWindow)
-        {
-            aGame.ChangeState(new PlayState(aGame, aWindow));
-        }
         public static void Back(MainGame aGame, GameWindow aWindow)
         {
             aGame.ChangeState(new MenuState(aGame, aWindow));

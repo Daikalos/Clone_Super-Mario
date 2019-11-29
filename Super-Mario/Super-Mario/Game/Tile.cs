@@ -6,10 +6,12 @@ namespace Super_Mario
 {
     class Tile : StaticObject
     {
-        private List<Tile> myHistory; //Used for pathfinding
-
-        private char myTileType;
-        private int myTileForm;
+        private List<Tile> 
+            myHistory; //Used for pathfinding
+        private char 
+            myTileType;
+        private int 
+            myTileForm;
 
         public List<Tile> History
         {

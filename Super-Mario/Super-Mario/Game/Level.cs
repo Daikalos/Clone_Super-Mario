@@ -9,9 +9,10 @@ namespace Super_Mario
 {
     static class Level
     {
-        private static Tile[,] myTiles;
-
-        private static Vector2 myPlayerSpawn;
+        private static Tile[,] 
+            myTiles;
+        private static Vector2 
+            myPlayerSpawn;
         private static Point
             myTileSize,
             myMapSize;

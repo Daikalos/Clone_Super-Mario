@@ -6,7 +6,7 @@ namespace Super_Mario
 {
     class WinState : State
     {
-        SpriteFont my8bitFont;
+        private SpriteFont my8bitFont;
 
         public WinState(MainGame aGame) : base(aGame)
         {

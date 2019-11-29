@@ -13,10 +13,13 @@ namespace Super_Mario
             isDead
         }
 
-        private AnimationManager myWalkingAnimation;
+        private AnimationManager 
+            myWalkingAnimation;
 
-        private PlayerState myPlayerState;
-        private SpriteEffects myFlipSprite;
+        private PlayerState 
+            myPlayerState;
+        private SpriteEffects 
+            myFlipSprite;
 
         float myJumpHeight;
         bool myIsMoving;

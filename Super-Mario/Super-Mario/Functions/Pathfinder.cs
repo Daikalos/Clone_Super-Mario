@@ -12,8 +12,8 @@ namespace Super_Mario
             List<Tile> tempVisited = new List<Tile>();
             Queue<Tile> tempWork = new Queue<Tile>();
 
-            Tile tempStart = Level.GetTileAtPos(aStart).Item1;
-            Tile tempGoal = Level.GetClosestTile(aGoal);
+            Tile tempStart = Level.TileAtPos(aStart).Item1;
+            Tile tempGoal = Level.ClosestTile(aGoal);
 
             tempStart.History = new List<Tile>();
             tempVisited.Add(tempStart);
@@ -32,7 +32,7 @@ namespace Super_Mario
                 {
                     for (int x = -1; x <= 1; x += 2)
                     {
-                        Tuple<Tile, bool> tempCheckTile = Level.GetTileAtPos(new Vector2(tempCurrent.GetCenter().X + x * Level.TileSize.X, tempCurrent.GetCenter().Y));
+                        Tuple<Tile, bool> tempCheckTile = Level.TileAtPos(new Vector2(tempCurrent.GetCenter().X + x * Level.TileSize.X, tempCurrent.GetCenter().Y));
                         if (tempCheckTile.Item2)
                         {
                             if (tempCheckTile.Item1.TileType != '#')
@@ -50,7 +50,7 @@ namespace Super_Mario
                     }
                     for (int y = -1; y <= 1; y += 2)
                     {
-                        Tuple<Tile, bool> tempCheckTile = Level.GetTileAtPos(new Vector2(tempCurrent.GetCenter().X, tempCurrent.GetCenter().Y + y * Level.TileSize.Y));
+                        Tuple<Tile, bool> tempCheckTile = Level.TileAtPos(new Vector2(tempCurrent.GetCenter().X, tempCurrent.GetCenter().Y + y * Level.TileSize.Y));
                         if (tempCheckTile.Item2)
                         {
                             if (tempCheckTile.Item1.TileType != '#')

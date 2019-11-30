@@ -53,10 +53,17 @@ namespace Super_Mario
             ResourceManager.AddTexture("Grass-00", this.Content.Load<Texture2D>("Tileset/tile-grass-00"));
             ResourceManager.AddTexture("Grass-01", this.Content.Load<Texture2D>("Tileset/tile-grass-01"));
             ResourceManager.AddTexture("Flag", this.Content.Load<Texture2D>("Tileset/flag"));
+            ResourceManager.AddTexture("Ladder", this.Content.Load<Texture2D>("Tileset/ladder"));
 
             ResourceManager.AddTexture("Mario_Walking", this.Content.Load<Texture2D>("Sprites/mario_walking"));
             ResourceManager.AddTexture("Mario_Jumping", this.Content.Load<Texture2D>("Sprites/mario_jumping"));
+            ResourceManager.AddTexture("Mario_Climbing", this.Content.Load<Texture2D>("Sprites/mario_climbing"));
             ResourceManager.AddTexture("Mario_Idle", this.Content.Load<Texture2D>("Sprites/mario_idle"));
+
+            ResourceManager.AddTexture("Goomba_Walking", this.Content.Load<Texture2D>("Sprites/goomba_walking"));
+            ResourceManager.AddTexture("Goomba_Death", this.Content.Load<Texture2D>("Sprites/goomba_death"));
+            ResourceManager.AddTexture("Goomba_Editor", this.Content.Load<Texture2D>("Tileset/goomba_editor"));
+
             ResourceManager.AddTexture("Border", this.Content.Load<Texture2D>("Sprites/border"));
             ResourceManager.AddTexture("Background", this.Content.Load<Texture2D>("Sprites/background"));
 

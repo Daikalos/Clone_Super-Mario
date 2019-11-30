@@ -7,12 +7,13 @@ namespace Super_Mario
     {
         protected float 
             mySpeed,
+            myCurrentSpeed,
             myVelocity,
             myGravity;
 
-        public float Speed
+        public float CurrentSpeed
         {
-            get => mySpeed;
+            get => myCurrentSpeed;
         }
         
         public DynamicObject(Vector2 aPosition, Point aSize, float aSpeed, float aGravity) : base(aPosition, aSize)

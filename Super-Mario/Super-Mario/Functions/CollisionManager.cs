@@ -31,22 +31,22 @@ namespace Super_Mario
                 aRectangle1.Left < aRectangle2.Right;
         }
 
-        public static bool CheckLeft(Rectangle aRectangle1, Rectangle aRectangle2, float aSpeed)
+        public static bool CheckLeft(Rectangle aRectangle1, Rectangle aRectangle2, Vector2 aVelocity)
         {
             return
-                aRectangle1.Left - aSpeed < aRectangle2.Right &&
+                aRectangle1.Left - aVelocity.X < aRectangle2.Right &&
                 aRectangle1.Right > aRectangle2.Left &&
-                aRectangle1.Bottom > aRectangle2.Top &&
-                aRectangle1.Top < aRectangle2.Bottom;
+                aRectangle1.Bottom - aVelocity.Y > aRectangle2.Top &&
+                aRectangle1.Top + aVelocity.Y < aRectangle2.Bottom;
         }
 
-        public static bool CheckRight(Rectangle aRectangle1, Rectangle aRectangle2, float aSpeed)
+        public static bool CheckRight(Rectangle aRectangle1, Rectangle aRectangle2, Vector2 aVelocity)
         {
             return
-                aRectangle1.Right + aSpeed > aRectangle2.Left &&
+                aRectangle1.Right + aVelocity.X > aRectangle2.Left &&
                 aRectangle1.Left < aRectangle2.Left &&
-                aRectangle1.Bottom > aRectangle2.Top &&
-                aRectangle1.Top < aRectangle2.Bottom;
+                aRectangle1.Bottom - aVelocity.Y > aRectangle2.Top &&
+                aRectangle1.Top + aVelocity.Y < aRectangle2.Bottom;
         }
     }
 }

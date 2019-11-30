@@ -12,6 +12,10 @@ namespace Super_Mario
 
         public PlayState(MainGame aGame, GameWindow aWindow) : base(aGame)
         {
+            myGame.IsMouseVisible = false;
+
+            EnemyManager.Initialize();
+
             Level.LoadLevel(new Point(32), GameInfo.LevelName());
 
             Background.Reset();
@@ -30,6 +34,7 @@ namespace Super_Mario
             {
                 Level.Update();
                 Camera.FollowObject(aWindow, aGameTime, myPlayer);
+                EnemyManager.Update(aGameTime);
                 myPlayer.Update(aWindow, aGameTime);
 
                 if (myPlayer.CollisionFlag())
@@ -46,6 +51,7 @@ namespace Super_Mario
             if (KeyMouseReader.KeyPressed(Keys.Escape))
             {
                 GameInfo.IsPaused = !GameInfo.IsPaused;
+                myGame.IsMouseVisible = !myGame.IsMouseVisible;
             }
         }
 
@@ -57,6 +63,7 @@ namespace Super_Mario
                 null, null, null, null, Camera.TranslationMatrix);
 
             Level.DrawTiles(aSpriteBatch);
+            EnemyManager.Draw(aSpriteBatch, aGameTime);
             myPlayer.Draw(aSpriteBatch, aGameTime);
             GameInfo.Draw(aSpriteBatch, aWindow, my8bitFont, myPlayer);
 
@@ -73,6 +80,7 @@ namespace Super_Mario
             my8bitFont = ResourceManager.RequestFont("8-bit");
 
             Level.SetTileTexture();
+            EnemyManager.SetTexture();
             myPlayer.SetTexture("Mario_Idle");
             myBackButton.LoadContent();
         }

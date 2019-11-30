@@ -64,6 +64,9 @@ namespace Super_Mario
                 case '*':
                     myTexture = ResourceManager.RequestTexture("Flag");
                     break;
+                case '%':
+                    myTexture = ResourceManager.RequestTexture("Ladder");
+                    break;
                 case '#':
                     myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());
                     break;
@@ -82,6 +85,12 @@ namespace Super_Mario
                     break;
                 case '?':
                     myTexture = ResourceManager.RequestTexture("Mario_Idle");
+                    break;
+                case '%':
+                    myTexture = ResourceManager.RequestTexture("Ladder");
+                    break;
+                case '&':
+                    myTexture = ResourceManager.RequestTexture("Goomba_Editor");
                     break;
                 case '#':
                     myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());

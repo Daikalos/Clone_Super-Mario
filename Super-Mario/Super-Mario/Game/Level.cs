@@ -35,7 +35,7 @@ namespace Super_Mario
             get => myTiles;
         }
 
-        public static Tuple<Tile, bool> GetTileAtPos(Vector2 aPos)
+        public static Tuple<Tile, bool> TileAtPos(Vector2 aPos)
         {
             if (aPos.X > 0 && aPos.Y > 0)
             {
@@ -60,7 +60,7 @@ namespace Super_Mario
             for (int x = 0; x < (aObject.Size.X / Level.TileSize.X) + 2; x++)
             {
                 tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y - tempOffset.Y);
-                tempTile = GetTileAtPos(tempPosition);
+                tempTile = TileAtPos(tempPosition);
 
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
                 {
@@ -68,7 +68,7 @@ namespace Super_Mario
                 }
 
                 tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y + Level.TileSize.Y + tempOffset.Y);
-                tempTile = GetTileAtPos(tempPosition);
+                tempTile = TileAtPos(tempPosition);
 
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
                 {
@@ -79,7 +79,7 @@ namespace Super_Mario
             for (int y = 0; y < (aObject.Size.Y / Level.TileSize.Y) + 2; y++)
             {
                 tempPosition = new Vector2(aObject.BoundingBox.Center.X - Level.TileSize.X - tempOffset.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y + (Level.TileSize.Y * y) - tempOffset.Y);
-                tempTile = GetTileAtPos(tempPosition);
+                tempTile = TileAtPos(tempPosition);
 
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
                 {
@@ -87,7 +87,7 @@ namespace Super_Mario
                 }
 
                 tempPosition = new Vector2(aObject.BoundingBox.Center.X + Level.TileSize.X + tempOffset.X, aObject.BoundingBox.Center.Y - Level.TileSize.Y + (Level.TileSize.Y * y) - tempOffset.Y);
-                tempTile = GetTileAtPos(tempPosition);
+                tempTile = TileAtPos(tempPosition);
 
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
                 {
@@ -110,7 +110,7 @@ namespace Super_Mario
             for (int x = 0; x < (aObject.Size.X / Level.TileSize.X); x++)
             {
                 tempPosition = new Vector2(aObject.BoundingBox.Center.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y - tempOffset.Y);
-                tempTile = GetTileAtPos(tempPosition);
+                tempTile = TileAtPos(tempPosition);
 
                 if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
                 {
@@ -120,7 +120,7 @@ namespace Super_Mario
                 for (int y = 0; y < (aObject.Size.Y / Level.TileSize.Y); y++)
                 {
                     tempPosition = new Vector2(aObject.BoundingBox.Center.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y + (Level.TileSize.Y * y) - tempOffset.Y);
-                    tempTile = GetTileAtPos(tempPosition);
+                    tempTile = TileAtPos(tempPosition);
 
                     if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
                     {
@@ -131,7 +131,7 @@ namespace Super_Mario
 
             return tempTiles;
         }
-        public static Tile GetClosestTile(Vector2 aPos)
+        public static Tile ClosestTile(Vector2 aPos)
         {
             Tile tempClosest = null;
             float tempMinDistance = float.MaxValue;
@@ -176,7 +176,7 @@ namespace Super_Mario
             }
         }
 
-        public static void LoadLevel(Point aTileSize, string aLevelName)
+        public static bool LoadLevel(Point aTileSize, string aLevelName)
         {
             if (File.Exists(GameInfo.FolderLevels + aLevelName + ".txt"))
             {
@@ -197,9 +197,14 @@ namespace Super_Mario
                             myTileSize);
                         myTiles[x, y].TileType = myLevelBuilder[y][x];
 
-                        if (myTiles[x, y].TileType == '?')
+                        switch(myTiles[x, y].TileType)
                         {
-                            myPlayerSpawn = myTiles[x, y].Position;
+                            case '?':
+                                myPlayerSpawn = myTiles[x, y].Position;
+                                break;
+                            case '&':
+                                EnemyManager.AddPatrolEnemy(myTiles[x, y].Position);
+                                break;
                         }
                     }
                 }
@@ -207,40 +212,14 @@ namespace Super_Mario
                 myMapSize = new Point(
                     myTiles.GetLength(0) * myTileSize.X,
                     myTiles.GetLength(1) * myTileSize.Y);
+
+                return true;
             }
-            else //Create custom level
-            {
-                myTileSize = aTileSize;
-
-                int tempSizeX = 128;
-                int tempSizeY = 32;
-
-                myTiles = new Tile[tempSizeX, tempSizeY];
-
-                for (int x = 0; x < tempSizeX; x++)
-                {
-                    for (int y = 0; y < tempSizeY; y++)
-                    {
-                        myTiles[x, y] = new Tile(
-                            new Vector2(x * myTileSize.X, y * myTileSize.Y),
-                            myTileSize);
-                        myTiles[x, y].TileType = '-';
-
-                        if (myTiles[x, y].TileType == '?')
-                        {
-                            myPlayerSpawn = myTiles[x, y].Position;
-                        }
-                    }
-                }
-
-                myMapSize = new Point(
-                myTiles.GetLength(0) * myTileSize.X,
-                myTiles.GetLength(1) * myTileSize.Y);
-            }
+            return false;
         }
         public static void SaveLevel(string aLevelName, char[,] aLevel)
         {
-            string tempPathLevels = GameInfo.FolderLevels + aLevelName;
+            string tempPathLevels = GameInfo.FolderLevels + aLevelName + ".txt";
 
             string tempName = aLevelName;
             tempName = tempName.Replace(".txt", "");
@@ -251,8 +230,15 @@ namespace Super_Mario
             {
                 File.Delete(tempPathLevels);
             }
+            if (File.Exists(tempPathHighScores))
+            {
+                File.Delete(tempPathHighScores);
+            }
 
             FileStream tempFS = File.Create(tempPathLevels);
+            tempFS.Close();
+
+            tempFS = File.Create(tempPathHighScores);
             tempFS.Close();
 
             for (int i = 0; i < aLevel.GetLength(1); i++)

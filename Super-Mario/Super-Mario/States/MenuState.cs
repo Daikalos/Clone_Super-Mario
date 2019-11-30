@@ -2,16 +2,19 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Super_Mario
 {
     class MenuState : State
     {
-        private SpriteFont my8bitFont;
-        private Button[] myButtons;
-        private Button[] myLevels;
-        private string[] myLevelNames;
-        private bool myLoadLevel;
+        private SpriteFont 
+            my8bitFont;
+        private Button[] 
+            myButtons,
+            myLevels;
+        private bool 
+            myLoadLevel;
 
         public MenuState(MainGame aGame, GameWindow aWindow) : base(aGame)
         {
@@ -53,41 +56,16 @@ namespace Super_Mario
             {
                 Array.ForEach(myButtons, b => b.Update());
 
-                if (myButtons[0].IsClicked())
-                {
-                    myLoadLevel = true;
-                    myLevelNames = FileReader.FindFileNames("../../../../Levels/");
-
-                    myLevels = new Button[myLevelNames.Length];
-
-                    for (int i = 0; i < myLevels.Length; i++)
-                    {
-                        myLevels[i] = new Button(new Vector2((aWindow.ClientBounds.Width / 2) - 113, (aWindow.ClientBounds.Height / 2) - 64 - 90 + (i * 40)), 
-                            new Point(226, 32), null, myLevelNames[i], 0.4f);
-                        myLevels[i].LoadContent();
-                    }
-                }
+                Play(aWindow);
             }
             else
             {
-                foreach (Button button in myLevels)
+                LoadLevel(aWindow);
+
+                if (KeyMouseReader.KeyPressed(Keys.Back))
                 {
-                    button.Update();
-                    if (button.IsClicked())
-                    {
-                        string tempLevel = button.DisplayText;
-                        tempLevel = tempLevel.Replace("Level", "");
-                        int tempLoadLevel;
-
-                        if (Int32.TryParse(tempLevel, out tempLoadLevel))
-                        {
-                            GameInfo.CurrentLevel = tempLoadLevel;
-                            myGame.ChangeState(new PlayState(myGame, aWindow));
-                        }
-
-                        myLoadLevel = false;
-                        myLevels = null;
-                    }
+                    myLoadLevel = false;
+                    myLevels = null;
                 }
             }
         }
@@ -104,6 +82,48 @@ namespace Super_Mario
             else
             {
                 Array.ForEach(myLevels, b => b.Draw(aSpriteBatch));
+                StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press return to go back to menu", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black, 0.4f);
+            }
+        }
+
+        private void Play(GameWindow aWindow)
+        {
+            if (myButtons[0].IsClicked())
+            {
+                myLoadLevel = true;
+                string[] tempLevelNames = FileReader.FindFileNames(GameInfo.FolderLevels);
+
+                myLevels = new Button[tempLevelNames.Length];
+
+                for (int i = 0; i < myLevels.Length; i++)
+                {
+                    myLevels[i] = new Button(new Vector2((aWindow.ClientBounds.Width / 2) - 113, (aWindow.ClientBounds.Height / 2) - 64 - 90 + (i * 40)),
+                        new Point(226, 32), null, tempLevelNames[i], 0.4f);
+                    myLevels[i].LoadContent();
+                }
+            }
+        }
+
+        private void LoadLevel(GameWindow aWindow)
+        {
+            foreach (Button button in myLevels)
+            {
+                button.Update();
+                if (button.IsClicked())
+                {
+                    string tempLevel = button.DisplayText;
+                    tempLevel = tempLevel.Replace("Level", "");
+                    int tempLoadLevel;
+
+                    if (Int32.TryParse(tempLevel, out tempLoadLevel))
+                    {
+                        GameInfo.CurrentLevel = tempLoadLevel;
+                        myGame.ChangeState(new PlayState(myGame, aWindow));
+                    }
+
+                    myLoadLevel = false;
+                    myLevels = null;
+                }
             }
         }
 

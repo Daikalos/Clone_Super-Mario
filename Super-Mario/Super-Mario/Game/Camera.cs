@@ -40,11 +40,11 @@ namespace Super_Mario
         {
             if (aObject.Position.X - (aWindow.ClientBounds.Width / 8) < myPosition.X)
             {
-                MoveCamera(aWindow, aGameTime, -aObject.Speed);
+                MoveCamera(aWindow, aGameTime, -aObject.CurrentSpeed);
             }
             if (aObject.Position.X + aObject.Size.X + (aWindow.ClientBounds.Width / 4) > myPosition.X + aWindow.ClientBounds.Width)
             {
-                MoveCamera(aWindow, aGameTime, aObject.Speed);
+                MoveCamera(aWindow, aGameTime, aObject.CurrentSpeed);
             }
         }
 

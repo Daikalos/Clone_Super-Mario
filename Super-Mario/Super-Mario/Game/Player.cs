@@ -18,12 +18,8 @@ namespace Super_Mario
         private AnimationManager 
             myWalkingAnimation,
             myClimbingAnimation;
-
-        private PlayerState 
-            myPlayerState;
-        private SpriteEffects 
-            myFlipSprite;
-
+        private PlayerState myPlayerState;
+        private SpriteEffects myFlipSprite;
         float myJumpHeight;
         bool 
             myIsMoving,

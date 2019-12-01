@@ -5,7 +5,7 @@ namespace Super_Mario
     static class FileReader
     {
         /// <summary>
-        /// Quickly finds all instances of specified information inside a text document
+        /// Returns all instances of specified information inside a text document
         /// </summary>
         public static string[] FindInfo(string aPath, string aName, char aSeperator)
         {
@@ -42,6 +42,9 @@ namespace Super_Mario
             return new string[0];
         }
 
+        /// <summary>
+        /// Returns all file names within a specified folder
+        /// <returns></returns>
         public static string[] FindFileNames(string aPath)
         {
             DirectoryInfo tempInfo = new DirectoryInfo(aPath);

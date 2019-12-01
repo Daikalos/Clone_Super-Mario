@@ -5,16 +5,11 @@ namespace Super_Mario
 {
     class Button : StaticObject
     {
-        private SpriteFont 
-            my8bitFont;
-        private Rectangle 
-            myOffset;
-        private OnClick 
-            myIsClicked; //Uncertain about naming
-        private string 
-            myDisplayText;
-        private float 
-            myTextSize;
+        private SpriteFont my8bitFont;
+        private Rectangle myOffset;
+        private OnClick myIsClicked; //Uncertain about naming
+        private string myDisplayText;
+        private float myTextSize;
 
         public string DisplayText
         {

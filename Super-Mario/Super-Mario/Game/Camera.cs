@@ -6,8 +6,7 @@ namespace Super_Mario
 {
     static class Camera
     {
-        private static Vector2 
-            myPosition;
+        private static Vector2 myPosition;
 
         public static Vector2 Position
         {

@@ -6,16 +6,12 @@ namespace Super_Mario
     internal class AnimationManager
     {
         //Animation-Info
-        private int myCurrentFrame;
-
         private Point myCurrentFramePos;
-        private bool myIsFinished;
         private float myTimer;
-
-        //Texture-Info
-        private Point
-            myFrameAmount;
-
+        private int myCurrentFrame;
+        private bool myIsFinished;
+        //Sprite-Info
+        private Point myFrameAmount;
         private float myAnimationSpeed;
         private bool myIsLoop;
 

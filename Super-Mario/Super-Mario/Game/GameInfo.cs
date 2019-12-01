@@ -8,13 +8,11 @@ namespace Super_Mario
 {
     static class GameInfo
     {
-        private static Vector2 
-            myDrawPos;
+        private static Vector2 myDrawPos;
         private static string
             myFolderLevels,
             myFolderHighScores;
-        private static int[] 
-            myHighScores;
+        private static int[] myHighScores;
         private static int
             myScore,
             myCurrentLevel,
@@ -22,8 +20,7 @@ namespace Super_Mario
         private static float
             myDSTimer,
             myDSDelay;
-        private static bool
-            myIsPaused;
+        private static bool myIsPaused;
 
         public static Vector2 DrawPos
         {

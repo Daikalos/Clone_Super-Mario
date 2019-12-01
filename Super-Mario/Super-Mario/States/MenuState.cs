@@ -8,13 +8,11 @@ namespace Super_Mario
 {
     class MenuState : State
     {
-        private SpriteFont 
-            my8bitFont;
+        private SpriteFont my8bitFont;
         private Button[] 
             myButtons,
             myLevels;
-        private bool 
-            myLoadLevel;
+        private bool myLoadLevel;
 
         public MenuState(MainGame aGame, GameWindow aWindow) : base(aGame)
         {

@@ -1,0 +1,2 @@
+HighScore=300
+HighScore=100

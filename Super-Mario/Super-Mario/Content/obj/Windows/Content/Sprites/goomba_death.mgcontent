@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/goomba_death.png</SourceFile>
-  <SourceTime>2019-11-30T15:12:57.9521069+01:00</SourceTime>
-  <DestFile>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Sprites/goomba_death.xnb</DestFile>
-  <DestTime>2019-11-30T15:29:08.0409981+01:00</DestTime>
+  <SourceFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/goomba_death.png</SourceFile>
+  <SourceTime>2019-12-02T12:46:57.9765585+01:00</SourceTime>
+  <DestFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Sprites/goomba_death.xnb</DestFile>
+  <DestTime>2019-12-02T13:01:17.9076945+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

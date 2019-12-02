@@ -78,9 +78,11 @@ namespace Super_Mario
             myDSTimer = 0;
         }
 
-        public static void LoadHighScore(string aPath)
+        public static void LoadHighScore(string aLevelName)
         {
-            string[] tempScores = FileReader.FindInfo(aPath, "HighScore", '=');
+            string tempPath = GameInfo.FolderHighScores + aLevelName + "_HighScores.txt";
+
+            string[] tempScores = FileReader.FindInfo(tempPath, "HighScore", '=');
             myHighScores = Array.ConvertAll(tempScores, s => Int32.Parse(s));
 
             if (myHighScores.Length == 0)
@@ -91,9 +93,21 @@ namespace Super_Mario
             Array.Sort(myHighScores);
             Array.Reverse(myHighScores);
         }
-        public static void SaveHighScore(string aPath)
+        public static void SaveHighScore(string aLevelName)
         {
+            string tempPath = GameInfo.FolderHighScores + aLevelName + "_HighScores.txt";
 
+            if (myHighScores.Length > 0)
+            {
+                if (myHighScores[0] != 0)
+                {
+                    File.AppendAllText(tempPath, Environment.NewLine + "HighScore=" + myScore.ToString());
+                }
+                else
+                {
+                    File.AppendAllText(tempPath, "HighScore=" + myScore.ToString());
+                }
+            }
         }
 
         public static void Update(GameTime aGameTime)
@@ -106,13 +120,14 @@ namespace Super_Mario
 
         public static void Draw(SpriteBatch aSpriteBatch, GameWindow aWindow, SpriteFont aFont, Player aPlayer)
         {
-            StringManager.DrawStringLeft(aSpriteBatch, aFont, "HighScore: " + HighScore.ToString(), new Vector2(Camera.Position.X + 32, 32), Color.Black, 0.5f);
+            StringManager.DrawStringLeft(aSpriteBatch, aFont, "Lives: " + aPlayer.Lives, new Vector2(Camera.Position.X + 32, 32), Color.Black, 0.5f);
             StringManager.DrawStringLeft(aSpriteBatch, aFont, "Score: " + myScore.ToString(), new Vector2(Camera.Position.X + 32, 64), Color.Black, 0.5f);
+            StringManager.DrawStringMid(aSpriteBatch, aFont, "HighScore: " + HighScore.ToString(), new Vector2(Camera.Position.X + (aWindow.ClientBounds.Width / 2), 32), Color.Black, 0.5f);
+            StringManager.DrawStringRight(aSpriteBatch, aFont, LevelName(), new Vector2(Camera.Position.X + (aWindow.ClientBounds.Width - 32), 32), Color.Black, 0.5f);
 
             if (myDSTimer >= 0)
             {
-                StringManager.DrawStringMid(aSpriteBatch, aFont, myDrawScore.ToString(), 
-                    new Vector2(Camera.Position.X + myDrawPos.X, myDrawPos.Y), Color.White, 0.3f);
+                StringManager.DrawStringMid(aSpriteBatch, aFont, myDrawScore.ToString(), myDrawPos, Color.White, 0.3f);
             }
         }
 

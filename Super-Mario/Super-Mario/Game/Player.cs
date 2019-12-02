@@ -20,13 +20,22 @@ namespace Super_Mario
             myClimbingAnimation;
         private PlayerState myPlayerState;
         private SpriteEffects myFlipSprite;
-        float myJumpHeight;
-        bool 
+        private int myLives;
+        private float 
+            myJumpHeight;
+        private bool 
             myIsMoving,
-            myIsClimbing;
+            myIsClimbing,
+            myIsInvincible;
 
-        public Player(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aJumpHeight) : base(aPosition, aSize, aSpeed, aGravity)
+        public int Lives
         {
+            get => myLives;
+        }
+
+        public Player(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, int someLives, float aJumpHeight) : base(aPosition, aSize, aSpeed, aGravity)
+        {
+            this.myLives = someLives;
             this.myJumpHeight = aJumpHeight;
 
             this.myWalkingAnimation = new AnimationManager(new Point(3, 1), 0.1f, true);
@@ -104,7 +113,7 @@ namespace Super_Mario
             IsFalling();
             CollisionBlock(aGameTime);
             CollisionLadder();
-            CollisionEnemy();
+            CollisionEnemy(aGameTime);
         }
         private void IsFalling()
         {
@@ -182,11 +191,44 @@ namespace Super_Mario
                 }
             }
         }
-        private void CollisionEnemy()
+        private void CollisionEnemy(GameTime aGameTime)
         {
             foreach (Enemy enemy in EnemyManager.Enemies)
             {
+                float tempVelocity = myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                float tempSpeed = mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
 
+                if (CollisionManager.CheckBelow(myBoundingBox, enemy.BoundingBox, tempVelocity) && tempVelocity > 0)
+                {
+                    enemy.IsAlive = false;
+                    myVelocity = myJumpHeight;
+
+                    GameInfo.AddScore(enemy.BoundingBox.Center.ToVector2(), 100);
+
+                    break;
+                }
+                else
+                {
+                    if (CollisionManager.CheckAbove(myBoundingBox, enemy.BoundingBox, tempVelocity) && tempVelocity < 0)
+                    {
+                        enemy.IsAlive = false;
+                    }
+                    else if (CollisionManager.CheckLeft(myBoundingBox, enemy.BoundingBox, new Vector2(0, -tempVelocity)))
+                    {
+                        enemy.IsAlive = false;
+                    }
+                    else if (CollisionManager.CheckRight(myBoundingBox, enemy.BoundingBox, new Vector2(0, -tempVelocity)))
+                    {
+                        enemy.IsAlive = false;
+                    }
+
+                    if (!enemy.IsAlive)
+                    {
+                        myLives--;
+
+                        break;
+                    }
+                }
             }
         }
         public bool CollisionFlag()

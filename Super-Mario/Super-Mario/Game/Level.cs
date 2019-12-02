@@ -217,23 +217,23 @@ namespace Super_Mario
         }
         public static void SaveLevel(string aLevelName, char[,] aLevel)
         {
-            string tempPathLevels = GameInfo.FolderLevels + aLevelName + ".txt";
+            string tempPathLevel = GameInfo.FolderLevels + aLevelName + ".txt";
 
             string tempName = aLevelName;
             tempName = tempName.Replace(".txt", "");
 
             string tempPathHighScores = GameInfo.FolderHighScores + tempName + "_HighScores.txt";
 
-            if (File.Exists(tempPathLevels))
+            if (File.Exists(tempPathLevel))
             {
-                File.Delete(tempPathLevels);
+                File.Delete(tempPathLevel);
             }
             if (File.Exists(tempPathHighScores))
             {
                 File.Delete(tempPathHighScores);
             }
 
-            FileStream tempFS = File.Create(tempPathLevels);
+            FileStream tempFS = File.Create(tempPathLevel);
             tempFS.Close();
 
             tempFS = File.Create(tempPathHighScores);
@@ -248,8 +248,26 @@ namespace Super_Mario
                     tempLevel += aLevel[j, i].ToString();
                 }
 
-                File.AppendAllText(tempPathLevels, tempLevel);
-                File.AppendAllText(tempPathLevels, Environment.NewLine);
+                File.AppendAllText(tempPathLevel, tempLevel);
+                File.AppendAllText(tempPathLevel, Environment.NewLine);
+            }
+        }
+        public static void DeleteLevel(string aLevelName)
+        {
+            string tempPathLevel = GameInfo.FolderLevels + aLevelName + ".txt";
+
+            string tempName = aLevelName;
+            tempName = tempName.Replace(".txt", "");
+
+            string tempPathHighScores = GameInfo.FolderHighScores + tempName + "_HighScores.txt";
+
+            if (File.Exists(tempPathLevel))
+            {
+                File.Delete(tempPathLevel);
+            }
+            if (File.Exists(tempPathHighScores))
+            {
+                File.Delete(tempPathHighScores);
             }
         }
 

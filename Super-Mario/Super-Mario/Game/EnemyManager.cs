@@ -23,6 +23,10 @@ namespace Super_Mario
             for (int i = myEnemies.Count - 1; i >= 0; i--)
             {
                 myEnemies[i].Update(aGameTime);
+                if (!myEnemies[i].IsAlive)
+                {
+                    myEnemies.RemoveAt(i);
+                }
             }
         }
 

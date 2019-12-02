@@ -58,7 +58,7 @@ namespace Super_Mario
                     string tempName = myLevelNames[mySelection];
                     tempName = tempName.Replace(".txt", "");
 
-                    GameInfo.LoadHighScore(GameInfo.FolderHighScores + tempName + "_HighScores.txt");
+                    GameInfo.LoadHighScore(tempName);
                 }
             }
         }
@@ -67,9 +67,9 @@ namespace Super_Mario
         {
             StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, ">",
                 new Vector2(60, 110 + (40 * mySelection)),
-                Color.GhostWhite, 0.6f);
+                Color.Black, 0.6f);
 
-            StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "LEVELS", new Vector2(64, 64), Color.DarkOrange, 0.9f);
+            StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "LEVELS", new Vector2(64, 64), Color.Black, 0.9f);
             for (int i = 0; i < myLevelNames.Length; i++)
             {
                 string tempName = myLevelNames[i];
@@ -79,18 +79,18 @@ namespace Super_Mario
                 {
                     StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, tempName,
                     new Vector2(80, 110 + (40 * i)),
-                    Color.White, 0.5f);
+                    Color.Black, 0.5f);
                 }
             }
 
 
-            StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "HIGH SCORE", new Vector2(aWindow.ClientBounds.Width / 2, 64), Color.DarkOrange, 0.9f);
+            StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "HIGH SCORE", new Vector2(aWindow.ClientBounds.Width / 2, 64), Color.Black, 0.9f);
             for (int i = 0; i < GameInfo.HighScores.Length; i++)
             {
-                StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, GameInfo.HighScores[i].ToString(), new Vector2((aWindow.ClientBounds.Width / 2) + 16, 110 + (40 * i)), Color.White, 0.7f);
+                StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, GameInfo.HighScores[i].ToString(), new Vector2((aWindow.ClientBounds.Width / 2) + 16, 110 + (40 * i)), Color.Black, 0.7f);
             }
 
-            StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press return to go back to menu", new Vector2(16, aWindow.ClientBounds.Height - 16), Color.DarkOrange, 0.5f);
+            StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press return to go back to menu", new Vector2(16, aWindow.ClientBounds.Height - 16), Color.Black * 0.8f, 0.5f);
         }
 
         public override void LoadContent()

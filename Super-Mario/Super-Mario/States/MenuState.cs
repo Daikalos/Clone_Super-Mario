@@ -91,7 +91,7 @@ namespace Super_Mario
                 myLoadLevel = true;
                 string[] tempLevelNames = FileReader.FindFileNames(GameInfo.FolderLevels);
 
-                myLevels = new Button[tempLevelNames.Length];
+                myLevels = new Button[tempLevelNames.Length - 1];
 
                 for (int i = 0; i < myLevels.Length; i++)
                 {

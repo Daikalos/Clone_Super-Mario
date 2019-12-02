@@ -23,7 +23,7 @@ namespace Super_Mario
 
         public Enemy(Vector2 aPosition, Point aSize, float aSpeed, float aGravity) : base(aPosition, aSize, aSpeed, aGravity)
         {
-
+            myIsAlive = true;
         }
 
         public void Update(GameTime aGameTime)
@@ -168,6 +168,19 @@ namespace Super_Mario
                     {
                         tempSwitchDirection = true;
                     }
+                }
+                if (myPosition.X + tempSpeed < 0)
+                {
+                    tempSwitchDirection = true;
+                }
+                if (myPosition.X + tempSpeed > Level.MapSize.X)
+                {
+                    tempSwitchDirection = true;
+                }
+
+                if (tempSwitchDirection)
+                {
+                    break;
                 }
             }
             if (tempSwitchDirection)

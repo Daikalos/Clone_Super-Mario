@@ -51,11 +51,11 @@ namespace Super_Mario
         {
             foreach (Enemy enemy in myEnemies)
             {
-                if (enemy.GetType() == typeof(Chase))
+                if (enemy is Chase)
                 {
                     enemy.SetTexture("Goomba_Walking");
                 }
-                if (enemy.GetType() == typeof(Patrol))
+                if (enemy is Patrol)
                 {
                     enemy.SetTexture("Goomba_Walking");
                 }

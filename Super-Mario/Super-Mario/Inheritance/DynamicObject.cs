@@ -9,6 +9,7 @@ namespace Super_Mario
             mySpeed,
             myCurrentSpeed,
             myVelocity,
+            myVelocityThreshold,
             myGravity;
 
         public float CurrentSpeed
@@ -16,10 +17,11 @@ namespace Super_Mario
             get => myCurrentSpeed;
         }
         
-        public DynamicObject(Vector2 aPosition, Point aSize, float aSpeed, float aGravity) : base(aPosition, aSize)
+        public DynamicObject(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aVelocityThreshold) : base(aPosition, aSize)
         {
             this.mySpeed = aSpeed;
             this.myGravity = aGravity;
+            this.myVelocityThreshold = aVelocityThreshold;
         }
     }
 }

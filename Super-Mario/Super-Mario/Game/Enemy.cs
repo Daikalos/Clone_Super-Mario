@@ -13,7 +13,9 @@ namespace Super_Mario
         }
 
         protected EnemyState myEnemyState;
-        protected bool myIsAlive;
+        protected bool 
+            myIsAlive,
+            myHasCollided;
         protected float myIsDeadDelay;
 
         public bool IsAlive
@@ -25,10 +27,16 @@ namespace Super_Mario
                 myTexture = ResourceManager.RequestTexture("Goomba_Death");
             }
         }
+        public bool HasCollided
+        {
+            get => myHasCollided;
+            set => myHasCollided = value;
+        }
 
-        public Enemy(Vector2 aPosition, Point aSize, float aSpeed, float aGravity) : base(aPosition, aSize, aSpeed, aGravity)
+        public Enemy(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aVelocityThreshold) : base(aPosition, aSize, aSpeed, aGravity, aVelocityThreshold)
         {
             this.myIsAlive = true;
+            this.myHasCollided = false;
             this.myIsDeadDelay = 0.25f; //Fixed value
         }
 
@@ -106,7 +114,7 @@ namespace Super_Mario
 
     class Chase : Enemy
     {
-        public Chase(Vector2 aPosition, Point aSize, float aSpeed, float aGravity) : base(aPosition, aSize, aSpeed, aGravity)
+        public Chase(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aVelocityThreshold) : base(aPosition, aSize, aSpeed, aGravity, aVelocityThreshold)
         {
 
         }
@@ -127,7 +135,7 @@ namespace Super_Mario
         private AnimationManager myGoombaAnimation;
         private bool myDirection;
 
-        public Patrol(Vector2 aPosition, Point aSize, float aSpeed, float aGravity) : base(aPosition, aSize, aSpeed, aGravity)
+        public Patrol(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aVelocityThreshold) : base(aPosition, aSize, aSpeed, aGravity, aVelocityThreshold)
         {
             myGoombaAnimation = new AnimationManager(new Point(2, 1), 0.2f, true);
         }

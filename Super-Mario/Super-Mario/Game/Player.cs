@@ -30,8 +30,8 @@ namespace Super_Mario
             myJumpHeight,
             myInvincibleTimer,
             myInvincibleDelay,
-            myFlashPlayerTimer,
-            myFlashPlayerDelay;
+            myDrawPlayerTimer,
+            myDrawPlayerDelay;
         private int myLives;
 
         public int Lives
@@ -43,7 +43,7 @@ namespace Super_Mario
             get => myIsAlive;
         }
 
-        public Player(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, int someLives, float aJumpHeight, float aInvincibleDelay) : base(aPosition, aSize, aSpeed, aGravity)
+        public Player(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aVelocityThreshold, int someLives, float aJumpHeight, float aInvincibleDelay) : base(aPosition, aSize, aSpeed, aGravity, aVelocityThreshold)
         {
             this.myLives = someLives;
             this.myJumpHeight = aJumpHeight;
@@ -56,7 +56,7 @@ namespace Super_Mario
             this.myFlipSprite = SpriteEffects.None;
             this.myIsAlive = true;
             this.myDrawSprite = true;
-            this.myFlashPlayerDelay = 0.10f;
+            this.myDrawPlayerDelay = 0.10f; //Fixed value
         }
 
         public void Update(GameWindow aWindow, GameTime aGameTime)
@@ -69,25 +69,35 @@ namespace Super_Mario
                     Movement(aWindow, aGameTime, mySpeed);
                     Idle();
                     Jump();
+                    Collisions(aGameTime);
                     break;
                 case PlayerState.isClimbing:
                     Movement(aWindow, aGameTime, mySpeed / 2);
                     Climbing(aGameTime, mySpeed / 2);
                     Idle();
+                    Collisions(aGameTime);
                     break;
                 case PlayerState.isFalling:
                     Movement(aWindow, aGameTime, mySpeed);
                     myVelocity += myGravity;
                     myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    Collisions(aGameTime);
                     break;
                 case PlayerState.isDead:
+                    if (myPosition.Y - (myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds) > aWindow.ClientBounds.Height)
+                    {
+                        myIsAlive = false;
+                    }
 
+                    if (myVelocity < 150.0f)
+                    {
+                        myVelocity += myGravity;
+                    }
+                    myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                     break;
             }
 
             Timer(aGameTime);
-
-            Collisions(aGameTime);
             TextureState(); //Create post-update instead?
         }
 
@@ -121,7 +131,7 @@ namespace Super_Mario
                         aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                         break;
                     case PlayerState.isDead:
-
+                        aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                         break;
                 }
             }
@@ -230,13 +240,14 @@ namespace Super_Mario
                 if (CollisionManager.CheckBelow(myBoundingBox, enemy.BoundingBox, tempVelocity) && tempVelocity > 0)
                 {
                     enemy.IsAlive = false;
+                    enemy.HasCollided = true;
                     myVelocity = myJumpHeight;
 
                     GameInfo.AddScore(enemy.BoundingBox.Center.ToVector2(), 100);
 
                     break;
                 }
-                else if (enemy.IsAlive)
+                else if (!enemy.HasCollided)
                 {
                     if (!myIsInvincible)
                     {
@@ -336,11 +347,21 @@ namespace Super_Mario
             {
                 myLives -= aValue;
 
-                myIsInvincible = true;
-                myInvincibleTimer = myInvincibleDelay;
+                if (myLives > 0)
+                {
+                    myIsInvincible = true;
+                    myInvincibleTimer = myInvincibleDelay;
 
-                myPosition = Level.PlayerSpawn;
-                myPosition += new Vector2(0, -mySize.Y);
+                    myPosition = Level.PlayerSpawn;
+                    myPosition += new Vector2(0, -mySize.Y);
+                }
+                else
+                {
+                    myLives = 0;
+
+                    myVelocity = myJumpHeight * 0.8f;
+                    myPlayerState = PlayerState.isDead;
+                }
             }
         }
 
@@ -409,24 +430,23 @@ namespace Super_Mario
             if (myInvincibleTimer > 0)
             {
                 myInvincibleTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
-                if (myFlashPlayerTimer > 0)
+                if (myDrawPlayerTimer > 0)
                 {
-                    myFlashPlayerTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    myDrawPlayerTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
                 }
                 else
                 {
-                    myFlashPlayerTimer = myFlashPlayerDelay;
+                    myDrawPlayerTimer = myDrawPlayerDelay;
                     myDrawSprite = !myDrawSprite;
                 }
             }
             else
             {
                 myInvincibleTimer = 0;
+                myIsInvincible = false;
                 myDrawSprite = true;
             }
         }
-
-
 
         private void TextureState()
         {
@@ -447,6 +467,9 @@ namespace Super_Mario
                     break;
                 case PlayerState.isFalling:
                     myTexture = ResourceManager.RequestTexture("Mario_Jumping");
+                    break;
+                case PlayerState.isDead:
+                    myTexture = ResourceManager.RequestTexture("Mario_Death");
                     break;
             }
         }

@@ -8,18 +8,19 @@ namespace Super_Mario
     class LeaderboardState : State
     {
         private SpriteFont my8bitFont;
-        private string[]
-            myLevelNames,
-            myHighScores;
         private int
             mySelection,
             mySelectionAmount;
+        private string[] myLevelNames;
+        private string myLevelName;
 
         public LeaderboardState(MainGame aGame) : base(aGame)
         {
-            myLevelNames = FileReader.FindFileNames(GameInfo.FolderLevels);
-            myHighScores = FileReader.FindFileNames(GameInfo.FolderHighScores);
-            mySelectionAmount = myLevelNames.Length - 2;
+            GameInfo.LoadHighScore(GameInfo.LevelName);
+
+            this.myLevelNames = FileReader.FindFileNames(GameInfo.FolderLevels);
+            this.mySelectionAmount = myLevelNames.Length - 1;
+            this.myLevelName = string.Empty;
         }
 
         public override void Update(GameWindow aWindow, GameTime aGameTime)
@@ -41,21 +42,18 @@ namespace Super_Mario
                 }
             }
 
-            if (KeyMouseReader.KeyPressed(Keys.Back))
+            if (KeyMouseReader.KeyPressed(Keys.Escape))
             {
                 myGame.ChangeState(new MenuState(myGame, aWindow));
             }
 
             if (myLevelNames.Length > 0)
             {
-                string tempPrefix = "";
-                if (mySelection < 10)
+                if (myLevelName != myLevelNames[mySelection])
                 {
-                    tempPrefix = "0";
-                }
-                if (myLevelNames[mySelection] != "Level" + tempPrefix + mySelection)
-                {
-                    string tempName = myLevelNames[mySelection];
+                    myLevelName = myLevelNames[mySelection];
+
+                    string tempName = myLevelName;
                     tempName = tempName.Replace(".txt", "");
 
                     GameInfo.LoadHighScore(tempName);
@@ -75,12 +73,9 @@ namespace Super_Mario
                 string tempName = myLevelNames[i];
                 tempName = tempName.Replace(".txt", "");
 
-                if (tempName != "Level_Template")
-                {
-                    StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, tempName,
-                    new Vector2(80, 110 + (40 * i)),
-                    Color.Black, 0.5f);
-                }
+                StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, tempName,
+                new Vector2(80, 110 + (40 * i)),
+                Color.Black, 0.5f);
             }
 
 
@@ -90,7 +85,7 @@ namespace Super_Mario
                 StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, GameInfo.HighScores[i].ToString(), new Vector2((aWindow.ClientBounds.Width / 2) + 16, 110 + (40 * i)), Color.Black, 0.7f);
             }
 
-            StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press return to go back to menu", new Vector2(16, aWindow.ClientBounds.Height - 16), Color.Black * 0.8f, 0.5f);
+            StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press escape to go back to menu", new Vector2(16, aWindow.ClientBounds.Height - 16), Color.Black * 0.8f, 0.5f);
         }
 
         public override void LoadContent()

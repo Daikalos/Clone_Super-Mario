@@ -60,7 +60,7 @@ namespace Super_Mario
             {
                 LoadLevel(aWindow);
 
-                if (KeyMouseReader.KeyPressed(Keys.Back))
+                if (KeyMouseReader.KeyPressed(Keys.Escape))
                 {
                     myLoadLevel = false;
                     myLevels = null;
@@ -80,7 +80,7 @@ namespace Super_Mario
             else
             {
                 Array.ForEach(myLevels, b => b.Draw(aSpriteBatch));
-                StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press return to go back to menu", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black, 0.4f);
+                StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press escape to go back to menu", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black, 0.4f);
             }
         }
 
@@ -91,7 +91,7 @@ namespace Super_Mario
                 myLoadLevel = true;
                 string[] tempLevelNames = FileReader.FindFileNames(GameInfo.FolderLevels);
 
-                myLevels = new Button[tempLevelNames.Length - 1];
+                myLevels = new Button[tempLevelNames.Length];
 
                 for (int i = 0; i < myLevels.Length; i++)
                 {
@@ -110,14 +110,9 @@ namespace Super_Mario
                 if (button.IsClicked())
                 {
                     string tempLevel = button.DisplayText;
-                    tempLevel = tempLevel.Replace("Level", "");
-                    int tempLoadLevel;
 
-                    if (Int32.TryParse(tempLevel, out tempLoadLevel))
-                    {
-                        GameInfo.CurrentLevel = tempLoadLevel;
-                        myGame.ChangeState(new PlayState(myGame, aWindow));
-                    }
+                    GameInfo.LevelName = tempLevel;
+                    myGame.ChangeState(new PlayState(myGame, aWindow));
 
                     myLoadLevel = false;
                     myLevels = null;

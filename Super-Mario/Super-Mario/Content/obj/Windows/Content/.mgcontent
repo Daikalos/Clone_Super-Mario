@@ -16,11 +16,13 @@
     <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/flag.png</File>
     <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/goomba_editor.png</File>
     <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/ladder.png</File>
+    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/teleporter.png</File>
     <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/tile-grass-00.png</File>
     <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/tile-grass-01.png</File>
   </SourceFiles>
   <DestFiles>
     <File>Fonts/8bit.spritefont</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

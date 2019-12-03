@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,6 +12,7 @@ namespace Super_Mario
         {
             isEditing,
             isLoading,
+            isSaving,
             isDeleting
         }
 
@@ -35,10 +36,11 @@ namespace Super_Mario
         private EditorStates myEditorState;
         private char mySelectedTile;
         private char[,] myLevel;
-        private int myTile;
         private float
             myTimer,
             myDelay;
+        private int myTile;
+        private string myLevelName;
 
         public EditorState(MainGame aGame, GameWindow aWindow) : base(aGame)
         {
@@ -54,17 +56,19 @@ namespace Super_Mario
 
             this.mySelections = new Tile[]
             {
-                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32)),
-                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32)),
-                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32)),
-                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32)),
-                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32)),
+                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '#'),
+                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '?'),
+                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '*'),
+                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '%'),
+                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '&'),
+                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '/'),
             };
-            myEditorState = EditorStates.isEditing;
+            this.myEditorState = EditorStates.isEditing;
             this.myOffset = new Rectangle(-2, -2, 4, 4);
             this.mySelectedTile = ' ';
-            this.myTile = -1;
             this.myDelay = 0.50f;
+            this.myTile = -1;
+            this.myLevelName = string.Empty;
         }
 
         public override void Update(GameWindow aWindow, GameTime aGameTime)
@@ -84,12 +88,15 @@ namespace Super_Mario
                 case EditorStates.isLoading:
                     SelectLevelToLoad();
                     break;
+                case EditorStates.isSaving:
+                    TypeNameOfLevel();
+                    break;
                 case EditorStates.isDeleting:
                     SelectLevelToDelete();
                     break;
             }
 
-            if (KeyMouseReader.KeyPressed(Keys.Back))
+            if (KeyMouseReader.KeyPressed(Keys.Escape))
             {
                 switch (myEditorState)
                 {
@@ -119,24 +126,29 @@ namespace Super_Mario
 
                     if (myTile >= 0 && myTile < mySelections.Length)
                     {
-                        aSpriteBatch.Draw(mySelections[myTile].Texture, (Camera.Position + KeyMouseReader.GetCurrentMouseState.Position.ToVector2()), null, Color.White);
+                        aSpriteBatch.Draw(mySelections[myTile].Texture, (Camera.Position + KeyMouseReader.CurrentMouseState.Position.ToVector2()), null, Color.White);
                     }
 
                     myLoadButton.Draw(aSpriteBatch);
                     mySaveButton.Draw(aSpriteBatch);
                     myDeleteButton.Draw(aSpriteBatch);
 
-                    StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press return to go back to menu", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black * 0.50f, 0.4f);
+                    StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press escape to go back to menu", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black * 0.50f, 0.4f);
                     break;
                 case EditorStates.isLoading:
                     Array.ForEach(myLevels, b => b.Draw(aSpriteBatch));
-                    StringManager.DrawStringMid(aSpriteBatch, my8bitFont, "LOAD", new Vector2(Camera.Position.X + aWindow.ClientBounds.Width / 2, 32), Color.Black, 0.9f);
-                    StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press return to go back to editor", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black * 0.50f, 0.4f);
+                    StringManager.DrawStringMid(aSpriteBatch, my8bitFont, "LOAD", new Vector2(Camera.Position.X + (aWindow.ClientBounds.Width / 2), 32), Color.Black, 0.9f);
+                    StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press escape to go back to editor", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black * 0.50f, 0.4f);
+                    break;
+                case EditorStates.isSaving:
+                    StringManager.DrawStringMid(aSpriteBatch, my8bitFont, "Type name of level", new Vector2(Camera.Position.X + (aWindow.ClientBounds.Width / 2), 32), Color.Black, 0.8f);
+                    StringManager.DrawStringMid(aSpriteBatch, my8bitFont, myLevelName + "_", new Vector2(Camera.Position.X + (aWindow.ClientBounds.Width / 2), 96), Color.Black, 0.8f);
+                    StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press escape to go back to editor", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black * 0.50f, 0.4f);
                     break;
                 case EditorStates.isDeleting:
                     Array.ForEach(myLevels, b => b.Draw(aSpriteBatch));
                     StringManager.DrawStringMid(aSpriteBatch, my8bitFont, "DELETE", new Vector2(Camera.Position.X + aWindow.ClientBounds.Width / 2, 32), Color.Black, 0.9f);
-                    StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press return to go back to editor", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black * 0.50f, 0.4f);
+                    StringManager.DrawStringLeft(aSpriteBatch, my8bitFont, "Press escape to go back to editor", new Vector2(Camera.Position.X + 16, aWindow.ClientBounds.Height - 16), Color.Black * 0.50f, 0.4f);
                     break;
             }
         }
@@ -174,7 +186,7 @@ namespace Super_Mario
 
                 Rectangle tempRect = mySelections[i].BoundingBox;
 
-                if (tempRect.Contains(Camera.Position.ToPoint() + KeyMouseReader.GetCurrentMouseState.Position))
+                if (tempRect.Contains(Camera.Position.ToPoint() + KeyMouseReader.CurrentMouseState.Position))
                 {
                     mySelections[i].BoundingBox = new Rectangle(tempRect.X + myOffset.X, tempRect.Y + myOffset.Y,
                         tempRect.Width + myOffset.Width, tempRect.Height + myOffset.Height);
@@ -193,7 +205,7 @@ namespace Super_Mario
         {
             if (KeyMouseReader.LeftHold() && mySelectedTile != ' ' && myTimer <= 0)
             {
-                Tile tempTile = Level.TileAtPos(Camera.Position + KeyMouseReader.GetCurrentMouseState.Position.ToVector2()).Item1;
+                Tile tempTile = Level.TileAtPos(Camera.Position + KeyMouseReader.CurrentMouseState.Position.ToVector2()).Item1;
                 tempTile.TileType = mySelectedTile;
                 tempTile.TileForm = 0;
                 tempTile.SetTextureEditor();
@@ -203,7 +215,7 @@ namespace Super_Mario
                 mySelectedTile = '-';
                 myTile = -1;
 
-                Tile tempTile = Level.TileAtPos(Camera.Position + KeyMouseReader.GetCurrentMouseState.Position.ToVector2()).Item1;
+                Tile tempTile = Level.TileAtPos(Camera.Position + KeyMouseReader.CurrentMouseState.Position.ToVector2()).Item1;
                 tempTile.TileType = mySelectedTile;
                 tempTile.TileForm = 0;
                 tempTile.SetTextureEditor();
@@ -231,43 +243,14 @@ namespace Super_Mario
         {
             if (mySaveButton.IsClicked())
             {
+                myEditorState = EditorStates.isSaving;
+
                 for (int i = 0; i < myLevel.GetLength(0); i++)
                 {
                     for (int j = 0; j < myLevel.GetLength(1); j++)
                     {
                         myLevel[i, j] = Level.GetTiles[i, j].TileType;
                     }
-                }
-
-                int tempLevel = 1;
-                string[] tempName = FileReader.FindFileNames(GameInfo.FolderLevels);
-                for (int i = 0; i < tempName.Length; i++)
-                {
-                    tempName[i] = tempName[i].Replace("Level", "");
-                    tempName[i] = tempName[i].Replace(".txt", "");
-                }
-                for (int i = 0; i < tempName.Length; i++)
-                {
-                    if (tempName[i] != "Level_Template")
-                    {
-                        int tempResult = 0;
-                        Int32.TryParse(tempName[i], out tempResult);
-
-                        if (tempResult != (i + 1) && i > 0)
-                        {
-                            tempLevel = (i + 1);
-                            break;
-                        }
-                    }
-                }
-
-                if (tempLevel < 10)
-                {
-                    Level.SaveLevel("Level0" + tempLevel, myLevel);
-                }
-                else
-                {
-                    Level.SaveLevel("Level" + tempLevel, myLevel);
                 }
             }
         }
@@ -280,11 +263,17 @@ namespace Super_Mario
 
                 myLevels = new Button[tempLevelNames.Length - 1];
 
-                for (int i = 0; i < myLevels.Length; i++)
+                int tempAddButton = 0;
+                for (int i = 0; i < tempLevelNames.Length; i++)
                 {
-                    myLevels[i] = new Button(new Vector2((aWindow.ClientBounds.Width / 2) - 113, (aWindow.ClientBounds.Height / 2) - 64 - 200 + (i * 40)),
-                        new Point(226, 32), null, tempLevelNames[i], 0.4f);
-                    myLevels[i].LoadContent();
+                    if (tempLevelNames[i] != "Level_Template")
+                    {
+                        myLevels[tempAddButton] = new Button(new Vector2((aWindow.ClientBounds.Width / 2) - 113, (aWindow.ClientBounds.Height / 2) - 64 - 200 + (tempAddButton * 40)),
+                            new Point(226, 32), null, tempLevelNames[i], 0.4f);
+                        myLevels[tempAddButton].LoadContent();
+
+                        tempAddButton++;
+                    }
                 }
             }
         }
@@ -302,6 +291,37 @@ namespace Super_Mario
 
                     myEditorState = EditorStates.isEditing;
                     myLevels = null;
+                }
+            }
+        }
+        private void TypeNameOfLevel()
+        {
+            Keys[] tempKeys = KeyMouseReader.CurrentKeyState.GetPressedKeys();
+
+            if (tempKeys.Length > 0)
+            {
+                string tempLetter = tempKeys[0].ToString();
+
+                if (Regex.IsMatch(tempLetter, @"[a-zA-Z]") && tempLetter.Length == 1)
+                {
+                    if (KeyMouseReader.PreviousKeyState.IsKeyUp(tempKeys[0]))
+                    {
+                        myLevelName += tempKeys[0].ToString();
+                    }
+                }
+
+                if (KeyMouseReader.KeyPressed(Keys.Space))
+                {
+                    myLevelName += "_";
+                }
+                if (KeyMouseReader.KeyPressed(Keys.Back) && myLevelName.Length > 0)
+                {
+                    myLevelName = myLevelName.Remove(myLevelName.Length - 1, 1);
+                }
+                if (KeyMouseReader.KeyPressed(Keys.Enter) && myLevelName.Length > 0)
+                {
+                    myEditorState = EditorStates.isEditing;
+                    Level.SaveLevel(myLevelName, myLevel);
                 }
             }
         }
@@ -323,12 +343,6 @@ namespace Super_Mario
         public override void LoadContent()
         {
             Level.SetTileTextureEditor();
-
-            mySelections[0].TileType = '#';
-            mySelections[1].TileType = '?';
-            mySelections[2].TileType = '*';
-            mySelections[3].TileType = '%';
-            mySelections[4].TileType = '&';
 
             Array.ForEach(mySelections, t => t.SetTextureEditor());
 

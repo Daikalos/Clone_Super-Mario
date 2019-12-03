@@ -99,3 +99,4 @@ C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\goomba_death.xnb
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\goomba_walking.xnb
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario_climbing.xnb
+C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\teleporter.xnb

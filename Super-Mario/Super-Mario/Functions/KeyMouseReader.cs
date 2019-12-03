@@ -19,7 +19,11 @@ namespace Super_Mario
         {
             return myCurrentKeyState.IsKeyDown(aKey);
         }
-        public static KeyboardState GetPreviousKeyState
+        public static KeyboardState CurrentKeyState
+        {
+            get => myCurrentKeyState;
+        }
+        public static KeyboardState PreviousKeyState
         {
             get => myPreviousKeyState;
         }
@@ -43,7 +47,7 @@ namespace Super_Mario
             return myCurrentMouseState.RightButton == ButtonState.Pressed;
         }
 
-        public static MouseState GetCurrentMouseState
+        public static MouseState CurrentMouseState
         {
             get => myCurrentMouseState;
         }

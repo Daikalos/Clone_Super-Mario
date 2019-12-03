@@ -155,6 +155,18 @@
 /processorParam:TextureFormat=Color
 /build:Tileset/ladder.png
 
+#begin Tileset/teleporter.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tileset/teleporter.png
+
 #begin Tileset/tile-grass-00.png
 /importer:TextureImporter
 /processor:TextureProcessor

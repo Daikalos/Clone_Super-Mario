@@ -45,6 +45,15 @@ namespace Super_Mario
             {
                 MoveCamera(aWindow, aGameTime, aObject.CurrentSpeed);
             }
+
+            if (aObject.Position.X < myPosition.X)
+            {
+                MoveCamera(aWindow, aGameTime, -aObject.CurrentSpeed * 3);
+            }
+            if (aObject.Position.X + aObject.Size.X > myPosition.X + aWindow.ClientBounds.Width)
+            {
+                MoveCamera(aWindow, aGameTime, aObject.CurrentSpeed * 3);
+            }
         }
 
         private static bool SnapToMap(GameWindow aWindow, float aNewPosition)

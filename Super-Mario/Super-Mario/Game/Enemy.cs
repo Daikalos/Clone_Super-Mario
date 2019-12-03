@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Super_Mario
 {
-    class Enemy : DynamicObject
+    abstract class Enemy : DynamicObject
     {
         protected enum EnemyState
         {
@@ -14,16 +14,22 @@ namespace Super_Mario
 
         protected EnemyState myEnemyState;
         protected bool myIsAlive;
+        protected float myIsDeadDelay;
 
         public bool IsAlive
         {
             get => myIsAlive;
-            set => myIsAlive = value;
+            set
+            {
+                myEnemyState = EnemyState.isDead;
+                myTexture = ResourceManager.RequestTexture("Goomba_Death");
+            }
         }
 
         public Enemy(Vector2 aPosition, Point aSize, float aSpeed, float aGravity) : base(aPosition, aSize, aSpeed, aGravity)
         {
-            myIsAlive = true;
+            this.myIsAlive = true;
+            this.myIsDeadDelay = 0.25f; //Fixed value
         }
 
         public void Update(GameTime aGameTime)
@@ -39,21 +45,26 @@ namespace Super_Mario
                     myVelocity += myGravity;
                     myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                     break;
+                case EnemyState.isDead:
+                    if (myIsDeadDelay > 0)
+                    {
+                        myIsDeadDelay -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    else
+                    {
+                        myIsAlive = false;
+                    }
+                    break;
             }
 
             CollisionBlock(aGameTime);
             IsFalling();
         }
 
-        public virtual void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime)
-        {
+        public abstract void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime);
 
-        }
+        protected abstract void Behaviour(GameTime aGameTime);
 
-        protected virtual void Behaviour(GameTime aGameTime)
-        {
-
-        }
         protected void CollisionBlock(GameTime aGameTime)
         {
             foreach (Tile tile in Level.TilesAround(this))
@@ -138,7 +149,15 @@ namespace Super_Mario
 
         public override void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime)
         {
-            myGoombaAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, mySize, new Point(32), Color.White, 0.0f, myOrigin, SpriteEffects.None);
+            switch (myEnemyState)
+            {
+                case EnemyState.isDead:
+                    aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White);
+                    break;
+                default:
+                    myGoombaAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, mySize, new Point(32), Color.White, 0.0f, myOrigin, SpriteEffects.None);
+                    break;
+            }
         }
 
         private void SwitchDirection(GameTime aGameTime)

@@ -192,8 +192,7 @@ namespace Super_Mario
                     {
                         myTiles[x, y] = new Tile(
                             new Vector2(x * myTileSize.X, y * myTileSize.Y),
-                            myTileSize);
-                        myTiles[x, y].TileType = myLevelBuilder[y][x];
+                            myTileSize, myLevelBuilder[y][x]);
 
                         switch(myTiles[x, y].TileType)
                         {

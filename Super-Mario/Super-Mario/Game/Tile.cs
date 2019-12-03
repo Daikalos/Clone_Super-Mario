@@ -33,8 +33,10 @@ namespace Super_Mario
             return new Rectangle(myBoundingBox.X - (int)myOrigin.X, myBoundingBox.Y - (int)myOrigin.Y, mySize.X, mySize.Y).Center.ToVector2();
         }
 
-        public Tile(Vector2 aPosition, Point aSize) : base(aPosition, aSize)
+        public Tile(Vector2 aPosition, Point aSize, char aTileType) : base(aPosition, aSize)
         {
+            this.myTileType = aTileType;
+
             this.myTileForm = 0;
             this.myOrigin = Vector2.Zero;
             this.myBoundingBox = new Rectangle((int)aPosition.X, (int)aPosition.Y, aSize.X, aSize.Y);
@@ -64,6 +66,9 @@ namespace Super_Mario
                 case '%':
                     myTexture = ResourceManager.RequestTexture("Ladder");
                     break;
+                case '/':
+                    myTexture = ResourceManager.RequestTexture("Teleporter");
+                    break;
                 case '#':
                     myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());
                     break;
@@ -85,6 +90,9 @@ namespace Super_Mario
                     break;
                 case '%':
                     myTexture = ResourceManager.RequestTexture("Ladder");
+                    break;
+                case '/':
+                    myTexture = ResourceManager.RequestTexture("Teleporter");
                     break;
                 case '&':
                     myTexture = ResourceManager.RequestTexture("Goomba_Editor");

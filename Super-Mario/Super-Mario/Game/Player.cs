@@ -20,29 +20,38 @@ namespace Super_Mario
             myClimbingAnimation;
         private PlayerState myPlayerState;
         private SpriteEffects myFlipSprite;
-        private int myLives;
-        private float 
-            myJumpHeight;
-        private bool 
+        private bool
+            myIsAlive,
             myIsMoving,
             myIsClimbing,
             myIsInvincible;
+        private float 
+            myJumpHeight,
+            myInvincibleTimer,
+            myInvincibleDelay;
+        private int myLives;
 
         public int Lives
         {
             get => myLives;
         }
+        public bool IsAlive
+        {
+            get => myIsAlive;
+        }
 
-        public Player(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, int someLives, float aJumpHeight) : base(aPosition, aSize, aSpeed, aGravity)
+        public Player(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, int someLives, float aJumpHeight, float aInvincibleDelay) : base(aPosition, aSize, aSpeed, aGravity)
         {
             this.myLives = someLives;
             this.myJumpHeight = aJumpHeight;
+            this.myInvincibleDelay = aInvincibleDelay;
 
             this.myWalkingAnimation = new AnimationManager(new Point(3, 1), 0.1f, true);
             this.myClimbingAnimation = new AnimationManager(new Point(2, 1), 0.3f, true);
             this.myPosition += new Vector2(0, Level.TileSize.Y - mySize.Y);
             this.myPlayerState = PlayerState.isWalking;
             this.myFlipSprite = SpriteEffects.None;
+            this.myIsAlive = true;
         }
 
         public void Update(GameWindow aWindow, GameTime aGameTime)
@@ -113,6 +122,7 @@ namespace Super_Mario
             IsFalling();
             CollisionBlock(aGameTime);
             CollisionLadder();
+            CollisionTeleporter();
             CollisionEnemy(aGameTime);
         }
         private void IsFalling()
@@ -191,6 +201,16 @@ namespace Super_Mario
                 }
             }
         }
+        private void CollisionTeleporter()
+        {
+            foreach (Tile tile in Level.TilesOn(this))
+            {
+                if (tile.TileType == '/')
+                {
+                    
+                }
+            }
+        }
         private void CollisionEnemy(GameTime aGameTime)
         {
             foreach (Enemy enemy in EnemyManager.Enemies)
@@ -211,22 +231,15 @@ namespace Super_Mario
                 {
                     if (CollisionManager.CheckAbove(myBoundingBox, enemy.BoundingBox, tempVelocity) && tempVelocity < 0)
                     {
-                        enemy.IsAlive = false;
+                        ReduceHealth(1);
                     }
                     else if (CollisionManager.CheckLeft(myBoundingBox, enemy.BoundingBox, new Vector2(0, -tempVelocity)))
                     {
-                        enemy.IsAlive = false;
+                        ReduceHealth(1);
                     }
                     else if (CollisionManager.CheckRight(myBoundingBox, enemy.BoundingBox, new Vector2(0, -tempVelocity)))
                     {
-                        enemy.IsAlive = false;
-                    }
-
-                    if (!enemy.IsAlive)
-                    {
-                        myLives--;
-
-                        break;
+                        ReduceHealth(1);
                     }
                 }
             }
@@ -266,8 +279,7 @@ namespace Super_Mario
 
             if (myPosition.Y > aWindow.ClientBounds.Height)
             {
-                myPosition = Level.PlayerSpawn;
-                myPosition += new Vector2(0, -mySize.Y);
+                ReduceHealth(1);
             }
         }
         private void Climbing(GameTime aGameTime, float aSpeed)
@@ -305,6 +317,16 @@ namespace Super_Mario
                 myVelocity = myJumpHeight;
                 myPlayerState = PlayerState.isFalling;
             }
+        }
+        public void ReduceHealth(int aValue)
+        {
+            myLives -= aValue;
+
+            myIsInvincible = true;
+            myInvincibleTimer = myInvincibleDelay;
+
+            myPosition = Level.PlayerSpawn;
+            myPosition += new Vector2(0, -mySize.Y);
         }
 
         private bool OutsideBounds(Vector2 aDirection)

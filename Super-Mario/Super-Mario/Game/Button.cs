@@ -56,11 +56,11 @@ namespace Super_Mario
         {
             return 
                 KeyMouseReader.LeftClick() && 
-                myBoundingBox.Contains(KeyMouseReader.GetCurrentMouseState.Position);
+                myBoundingBox.Contains(KeyMouseReader.CurrentMouseState.Position);
         }
         public bool IsHold()
         {
-            return myBoundingBox.Contains(KeyMouseReader.GetCurrentMouseState.Position);
+            return myBoundingBox.Contains(KeyMouseReader.CurrentMouseState.Position);
         }
 
         public delegate void OnClick();

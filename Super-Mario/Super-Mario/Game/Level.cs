@@ -47,6 +47,40 @@ namespace Super_Mario
             }
             return new Tuple<Tile, bool>(myTiles[0, 0], false);
         }
+        public static List<Tile> TilesOn(DynamicObject aObject)
+        {
+            List<Tile> tempTiles = new List<Tile>();
+            Vector2 tempOffset = new Vector2(
+                (aObject.Size.X / 2) - (Level.TileSize.X / 2),
+                (aObject.Size.Y / 2) - (Level.TileSize.Y / 2));
+
+            Vector2 tempPosition;
+            Tuple<Tile, bool> tempTile;
+
+            for (int x = 0; x < (aObject.Size.X / Level.TileSize.X); x++)
+            {
+                tempPosition = new Vector2(aObject.BoundingBox.Center.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y - tempOffset.Y);
+                tempTile = TileAtPos(tempPosition);
+
+                if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
+                {
+                    tempTiles.Add(tempTile.Item1);
+                }
+
+                for (int y = 0; y < (aObject.Size.Y / Level.TileSize.Y); y++)
+                {
+                    tempPosition = new Vector2(aObject.BoundingBox.Center.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y + (Level.TileSize.Y * y) - tempOffset.Y);
+                    tempTile = TileAtPos(tempPosition);
+
+                    if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
+                    {
+                        tempTiles.Add(tempTile.Item1);
+                    }
+                }
+            }
+
+            return tempTiles;
+        }
         public static List<Tile> TilesAround(DynamicObject aObject)
         {
             List<Tile> tempTiles = new List<Tile>();
@@ -95,37 +129,12 @@ namespace Super_Mario
 
             return tempTiles;
         }
-        public static List<Tile> TilesOn(DynamicObject aObject)
+        public static List<Tile> TilesOnAndAround(DynamicObject aObject)
         {
             List<Tile> tempTiles = new List<Tile>();
-            Vector2 tempOffset = new Vector2(
-                (aObject.Size.X / 2) - (Level.TileSize.X / 2), 
-                (aObject.Size.Y / 2) - (Level.TileSize.Y / 2));
 
-            Vector2 tempPosition;
-            Tuple<Tile, bool> tempTile;
-
-            for (int x = 0; x < (aObject.Size.X / Level.TileSize.X); x++)
-            {
-                tempPosition = new Vector2(aObject.BoundingBox.Center.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y - tempOffset.Y);
-                tempTile = TileAtPos(tempPosition);
-
-                if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
-                {
-                    tempTiles.Add(tempTile.Item1);
-                }
-
-                for (int y = 0; y < (aObject.Size.Y / Level.TileSize.Y); y++)
-                {
-                    tempPosition = new Vector2(aObject.BoundingBox.Center.X + (Level.TileSize.X * x) - tempOffset.X, aObject.BoundingBox.Center.Y + (Level.TileSize.Y * y) - tempOffset.Y);
-                    tempTile = TileAtPos(tempPosition);
-
-                    if (!tempTiles.Contains(tempTile.Item1) && tempTile.Item2)
-                    {
-                        tempTiles.Add(tempTile.Item1);
-                    }
-                }
-            }
+            tempTiles.AddRange(TilesOn(aObject));
+            tempTiles.AddRange(TilesAround(aObject));
 
             return tempTiles;
         }

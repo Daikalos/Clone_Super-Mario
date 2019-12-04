@@ -24,7 +24,7 @@ namespace Super_Mario
             Background.Reset();
             Camera.Reset();
 
-            myPlayer = new Player(Level.PlayerSpawn, new Point(32), 4.0f, 14.0f, 600.0f, 3, -440.0f, 2.0f);
+            myPlayer = new Player(Level.PlayerSpawn, new Point(32), 4.0f, 14.0f, 600.0f, 3, -440.0f, 2.0f, 10.0f);
             myBackButton = new Button(new Vector2(aWindow.ClientBounds.Width - 128 - 16, aWindow.ClientBounds.Height - 48 - 16),
                     new Point(128, 48),
                     new Button.OnClick(() => Button.Back(aGame, aWindow)),

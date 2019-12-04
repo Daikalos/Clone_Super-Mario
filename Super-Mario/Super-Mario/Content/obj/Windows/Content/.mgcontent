@@ -4,25 +4,25 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Fonts/8bit_spritefont.spritefont</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/background.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/border.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/goomba_death.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/goomba_walking.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_climbing.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_death.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_idle.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_jumping.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_walking.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/empty_block.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/flag.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/goomba_editor.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/item_block.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/ladder.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/mushroom-00.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/mushroom-01.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/tile-grass-00.png</File>
-    <File>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/tile-grass-01.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Fonts/8bit_spritefont.spritefont</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/background.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/border.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/goomba_death.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/goomba_walking.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_climbing.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_death.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_idle.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_jumping.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_walking.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/empty_block.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/flag.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/goomba_editor.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/item_block.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/ladder.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/mushroom-00.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/mushroom-01.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/tile-grass-00.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/tile-grass-01.png</File>
   </SourceFiles>
   <DestFiles>
     <File>Fonts/8bit.spritefont</File>

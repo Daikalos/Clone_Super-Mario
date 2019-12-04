@@ -38,6 +38,7 @@ namespace Super_Mario
             this.myIsAlive = true;
             this.myHasCollided = false;
             this.myIsDeadDelay = 0.25f; //Fixed value
+            this.myEnemyState = EnemyState.isFalling;
         }
 
         public void Update(GameTime aGameTime)
@@ -175,7 +176,7 @@ namespace Super_Mario
                 float tempSpeed = (mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
                 Rectangle tempColRectBot = new Rectangle((int)myPosition.X, (int)myPosition.Y + mySize.Y, mySize.X, (mySize.Y / 8));
 
-                if (tile.TileType == '#')
+                if (tile.IsBlock)
                 {
                     if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, new Vector2(tempSpeed, 0)) && !myDirection)
                     {
@@ -188,7 +189,7 @@ namespace Super_Mario
                         tempSwitchDirection = true;
                     }
                 }
-                if (tile.TileType == '-')
+                else
                 {
                     if (CollisionManager.Collision(tempColRectBot, tile.BoundingBox))
                     {

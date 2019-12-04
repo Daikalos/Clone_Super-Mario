@@ -98,6 +98,12 @@ namespace Super_Mario
                 case '(':
                     myTexture = ResourceManager.RequestTexture("Empty_Block");
                     break;
+                case '=':
+                    myTexture = ResourceManager.RequestTexture("Mushroom-00");
+                    break;
+                case ')':
+                    myTexture = ResourceManager.RequestTexture("Mushroom-01");
+                    break;
                 case '#':
                     myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());
                     break;

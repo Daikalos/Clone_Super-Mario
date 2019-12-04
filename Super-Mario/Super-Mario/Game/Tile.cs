@@ -7,6 +7,8 @@ namespace Super_Mario
     class Tile : StaticObject
     {
         private List<Tile> myHistory; //Used for pathfinding
+        private AnimationManager myItemBlockAnimation;
+        private bool myIsBlock;
         private char myTileType;
         private int myTileForm;
 
@@ -16,6 +18,11 @@ namespace Super_Mario
             set => myHistory = value;
         }
 
+        public bool IsBlock
+        {
+            get => myIsBlock;
+            set => myIsBlock = value;
+        }
         public char TileType
         {
             get => myTileType;
@@ -37,6 +44,17 @@ namespace Super_Mario
         {
             this.myTileType = aTileType;
 
+            switch(aTileType)
+            {
+                case '#':
+                case '/':
+                    myIsBlock = true;
+                    break;
+                default:
+                    myIsBlock = false;
+                    break;
+            }
+
             this.myTileForm = 0;
             this.myOrigin = Vector2.Zero;
             this.myBoundingBox = new Rectangle((int)aPosition.X, (int)aPosition.Y, aSize.X, aSize.Y);
@@ -47,12 +65,20 @@ namespace Super_Mario
             myBoundingBox = new Rectangle((int)myPosition.X + (int)myOrigin.X, (int)myPosition.Y + (int)myOrigin.Y, mySize.X, mySize.Y);
         }
 
-        public override void Draw(SpriteBatch aSpriteBatch)
+        public void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime)
         {
-            if (myTexture != null)
+            switch (myTileType)
             {
-                aSpriteBatch.Draw(myTexture, myBoundingBox,
-                    null, Color.White, 0.0f, myOrigin, SpriteEffects.None, 0.0f);
+                case '/':
+                    myItemBlockAnimation?.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, new Point(32), Color.White, 0.0f, myOrigin, SpriteEffects.None);
+                    break;
+                default:
+                    if (myTexture != null)
+                    {
+                        aSpriteBatch.Draw(myTexture, myBoundingBox,
+                            null, Color.White, 0.0f, myOrigin, SpriteEffects.None, 0.0f);
+                    }
+                    break;
             }
         }
 
@@ -67,13 +93,26 @@ namespace Super_Mario
                     myTexture = ResourceManager.RequestTexture("Ladder");
                     break;
                 case '/':
-                    myTexture = ResourceManager.RequestTexture("Teleporter");
+                    myTexture = ResourceManager.RequestTexture("Item_Block");
+                    break;
+                case '(':
+                    myTexture = ResourceManager.RequestTexture("Empty_Block");
                     break;
                 case '#':
                     myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());
                     break;
                 default:
                     myTexture = null;
+                    break;
+            }
+
+            switch (myTileType)
+            {
+                case '/':
+                    myItemBlockAnimation = new AnimationManager(new Point(4, 1), 0.3f, true);
+                    break;
+                default:
+                    myItemBlockAnimation = null;
                     break;
             }
         }
@@ -91,17 +130,30 @@ namespace Super_Mario
                 case '%':
                     myTexture = ResourceManager.RequestTexture("Ladder");
                     break;
-                case '/':
-                    myTexture = ResourceManager.RequestTexture("Teleporter");
-                    break;
                 case '&':
                     myTexture = ResourceManager.RequestTexture("Goomba_Editor");
+                    break;
+                case '/':
+                    myTexture = ResourceManager.RequestTexture("Item_Block");
+                    break;
+                case '(':
+                    myTexture = ResourceManager.RequestTexture("Empty_Block");
                     break;
                 case '#':
                     myTexture = ResourceManager.RequestTexture("Grass-0" + myTileForm.ToString());
                     break;
                 default:
                     myTexture = null;
+                    break;
+            }
+
+            switch (myTileType)
+            {
+                case '/':
+                    myItemBlockAnimation = new AnimationManager(new Point(4, 1), 0.3f, true);
+                    break;
+                default:
+                    myItemBlockAnimation = null;
                     break;
             }
         }

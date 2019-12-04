@@ -40,11 +40,11 @@ namespace Super_Mario
 
         public static void AddPatrolEnemy(Vector2 aPos)
         {
-            myEnemies?.Add(new Patrol(aPos, new Point(32), 1.0f, 8.2f));
+            myEnemies?.Add(new Patrol(aPos, new Point(32), 1.0f, 8.2f, 600.0f));
         }
         public static void AddChaseEnemy(Vector2 aPos)
         {
-            myEnemies?.Add(new Chase(aPos, new Point(32), 5.0f, 8.2f));
+            myEnemies?.Add(new Chase(aPos, new Point(32), 5.0f, 8.2f, 600.0f));
         }
         public static void RemoveAll()
         {

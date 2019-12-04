@@ -163,13 +163,13 @@ namespace Super_Mario
             }
         }
 
-        public static void DrawTiles(SpriteBatch aSpriteBatch)
+        public static void DrawTiles(SpriteBatch aSpriteBatch, GameTime aGameTime)
         {
             for (int i = 0; i < myTiles.GetLength(0); i++)
             {
                 for (int j = 0; j < myTiles.GetLength(1); j++)
                 {
-                    myTiles[i, j].Draw(aSpriteBatch);
+                    myTiles[i, j].Draw(aSpriteBatch, aGameTime);
                 }
             }
         }

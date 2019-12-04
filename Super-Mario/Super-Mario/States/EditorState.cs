@@ -20,11 +20,12 @@ namespace Super_Mario
             my8bitFont;
 
         /// <summary>
-        /// 0 = Block/#;
-        /// 1 = Player/?;
-        /// 2 = Flag/*;
-        /// 3 = Ladder/%;
-        /// 4 = Goomba/And;
+        /// 0 = Block|#;
+        /// 1 = Player|?;
+        /// 2 = Flag|*;
+        /// 3 = Ladder|%;
+        /// 4 = Goomba|And;
+        /// 5 = Item_Block|/;
         /// </summary>
         private Tile[] mySelections;
         private Button[] myLevels;
@@ -32,7 +33,9 @@ namespace Super_Mario
             myLoadButton,
             mySaveButton,
             myDeleteButton;
-        private Rectangle myOffset;
+        private Rectangle 
+            myOffset,
+            mySelectedSource;
         private EditorStates myEditorState;
         private char mySelectedTile;
         private char[,] myLevel;
@@ -64,7 +67,9 @@ namespace Super_Mario
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '/'),
             };
             this.myEditorState = EditorStates.isEditing;
-            this.myOffset = new Rectangle(-2, -2, 4, 4);
+            this.myOffset = new Rectangle(
+                -Level.TileSize.X / 16, -Level.TileSize.Y / 16, 
+                Level.TileSize.X / 8, Level.TileSize.Y / 8);
             this.mySelectedTile = ' ';
             this.myDelay = 0.50f;
             this.myTile = -1;
@@ -117,16 +122,16 @@ namespace Super_Mario
             aSpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
                 null, null, null, null, Camera.TranslationMatrix);
 
-            Level.DrawTiles(aSpriteBatch);
+            Level.DrawTiles(aSpriteBatch, aGameTime);
 
             switch (myEditorState)
             {
                 case EditorStates.isEditing:
-                    Array.ForEach(mySelections, t => t.Draw(aSpriteBatch));
+                    Array.ForEach(mySelections, t => t.Draw(aSpriteBatch, aGameTime));
 
                     if (myTile >= 0 && myTile < mySelections.Length)
                     {
-                        aSpriteBatch.Draw(mySelections[myTile].Texture, (Camera.Position + KeyMouseReader.CurrentMouseState.Position.ToVector2()), null, Color.White);
+                        aSpriteBatch.Draw(mySelections[myTile].Texture, (Camera.Position + KeyMouseReader.CurrentMouseState.Position.ToVector2()), mySelectedSource, Color.White);
                     }
 
                     myLoadButton.Draw(aSpriteBatch);
@@ -195,6 +200,16 @@ namespace Super_Mario
                     {
                         mySelectedTile = mySelections[i].TileType;
                         myTile = i;
+
+                        switch (mySelections[i].TileType)
+                        {
+                            case '/':
+                                mySelectedSource = new Rectangle(0, 0, mySelections[i].Texture.Width / 4, mySelections[i].Texture.Height);
+                                break;
+                            default:
+                                mySelectedSource = new Rectangle(0, 0, mySelections[i].Texture.Width, mySelections[i].Texture.Height);
+                                break;
+                        }
 
                         myTimer = myDelay;
                     }

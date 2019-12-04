@@ -50,8 +50,7 @@ namespace Super_Mario
                     Behaviour(aGameTime);
                     break;
                 case EnemyState.isFalling:
-                    myVelocity += myGravity;
-                    myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    Gravity(aGameTime);
                     break;
                 case EnemyState.isDead:
                     if (myIsDeadDelay > 0)
@@ -79,7 +78,7 @@ namespace Super_Mario
             {
                 float tempVelocity = (myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds);
 
-                if (tile.TileType == '#')
+                if (tile.IsBlock)
                 {
                     if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, tempVelocity) && myVelocity > 0)
                     {
@@ -99,7 +98,7 @@ namespace Super_Mario
                 Rectangle tempColRectBelow = new Rectangle(myBoundingBox.X, myBoundingBox.Y, myBoundingBox.Width, myBoundingBox.Height + (mySize.Y / 4));
                 if (CollisionManager.Collision(tempColRectBelow, tile.BoundingBox))
                 {
-                    if (tile.TileType == '#')
+                    if (tile.IsBlock)
                     {
                         tempFall = false;
                     }
@@ -163,7 +162,7 @@ namespace Super_Mario
                     aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White);
                     break;
                 default:
-                    myGoombaAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myPosition, mySize, new Point(32), Color.White, 0.0f, myOrigin, SpriteEffects.None);
+                    myGoombaAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, new Point(32), Color.White, 0.0f, myOrigin, SpriteEffects.None);
                     break;
             }
         }

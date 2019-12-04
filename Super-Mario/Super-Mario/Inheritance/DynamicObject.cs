@@ -23,5 +23,19 @@ namespace Super_Mario
             this.myGravity = aGravity;
             this.myVelocityThreshold = aVelocityThreshold;
         }
+
+        protected void Gravity(GameTime aGameTime)
+        {
+            if (myVelocity + myGravity < myVelocityThreshold)
+            {
+                myVelocity += myGravity;
+            }
+            else
+            {
+                myVelocity = myVelocityThreshold;
+            }
+
+            myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+        }
     }
 }

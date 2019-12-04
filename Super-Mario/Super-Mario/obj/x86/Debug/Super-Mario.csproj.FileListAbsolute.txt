@@ -99,6 +99,10 @@ C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\goomba_death.xnb
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\goomba_walking.xnb
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario_climbing.xnb
-C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\teleporter.xnb
 C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\teleporter.xnb
 C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario_death.xnb
+C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario_death.xnb
+C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\empty_block.xnb
+C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\item_block.xnb
+C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\mushroom-00.xnb
+C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\mushroom-01.xnb

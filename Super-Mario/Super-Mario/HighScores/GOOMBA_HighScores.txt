@@ -1,1 +1,1 @@
-HighScore=14600
+HighScore=30400

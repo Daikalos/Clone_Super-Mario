@@ -39,11 +39,11 @@ namespace Super_Mario
         {
             if (aObject.Position.X - (aWindow.ClientBounds.Width / 8) < myPosition.X)
             {
-                MoveCamera(aWindow, aGameTime, -aObject.CurrentVelocity.X);
+                MoveCamera(aWindow, aGameTime, -Math.Abs(aObject.CurrentVelocity.X));
             }
             if (aObject.Position.X + aObject.Size.X + (aWindow.ClientBounds.Width / 4) > myPosition.X + aWindow.ClientBounds.Width)
             {
-                MoveCamera(aWindow, aGameTime, aObject.CurrentVelocity.X);
+                MoveCamera(aWindow, aGameTime, Math.Abs(aObject.CurrentVelocity.X));
             }
 
             if (aObject.Position.X < myPosition.X)
@@ -58,12 +58,12 @@ namespace Super_Mario
 
         private static bool SnapToMap(GameWindow aWindow, float aNewPosition)
         {
-            if (myPosition.X + aNewPosition + aWindow.ClientBounds.Width > Level.MapSize.X)
+            if (myPosition.X + aNewPosition + aWindow.ClientBounds.Width >= Level.MapSize.X)
             {
                 myPosition.X = Level.MapSize.X - aWindow.ClientBounds.Width;
                 return false;
             }
-            if (myPosition.X + aNewPosition < 0)
+            if (myPosition.X + aNewPosition <= 0)
             {
                 myPosition.X = 0;
                 return false;

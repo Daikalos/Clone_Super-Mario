@@ -46,8 +46,7 @@ namespace Super_Mario
 
             switch(aTileType)
             {
-                case '#':
-                case '/':
+                case '#': case '/': case '^':
                     myIsBlock = true;
                     break;
                 default:
@@ -92,6 +91,9 @@ namespace Super_Mario
                 case '%':
                     myTexture = ResourceManager.RequestTexture("Ladder");
                     break;
+                case '^':
+                    myTexture = ResourceManager.RequestTexture("Coin_Block");
+                    break;
                 case '/':
                     myTexture = ResourceManager.RequestTexture("Item_Block");
                     break;
@@ -135,6 +137,9 @@ namespace Super_Mario
                     break;
                 case '%':
                     myTexture = ResourceManager.RequestTexture("Ladder");
+                    break;
+                case '^':
+                    myTexture = ResourceManager.RequestTexture("Coin_Block");
                     break;
                 case '&':
                     myTexture = ResourceManager.RequestTexture("Goomba_Editor");

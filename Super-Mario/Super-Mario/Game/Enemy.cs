@@ -33,7 +33,7 @@ namespace Super_Mario
             set => myHasCollided = value;
         }
 
-        public Enemy(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold) : base(aPosition, aSize, aVelocity, aVelocityThreshold)
+        public Enemy(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, float aGravity) : base(aPosition, aSize, aVelocity, aVelocityThreshold, aGravity)
         {
             this.myIsAlive = true;
             this.myHasCollided = false;
@@ -65,7 +65,7 @@ namespace Super_Mario
                     break;
             }
 
-            CollisionBlock(aGameTime);
+            CollisionBlock();
             IsFalling();
         }
 
@@ -73,15 +73,15 @@ namespace Super_Mario
 
         protected abstract void Behaviour(GameTime aGameTime);
 
-        protected void CollisionBlock(GameTime aGameTime)
+        protected void CollisionBlock()
         {
             foreach (Tile tile in Level.TilesAround(this))
             {
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, myVelocity.Y) && myVelocity.Y > 0)
+                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myCurrentVelocity.Y > 0)
                     {
-                        myVelocity.Y = 0.0f;
+                        myCurrentVelocity.Y = 0.0f;
                         myPosition.Y = tile.Position.Y - mySize.Y;
 
                         myEnemyState = EnemyState.isActing;
@@ -112,7 +112,7 @@ namespace Super_Mario
 
     class Chase : Enemy
     {
-        public Chase(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold) : base(aPosition, aSize, aVelocity, aVelocityThreshold)
+        public Chase(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, float aGravity) : base(aPosition, aSize, aVelocity, aVelocityThreshold, aGravity)
         {
 
         }
@@ -133,7 +133,7 @@ namespace Super_Mario
         private AnimationManager myGoombaAnimation;
         private bool myDirection;
 
-        public Patrol(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold) : base(aPosition, aSize, aVelocity, aVelocityThreshold)
+        public Patrol(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, float aGravity) : base(aPosition, aSize, aVelocity, aVelocityThreshold, aGravity)
         {
             myGoombaAnimation = new AnimationManager(new Point(2, 1), 0.2f, true);
         }

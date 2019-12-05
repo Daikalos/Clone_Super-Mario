@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Super_Mario
@@ -9,6 +10,7 @@ namespace Super_Mario
             myVelocity,
             myCurrentVelocity,
             myVelocityThreshold;
+        protected float myGravity;
 
         public Vector2 Velocity
         {
@@ -19,24 +21,19 @@ namespace Super_Mario
             get => myCurrentVelocity;
         }
         
-        public DynamicObject(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold) : base(aPosition, aSize)
+        public DynamicObject(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, float aGravity) : base(aPosition, aSize)
         {
             this.myVelocity = aVelocity; //Speed of object in x, y-axis
             this.myVelocityThreshold = aVelocityThreshold; //Maximum speed in x, y-axis
+            this.myGravity = aGravity; //Fall speed
         }
 
         protected void Gravity(GameTime aGameTime)
         {
-            if (myCurrentVelocity.Y + myVelocity.Y < myVelocityThreshold.Y)
-            {
-                myCurrentVelocity.Y += myVelocity.Y;
-            }
-            else
-            {
-                myCurrentVelocity.Y = myVelocityThreshold.Y;
-            }
-
-             myPosition.Y += myCurrentVelocity.Y * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+            myCurrentVelocity.Y += myGravity;
+            myCurrentVelocity.Y = Math.Min(Math.Max(myCurrentVelocity.Y, -myVelocityThreshold.Y), myVelocityThreshold.Y);
+            
+            myPosition.Y += myCurrentVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 }

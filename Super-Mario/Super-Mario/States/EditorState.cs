@@ -65,6 +65,7 @@ namespace Super_Mario
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '%'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '&'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '/'),
+                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '^'),
             };
             this.myEditorState = EditorStates.isEditing;
             this.myOffset = new Rectangle(

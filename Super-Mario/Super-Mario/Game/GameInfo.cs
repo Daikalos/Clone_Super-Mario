@@ -86,13 +86,16 @@ namespace Super_Mario
 
             if (myHighScores.Length > 0)
             {
-                if (myHighScores[0] != 0)
+                if (myScore > 0)
                 {
-                    File.AppendAllText(tempPath, Environment.NewLine + "HighScore=" + myScore.ToString());
-                }
-                else
-                {
-                    File.AppendAllText(tempPath, "HighScore=" + myScore.ToString());
+                    if (myHighScores[0] != 0)
+                    {
+                        File.AppendAllText(tempPath, Environment.NewLine + "HighScore=" + myScore.ToString());
+                    }
+                    else
+                    {
+                        File.AppendAllText(tempPath, "HighScore=" + myScore.ToString());
+                    }
                 }
             }
         }
@@ -114,7 +117,7 @@ namespace Super_Mario
 
             if (myDSTimer >= 0)
             {
-                StringManager.DrawStringMid(aSpriteBatch, aFont, myDrawScore.ToString(), myDrawPos, Color.White, 0.3f);
+                StringManager.DrawStringMid(aSpriteBatch, aFont, myDrawScore.ToString(), myDrawPos, Color.Black, 0.3f);
             }
         }
 

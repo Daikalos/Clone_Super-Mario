@@ -5,37 +5,38 @@ namespace Super_Mario
 {
     class DynamicObject : GameObject
     {
-        protected float 
-            mySpeed,
-            myCurrentSpeed,
+        protected Vector2 
             myVelocity,
-            myVelocityThreshold,
-            myGravity;
+            myCurrentVelocity,
+            myVelocityThreshold;
 
-        public float CurrentSpeed
+        public Vector2 Velocity
         {
-            get => myCurrentSpeed;
+            get => myVelocity;
+        }
+        public Vector2 CurrentVelocity
+        {
+            get => myCurrentVelocity;
         }
         
-        public DynamicObject(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aVelocityThreshold) : base(aPosition, aSize)
+        public DynamicObject(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold) : base(aPosition, aSize)
         {
-            this.mySpeed = aSpeed;
-            this.myGravity = aGravity;
-            this.myVelocityThreshold = aVelocityThreshold;
+            this.myVelocity = aVelocity; //Speed of object in x, y-axis
+            this.myVelocityThreshold = aVelocityThreshold; //Maximum speed in x, y-axis
         }
 
         protected void Gravity(GameTime aGameTime)
         {
-            if (myVelocity + myGravity < myVelocityThreshold)
+            if (myCurrentVelocity.Y + myVelocity.Y < myVelocityThreshold.Y)
             {
-                myVelocity += myGravity;
+                myCurrentVelocity.Y += myVelocity.Y;
             }
             else
             {
-                myVelocity = myVelocityThreshold;
+                myCurrentVelocity.Y = myVelocityThreshold.Y;
             }
 
-            myPosition.Y += myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+             myPosition.Y += myCurrentVelocity.Y * (float)aGameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 }

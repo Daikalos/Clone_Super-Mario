@@ -48,7 +48,7 @@ namespace Super_Mario
             get => myIsAlive;
         }
 
-        public Player(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aVelocityThreshold, int someLives, float aJumpHeight, float aInvincibleDelay, float aIsBigDelay) : base(aPosition, aSize, aSpeed, aGravity, aVelocityThreshold)
+        public Player(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, int someLives, float aJumpHeight, float aInvincibleDelay, float aIsBigDelay) : base(aPosition, aSize, aVelocity, aVelocityThreshold)
         {
             this.myLives = someLives;
             this.myJumpHeight = aJumpHeight;
@@ -74,19 +74,19 @@ namespace Super_Mario
             switch (myPlayerState)
             {
                 case PlayerState.isWalking:
-                    Movement(aWindow, aGameTime, mySpeed);
+                    Movement(aWindow, aGameTime);
                     Idle();
                     Jump();
                     Collisions(aGameTime);
                     break;
                 case PlayerState.isClimbing:
-                    Movement(aWindow, aGameTime, mySpeed / 2);
-                    Climbing(aGameTime, mySpeed / 2);
+                    Movement(aWindow, aGameTime);
+                    Climbing(aGameTime);
                     Idle();
                     Collisions(aGameTime);
                     break;
                 case PlayerState.isFalling:
-                    Movement(aWindow, aGameTime, mySpeed);
+                    Movement(aWindow, aGameTime);
                     Gravity(aGameTime);
                     Collisions(aGameTime);
                     break;
@@ -142,10 +142,10 @@ namespace Super_Mario
         private void Collisions(GameTime aGameTime)
         {
             IsFalling();
-            CollisionItemBlock(aGameTime);
-            CollisionBlock(aGameTime);
+            CollisionItemBlock();
+            CollisionBlock();
             CollisionLadder();
-            CollisionEnemy(aGameTime);
+            CollisionEnemy();
             CollisionItem();
         }
         private void IsFalling()
@@ -167,22 +167,20 @@ namespace Super_Mario
                 myPlayerState = PlayerState.isFalling;
             }
         }
-        private void CollisionBlock(GameTime aGameTime)
+        private void CollisionBlock()
         {
             foreach (Tile tile in Level.TilesAround(this))
             {
-                float tempVelocity = (myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, tempVelocity) && myVelocity < 0)
+                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, -myCurrentVelocity.Y) && myCurrentVelocity.Y < 0)
                     {
-                        myVelocity = 0.0f;
+                        myVelocity.Y = 0.0f;
                         myPosition.Y = tile.Position.Y + tile.Size.Y;
                     }
-                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, tempVelocity) && myVelocity > 0)
+                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, myCurrentVelocity.Y) && myCurrentVelocity.Y > 0)
                     {
-                        myVelocity = 0.0f;
+                        myVelocity.Y = 0.0f;
                         myPosition.Y = tile.Position.Y - mySize.Y;
 
                         myPlayerState = PlayerState.isWalking;
@@ -190,15 +188,13 @@ namespace Super_Mario
                 }
             }
         }
-        private void CollisionItemBlock(GameTime aGameTime)
+        private void CollisionItemBlock()
         {
             foreach (Tile tile in Level.TilesAround(this))
             {
-                float tempVelocity = (myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-
                 if (tile.TileType == '/')
                 {
-                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, tempVelocity) && myVelocity < 0)
+                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity.Y) && myCurrentVelocity.Y < 0)
                     {
                         tile.TileType = '(';
                         tile.IsBlock = true;
@@ -242,12 +238,12 @@ namespace Super_Mario
                     if (KeyMouseReader.KeyHold(Keys.Up) && (!CollisionManager.Collision(tempColRectAbove, tile.BoundingBox) || tile.TileType != '#'))
                     {
                         myPlayerState = PlayerState.isClimbing;
-                        myVelocity = 0.0f;
+                        myCurrentVelocity.Y = 0.0f;
                     }
                     if (KeyMouseReader.KeyHold(Keys.Down) && (!CollisionManager.Collision(tempColRectBelow, tile.BoundingBox) || tile.TileType != '#'))
                     {
                         myPlayerState = PlayerState.isClimbing;
-                        myVelocity = 0.0f;
+                        myCurrentVelocity.Y = 0.0f;
                     }
                 }
                 else if (myPlayerState == PlayerState.isClimbing)
@@ -256,21 +252,19 @@ namespace Super_Mario
                 }
             }
         }
-        private void CollisionEnemy(GameTime aGameTime)
+        private void CollisionEnemy()
         {
             foreach (Enemy enemy in EnemyManager.Enemies)
             {
-                float tempVelocity = myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds;
-
                 if (!enemy.HasCollided)
                 {
                     if (mySize != myBigSize)
                     {
-                        if (CollisionManager.CheckBelow(myBoundingBox, enemy.BoundingBox, tempVelocity) && tempVelocity > 0)
+                        if (CollisionManager.CheckBelow(myBoundingBox, enemy.BoundingBox, myCurrentVelocity.Y) && myCurrentVelocity.Y > 0)
                         {
                             enemy.IsAlive = false;
                             enemy.HasCollided = true;
-                            myVelocity = myJumpHeight;
+                            myCurrentVelocity.Y = myJumpHeight;
 
                             GameInfo.AddScore(enemy.BoundingBox.Center.ToVector2(), 100);
 
@@ -280,15 +274,15 @@ namespace Super_Mario
                         {
                             if (!myIsInvincible)
                             {
-                                if (CollisionManager.CheckAbove(myBoundingBox, enemy.BoundingBox, tempVelocity) && tempVelocity < 0)
+                                if (CollisionManager.CheckAbove(myBoundingBox, enemy.BoundingBox, myCurrentVelocity.Y) && myCurrentVelocity.Y < 0)
                                 {
                                     ReduceHealth(1);
                                 }
-                                else if (CollisionManager.CheckLeft(myBoundingBox, enemy.BoundingBox, new Vector2(0, -tempVelocity)))
+                                else if (CollisionManager.CheckLeft(myBoundingBox, enemy.BoundingBox, new Vector2(0, -myCurrentVelocity.X)))
                                 {
                                     ReduceHealth(1);
                                 }
-                                else if (CollisionManager.CheckRight(myBoundingBox, enemy.BoundingBox, new Vector2(0, -tempVelocity)))
+                                else if (CollisionManager.CheckRight(myBoundingBox, enemy.BoundingBox, new Vector2(0, -myCurrentVelocity.X)))
                                 {
                                     ReduceHealth(1);
                                 }
@@ -349,21 +343,21 @@ namespace Super_Mario
             return false;
         }
 
-        private void Movement(GameWindow aWindow, GameTime aGameTime, float aSpeed)
+        private void Movement(GameWindow aWindow, GameTime aGameTime)
         {
-            if (KeyMouseReader.KeyHold(Keys.Left) && !OutsideBounds(new Vector2(-mySpeed, 0)) && CanMoveHorizontal(aGameTime))
+            if (KeyMouseReader.KeyHold(Keys.Left) && !OutsideBounds() && CanMoveHorizontal(aGameTime))
             {
-                myPosition.X -= aSpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
-                myCurrentSpeed = aSpeed;
+                myCurrentVelocity.X = myVelocity.X * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                myPosition.X -= myCurrentVelocity.X;
 
                 myIsMoving = true;
                 myIsClimbing = true;
                 myFlipSprite = SpriteEffects.FlipHorizontally;
             }
-            if (KeyMouseReader.KeyHold(Keys.Right) && !OutsideBounds(new Vector2(mySpeed, 0)) && CanMoveHorizontal(aGameTime))
+            if (KeyMouseReader.KeyHold(Keys.Right) && !OutsideBounds() && CanMoveHorizontal(aGameTime))
             {
-                myPosition.X += aSpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
-                myCurrentSpeed = aSpeed;
+                myCurrentVelocity.X = myVelocity.X * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                myPosition.X += myCurrentVelocity.X;
 
                 myIsMoving = true;
                 myIsClimbing = true;
@@ -375,19 +369,19 @@ namespace Super_Mario
                 ReduceHealth(1);
             }
         }
-        private void Climbing(GameTime aGameTime, float aSpeed)
+        private void Climbing(GameTime aGameTime)
         {
-            if (KeyMouseReader.KeyHold(Keys.Up) && CanMoveVertical(aGameTime))
+            if (KeyMouseReader.KeyHold(Keys.Up) && CanMoveVertical())
             {
-                myPosition.Y -= aSpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
-                myCurrentSpeed = aSpeed;
+                myCurrentVelocity.X = myVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                myPosition.Y -= myCurrentVelocity.X;
 
                 myIsClimbing = true;
             }
-            if (KeyMouseReader.KeyHold(Keys.Down) && CanMoveVertical(aGameTime))
+            if (KeyMouseReader.KeyHold(Keys.Down) && CanMoveVertical())
             {
-                myPosition.Y += aSpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
-                myCurrentSpeed = aSpeed;
+                myCurrentVelocity.X = myVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                myPosition.Y += myCurrentVelocity.X;
 
                 myIsClimbing = true;
             }
@@ -397,7 +391,7 @@ namespace Super_Mario
             if (!KeyMouseReader.KeyHold(Keys.Left) && !KeyMouseReader.KeyHold(Keys.Right) || KeyMouseReader.KeyHold(Keys.Left) && KeyMouseReader.KeyHold(Keys.Right))
             {
                 myIsMoving = false;
-                myCurrentSpeed = 0;
+                myCurrentVelocity.X = 0;
                 if (!KeyMouseReader.KeyHold(Keys.Up) && !KeyMouseReader.KeyHold(Keys.Down) || KeyMouseReader.KeyHold(Keys.Up) && KeyMouseReader.KeyHold(Keys.Down))
                 {
                     myIsClimbing = false;
@@ -408,7 +402,7 @@ namespace Super_Mario
         {
             if (KeyMouseReader.KeyPressed(Keys.Space))
             {
-                myVelocity = myJumpHeight;
+                myCurrentVelocity.Y = myJumpHeight;
                 myPlayerState = PlayerState.isFalling;
             }
         }
@@ -430,20 +424,20 @@ namespace Super_Mario
                 {
                     myLives = 0;
 
-                    myVelocity = myJumpHeight * 0.8f;
+                    myCurrentVelocity.Y = myJumpHeight * 0.8f;
                     myPlayerState = PlayerState.isDead;
                 }
             }
         }
 
-        private bool OutsideBounds(Vector2 aDirection)
+        private bool OutsideBounds()
         {
-            if (myPosition.X + aDirection.X < 0)
+            if (myPosition.X + myCurrentVelocity.X < 0)
             {
                 myPosition.X = 0;
                 return true;
             }
-            if (myPosition.X + aDirection.X + mySize.X > Level.MapSize.X)
+            if (myPosition.X + myCurrentVelocity.X + mySize.X > Level.MapSize.X)
             {
                 myPosition.X = Level.MapSize.X - mySize.X;
                 return true;
@@ -456,15 +450,12 @@ namespace Super_Mario
             {
                 if (tile.IsBlock)
                 {
-                    float tempVelocity = Math.Abs((myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds));
-                    float tempSpeed = (mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-
-                    if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, new Vector2(tempSpeed, tempVelocity)) && KeyMouseReader.KeyHold(Keys.Left))
+                    if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && KeyMouseReader.KeyHold(Keys.Left))
                     {
                         myPosition.X = tile.BoundingBox.X + tile.Size.X;
                         return false;
                     }
-                    if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, new Vector2(tempSpeed, tempVelocity)) && KeyMouseReader.KeyHold(Keys.Right))
+                    if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && KeyMouseReader.KeyHold(Keys.Right))
                     {
                         myPosition.X = tile.BoundingBox.X - mySize.X;
                         return false;
@@ -473,20 +464,18 @@ namespace Super_Mario
             }
             return true;
         }
-        private bool CanMoveVertical(GameTime aGameTime)
+        private bool CanMoveVertical()
         {
             foreach (Tile tile in Level.TilesAround(this))
             {
                 if (tile.IsBlock)
                 {
-                    float tempSpeed = ((mySpeed / 2) * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-
-                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, -tempSpeed) && KeyMouseReader.KeyHold(Keys.Up))
+                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, -myCurrentVelocity.Y) && KeyMouseReader.KeyHold(Keys.Up))
                     {
                         myPosition.Y = tile.Position.Y + tile.Size.Y;
                         return false;
                     }
-                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, tempSpeed) && KeyMouseReader.KeyHold(Keys.Down))
+                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, myCurrentVelocity.Y) && KeyMouseReader.KeyHold(Keys.Down))
                     {
                         myPosition.Y = tile.Position.Y - mySize.Y;
                         return false;

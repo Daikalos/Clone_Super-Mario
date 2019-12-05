@@ -33,7 +33,7 @@ namespace Super_Mario
             set => myHasCollided = value;
         }
 
-        public Enemy(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aVelocityThreshold) : base(aPosition, aSize, aSpeed, aGravity, aVelocityThreshold)
+        public Enemy(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold) : base(aPosition, aSize, aVelocity, aVelocityThreshold)
         {
             this.myIsAlive = true;
             this.myHasCollided = false;
@@ -77,13 +77,11 @@ namespace Super_Mario
         {
             foreach (Tile tile in Level.TilesAround(this))
             {
-                float tempVelocity = (myVelocity * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, tempVelocity) && myVelocity > 0)
+                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, myVelocity.Y) && myVelocity.Y > 0)
                     {
-                        myVelocity = 0.0f;
+                        myVelocity.Y = 0.0f;
                         myPosition.Y = tile.Position.Y - mySize.Y;
 
                         myEnemyState = EnemyState.isActing;
@@ -114,7 +112,7 @@ namespace Super_Mario
 
     class Chase : Enemy
     {
-        public Chase(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aVelocityThreshold) : base(aPosition, aSize, aSpeed, aGravity, aVelocityThreshold)
+        public Chase(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold) : base(aPosition, aSize, aVelocity, aVelocityThreshold)
         {
 
         }
@@ -135,24 +133,25 @@ namespace Super_Mario
         private AnimationManager myGoombaAnimation;
         private bool myDirection;
 
-        public Patrol(Vector2 aPosition, Point aSize, float aSpeed, float aGravity, float aVelocityThreshold) : base(aPosition, aSize, aSpeed, aGravity, aVelocityThreshold)
+        public Patrol(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold) : base(aPosition, aSize, aVelocity, aVelocityThreshold)
         {
             myGoombaAnimation = new AnimationManager(new Point(2, 1), 0.2f, true);
         }
 
         protected override void Behaviour(GameTime aGameTime)
         {
+            myCurrentVelocity.X = myVelocity.X * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
             switch (myDirection)
             {
                 case true:
-                    myPosition.X += mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    myPosition.X += myCurrentVelocity.X;
                     break;
                 case false:
-                    myPosition.X -= mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    myPosition.X -= myCurrentVelocity.X;
                     break;
             }
 
-            SwitchDirection(aGameTime);
+            SwitchDirection();
         }
 
         public override void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime)
@@ -168,22 +167,21 @@ namespace Super_Mario
             }
         }
 
-        private void SwitchDirection(GameTime aGameTime)
+        private void SwitchDirection()
         {
             bool tempSwitchDirection = false;
             foreach (Tile tile in Level.TilesAround(this))
             {
-                float tempSpeed = (mySpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
                 Rectangle tempColRectBot = new Rectangle((int)myPosition.X, (int)myPosition.Y + mySize.Y, mySize.X, (mySize.Y / 8));
 
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, new Vector2(tempSpeed, 0)) && !myDirection)
+                    if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && !myDirection)
                     {
                         myPosition.X = tile.BoundingBox.X + tile.Size.X;
                         tempSwitchDirection = true;
                     }
-                    if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, new Vector2(tempSpeed, 0)) && myDirection)
+                    if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myDirection)
                     {
                         myPosition.X = tile.BoundingBox.X - mySize.X;
                         tempSwitchDirection = true;
@@ -196,11 +194,11 @@ namespace Super_Mario
                         tempSwitchDirection = true;
                     }
                 }
-                if (myPosition.X + tempSpeed < 0)
+                if (myPosition.X - myCurrentVelocity.X < 0)
                 {
                     tempSwitchDirection = true;
                 }
-                if (myPosition.X + tempSpeed > Level.MapSize.X)
+                if (myPosition.X + mySize.X + myCurrentVelocity.X > Level.MapSize.X)
                 {
                     tempSwitchDirection = true;
                 }

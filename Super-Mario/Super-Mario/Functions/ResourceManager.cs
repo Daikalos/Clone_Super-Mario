@@ -57,7 +57,7 @@ namespace Super_Mario
             {
                 return myTextures[aTextureName]; //Return texture
             }
-            return null; //ERROR
+            return myTextures["Null"]; //ERROR
         }
         public static SoundEffectInstance RequestSoundEffect(string aSoundName)
         {

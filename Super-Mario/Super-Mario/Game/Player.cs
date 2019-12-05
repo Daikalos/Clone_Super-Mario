@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -28,16 +27,20 @@ namespace Super_Mario
             myIsMoving,
             myIsClimbing,
             myIsInvincible,
+            myIsSuperForm,
+            myIsFireForm,
             myDrawSprite;
         private float
-            myJumpHeight,
             myInvincibleTimer,
             myInvincibleDelay,
-            myIsBigTimer,
-            myIsBigDelay,
+            mySuperPowerUpTimer,
+            mySuperPowerUpDelay,
+            myFirePowerUpTimer,
+            myFirePowerUpDelay,
             myDrawPlayerTimer,
             myDrawPlayerDelay;
         private int myLives;
+        private string myLoadTexture;
 
         public int Lives
         {
@@ -48,17 +51,17 @@ namespace Super_Mario
             get => myIsAlive;
         }
 
-        public Player(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, float aGravity, float aJumpHeight, float aInvincibleDelay, float aIsBigDelay, int someLives) : base(aPosition, aSize, aVelocity, aVelocityThreshold, aGravity)
+        public Player(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, float aGravity, float aInvincibleDelay, float aSuperPowerUpDelay, float aFirePowerUpDelay, int someLives) : base(aPosition, aSize, aVelocity, aVelocityThreshold, aGravity)
         {
             this.myLives = someLives;
-            this.myJumpHeight = aJumpHeight;
             this.myInvincibleDelay = aInvincibleDelay;
-            this.myIsBigDelay = aIsBigDelay;
+            this.mySuperPowerUpDelay = aSuperPowerUpDelay;
+            this.myFirePowerUpDelay = aFirePowerUpDelay;
 
             this.myWalkingAnimation = new AnimationManager(new Point(3, 1), 0.1f, true);
             this.myClimbingAnimation = new AnimationManager(new Point(2, 1), 0.3f, true);
             this.myPosition += new Vector2(0, Level.TileSize.Y - mySize.Y);
-            this.myBigSize = new Point(mySize.X * 2, mySize.Y * 2);
+            this.myBigSize = new Point(mySize.X, mySize.Y * 2);
             this.mySaveSize = mySize;
             this.myPlayerState = PlayerState.isWalking;
             this.myFlipSprite = SpriteEffects.None;
@@ -113,7 +116,7 @@ namespace Super_Mario
                     case PlayerState.isWalking:
                         if (myIsMoving)
                         {
-                            myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, new Point(32), Color.White, 0.0f, myOrigin, myFlipSprite);
+                            myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, mySize, Color.White, 0.0f, myOrigin, myFlipSprite);
                         }
                         else
                         {
@@ -123,11 +126,11 @@ namespace Super_Mario
                     case PlayerState.isClimbing:
                         if (myIsClimbing)
                         {
-                            myClimbingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, new Point(32), Color.White, 0.0f, myOrigin, SpriteEffects.None);
+                            myClimbingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, mySize, Color.White, 0.0f, myOrigin, SpriteEffects.None);
                         }
                         else
                         {
-                            aSpriteBatch.Draw(myTexture, myBoundingBox, new Rectangle(0, 0, 32, 32), Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
+                            aSpriteBatch.Draw(myTexture, myBoundingBox, new Rectangle(0, 0, mySize.X, mySize.Y), Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                         }
                         break;
                     case PlayerState.isFalling:
@@ -175,7 +178,7 @@ namespace Super_Mario
             {
                 if (tile.TileType == '^')
                 {
-                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myCurrentVelocity.Y < 0)
+                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         tile.TileType = '(';
                         tile.IsBlock = true;
@@ -192,7 +195,7 @@ namespace Super_Mario
             {
                 if (tile.TileType == '/')
                 {
-                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myCurrentVelocity.Y < 0)
+                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         tile.TileType = '(';
                         tile.IsBlock = true;
@@ -201,13 +204,16 @@ namespace Super_Mario
                         Tile tempTile = Level.TileAtPos(new Vector2(tile.GetCenter().X, tile.GetCenter().Y - Level.TileSize.Y)).Item1;
                         if (tempTile.TileType == '-')
                         {
-                            switch (StaticRandom.RandomNumber(0, 2))
+                            switch (StaticRandom.RandomNumber(0, 3))
                             {
                                 case 0:
                                     tempTile.TileType = '=';
                                     break;
                                 case 1:
                                     tempTile.TileType = ')';
+                                    break;
+                                case 2:
+                                    tempTile.TileType = ',';
                                     break;
                             }
                             tempTile.SetTexture();
@@ -222,12 +228,19 @@ namespace Super_Mario
             {
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myCurrentVelocity.Y < 0)
+                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = 0.0f;
                         myPosition.Y = tile.Position.Y + tile.Size.Y;
+
+                        if (myIsSuperForm)
+                        {
+                            tile.TileType = '-';
+                            tile.IsBlock = false;
+                            tile.SetTexture();
+                        }
                     }
-                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myCurrentVelocity.Y > 0)
+                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = 0.0f;
                         myPosition.Y = tile.Position.Y - mySize.Y;
@@ -277,48 +290,32 @@ namespace Super_Mario
             {
                 if (!enemy.HasCollided)
                 {
-                    if (mySize != myBigSize)
+                    if (CollisionManager.CheckBelow(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
                     {
-                        if (CollisionManager.CheckBelow(myBoundingBox, enemy.BoundingBox, myCurrentVelocity) && myCurrentVelocity.Y > 0)
-                        {
-                            enemy.IsAlive = false;
-                            enemy.HasCollided = true;
-                            myCurrentVelocity.Y = myJumpHeight;
+                        enemy.IsAlive = false;
+                        enemy.HasCollided = true;
+                        myCurrentVelocity.Y = -myVelocityThreshold.Y;
 
-                            GameInfo.AddScore(enemy.BoundingBox.Center.ToVector2(), 100);
+                        GameInfo.AddScore(enemy.BoundingBox.Center.ToVector2(), 100);
 
-                            break;
-                        }
-                        else
-                        {
-                            if (!myIsInvincible)
-                            {
-                                if (myBoundingBox.Bottom + myCurrentVelocity.Y > enemy.BoundingBox.Top)
-                                {
-                                    if (CollisionManager.CheckAbove(myBoundingBox, enemy.BoundingBox, myCurrentVelocity) && myCurrentVelocity.Y < 0)
-                                    {
-                                        ReduceHealth(1);
-                                    }
-                                    else if (CollisionManager.CheckLeft(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
-                                    {
-                                        ReduceHealth(1);
-                                    }
-                                    else if (CollisionManager.CheckRight(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
-                                    {
-                                        ReduceHealth(1);
-                                    }
-                                }
-                            }
-                        }
+                        break;
                     }
                     else
                     {
-                        if (CollisionManager.Collision(myBoundingBox, enemy.BoundingBox))
+                        if (myBoundingBox.Bottom + myCurrentVelocity.Y > enemy.BoundingBox.Top)
                         {
-                            enemy.IsAlive = false;
-                            enemy.HasCollided = true;
-
-                            GameInfo.AddScore(enemy.BoundingBox.Center.ToVector2(), 100);
+                            if (CollisionManager.CheckAbove(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
+                            {
+                                ReduceHealth(1);
+                            }
+                            else if (CollisionManager.CheckLeft(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
+                            {
+                                ReduceHealth(1);
+                            }
+                            else if (CollisionManager.CheckRight(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
+                            {
+                                ReduceHealth(1);
+                            }
                         }
                     }
                 }
@@ -330,12 +327,30 @@ namespace Super_Mario
             {
                 if (CollisionManager.Collision(myBoundingBox, tile.BoundingBox))
                 {
-                    if (tile.TileType == '=' && mySize != myBigSize)
+                    if (tile.TileType == '=' && !myIsSuperForm && !myIsFireForm)
                     {
-                        myPosition.Y -= mySize.Y;
-
+                        myPosition.Y -= (myBigSize.Y - mySize.Y);
                         mySize = myBigSize;
-                        myIsBigTimer = myIsBigDelay;
+
+                        myIsSuperForm = true;
+                        mySuperPowerUpTimer = mySuperPowerUpDelay;
+
+                        tile.TileType = '-';
+                        tile.SetTexture();
+                    }
+                    if (tile.TileType == ',' && !myIsFireForm)
+                    {
+                        if (myIsSuperForm)
+                        {
+                            mySuperPowerUpTimer = 0;
+                            myIsSuperForm = false;
+                        }
+
+                        myPosition.Y -= (myBigSize.Y - mySize.Y);
+                        mySize = myBigSize;
+
+                        myIsFireForm = true;
+                        myFirePowerUpTimer = myFirePowerUpDelay;
 
                         tile.TileType = '-';
                         tile.SetTexture();
@@ -430,30 +445,48 @@ namespace Super_Mario
         {
             if (KeyMouseReader.KeyPressed(Keys.Space))
             {
-                myCurrentVelocity.Y = myJumpHeight;
+                myCurrentVelocity.Y = -myVelocityThreshold.Y;
                 myPlayerState = PlayerState.isFalling;
+            }
+        }
+        private void ThrowFireball()
+        {
+            if (myIsFireForm)
+            {
+
             }
         }
         public void ReduceHealth(int aValue)
         {
-            if (myInvincibleTimer <= 0)
+            if (!myIsInvincible)
             {
-                myLives -= aValue;
-
-                if (myLives > 0)
+                if (!myIsSuperForm && !myIsFireForm)
                 {
-                    myIsInvincible = true;
-                    myInvincibleTimer = myInvincibleDelay;
+                    myLives -= aValue;
 
-                    myPosition = Level.PlayerSpawn;
-                    myPosition += new Vector2(0, -mySize.Y);
+                    if (myLives > 0)
+                    {
+                        myIsInvincible = true;
+                        myInvincibleTimer = myInvincibleDelay;
+
+                        myPosition = Level.PlayerSpawn;
+                        myPosition += new Vector2(0, -mySize.Y);
+                    }
+                    else
+                    {
+                        myLives = 0;
+
+                        myCurrentVelocity.Y = myVelocityThreshold.Y * 0.8f;
+                        myPlayerState = PlayerState.isDead;
+                    }
                 }
                 else
                 {
-                    myLives = 0;
+                    mySuperPowerUpTimer = 0;
+                    myFirePowerUpTimer = 0;
 
-                    myCurrentVelocity.Y = myJumpHeight * 0.8f;
-                    myPlayerState = PlayerState.isDead;
+                    myIsInvincible = true;
+                    myInvincibleTimer = myInvincibleDelay;
                 }
             }
         }
@@ -515,18 +548,16 @@ namespace Super_Mario
 
         private void Timer(GameTime aGameTime)
         {
+            Invincibility(aGameTime);
+            SuperPowerUp(aGameTime);
+            FirePowerUp(aGameTime);
+        }
+        private void Invincibility(GameTime aGameTime)
+        {
             if (myInvincibleTimer > 0)
             {
                 myInvincibleTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
-                if (myDrawPlayerTimer > 0)
-                {
-                    myDrawPlayerTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
-                }
-                else
-                {
-                    myDrawPlayerTimer = myDrawPlayerDelay;
-                    myDrawSprite = !myDrawSprite;
-                }
+                DrawPlayer(aGameTime);
             }
             else if (myIsInvincible)
             {
@@ -534,52 +565,95 @@ namespace Super_Mario
                 myIsInvincible = false;
                 myDrawSprite = true;
             }
-
-            if (myIsBigTimer > 0)
+        }
+        private void SuperPowerUp(GameTime aGameTime)
+        {
+            if (mySuperPowerUpTimer > 0)
             {
-                myIsBigTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
-                if (myIsBigTimer < (myIsBigDelay / 4))
+                mySuperPowerUpTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                if (mySuperPowerUpTimer < (mySuperPowerUpDelay / 4))
                 {
-                    if (myDrawPlayerTimer > 0)
-                    {
-                        myDrawPlayerTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
-                    }
-                    else
-                    {
-                        myDrawPlayerTimer = myDrawPlayerDelay;
-                        myDrawSprite = !myDrawSprite;
-                    }
+                    DrawPlayer(aGameTime);
                 }
             }
-            else if (mySize != mySaveSize)
+            else if (myIsSuperForm)
             {
-                myIsBigTimer = 0;
                 mySize = mySaveSize;
+                myIsSuperForm = false;
+                mySuperPowerUpTimer = 0;
+
                 myDrawSprite = true;
 
-                myPosition.Y += mySize.Y;
+                myPosition.Y += (myBigSize.Y - mySize.Y);
+            }
+        }
+        private void FirePowerUp(GameTime aGameTime)
+        {
+            if (myFirePowerUpTimer > 0)
+            {
+                myFirePowerUpTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                if (myFirePowerUpTimer < (myFirePowerUpDelay / 4))
+                {
+                    DrawPlayer(aGameTime);
+                }
+            }
+            else if (myIsFireForm)
+            {
+                mySize = mySaveSize;
+                myIsFireForm = false;
+                myFirePowerUpTimer = 0;
+
+                myDrawSprite = true;
+
+                myPosition.Y += (myBigSize.Y - mySize.Y);
+            }
+        }
+        private void DrawPlayer(GameTime aGameTime)
+        {
+            if (myDrawPlayerTimer > 0)
+            {
+                myDrawPlayerTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
+            }
+            else
+            {
+                myDrawPlayerTimer = myDrawPlayerDelay;
+                myDrawSprite = !myDrawSprite;
             }
         }
 
         private void TextureState()
         {
+            if (myIsSuperForm)
+            {
+                myLoadTexture = "-Super";
+            }
+            if (myIsFireForm)
+            {
+                myLoadTexture = "-Fire";
+            }
+
+            if (!myIsSuperForm && !myIsFireForm)
+            {
+                myLoadTexture = string.Empty;
+            }
+
             switch (myPlayerState)
             {
                 case PlayerState.isWalking:
                     if (myIsMoving)
                     {
-                        myTexture = ResourceManager.RequestTexture("Mario_Walking");
+                        myTexture = ResourceManager.RequestTexture("Mario" + myLoadTexture + "_Walking");
                     }
                     else
                     {
-                        myTexture = ResourceManager.RequestTexture("Mario_Idle");
+                        myTexture = ResourceManager.RequestTexture("Mario" + myLoadTexture + "_Idle");
                     }
                     break;
                 case PlayerState.isClimbing:
-                    myTexture = ResourceManager.RequestTexture("Mario_Climbing");
+                    myTexture = ResourceManager.RequestTexture("Mario" + myLoadTexture + "_Climbing");
                     break;
                 case PlayerState.isFalling:
-                    myTexture = ResourceManager.RequestTexture("Mario_Jumping");
+                    myTexture = ResourceManager.RequestTexture("Mario" + myLoadTexture + "_Jumping");
                     break;
                 case PlayerState.isDead:
                     myTexture = ResourceManager.RequestTexture("Mario_Death");

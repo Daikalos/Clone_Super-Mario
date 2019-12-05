@@ -52,6 +52,7 @@
     <Compile Include="Game\Background.cs" />
     <Compile Include="Game\Camera.cs" />
     <Compile Include="Game\Button.cs" />
+    <Compile Include="Game\Fireball.cs" />
     <Compile Include="Inheritance\DynamicObject.cs" />
     <Compile Include="Game\Enemy.cs" />
     <Compile Include="Game\EnemyManager.cs" />

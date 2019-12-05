@@ -110,3 +110,14 @@ C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows
 C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\mushroom-00.xnb
 C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\mushroom-01.xnb
 C:\Users\tobia\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\coin_block.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\coin_block.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Tileset\fireflower.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-super_walking.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-super_idle.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\null_texture.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-super_climbing.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-super_jumping.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-fire_walking.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-fire_idle.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-fire_climbing.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-fire_jumping.xnb

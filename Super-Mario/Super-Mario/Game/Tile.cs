@@ -59,11 +59,6 @@ namespace Super_Mario
             this.myBoundingBox = new Rectangle((int)aPosition.X, (int)aPosition.Y, aSize.X, aSize.Y);
         }
 
-        public override void Update()
-        {
-            myBoundingBox = new Rectangle((int)myPosition.X + (int)myOrigin.X, (int)myPosition.Y + (int)myOrigin.Y, mySize.X, mySize.Y);
-        }
-
         public void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime)
         {
             switch (myTileType)

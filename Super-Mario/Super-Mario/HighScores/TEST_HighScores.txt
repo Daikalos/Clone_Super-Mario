@@ -1,2 +1,3 @@
 HighScore=900
 HighScore=200
+HighScore=600

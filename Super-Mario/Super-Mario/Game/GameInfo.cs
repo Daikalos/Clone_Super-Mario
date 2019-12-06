@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,18 +9,14 @@ namespace Super_Mario
 {
     static class GameInfo
     {
-        private static Vector2 myDrawPos;
+        private static List<DrawScore> myDrawScore;
         private static string
             myLevelName,
             myFolderLevels,
             myFolderHighScores;
         private static int[] myHighScores;
-        private static int
-            myScore,
-            myDrawScore;
-        private static float
-            myDSTimer,
-            myDSDelay;
+        private static int myScore;
+        private static float myDrawScoreDelay;
         private static bool myIsPaused;
 
         public static string LevelName
@@ -56,13 +53,12 @@ namespace Super_Mario
             set => myIsPaused = value;
         }
 
-        public static void Initialize(float aDSDelay)
+        public static void Initialize(float aDrawScoreDelay)
         {
-            myDSDelay = aDSDelay;
+            myDrawScoreDelay = aDrawScoreDelay;
 
-            myDrawPos = Vector2.Zero;
+            myDrawScore = new List<DrawScore>();
             myScore = 0;
-            myDSTimer = 0;
         }
 
         public static void LoadHighScore(string aLevelName)
@@ -102,9 +98,16 @@ namespace Super_Mario
 
         public static void Update(GameTime aGameTime)
         {
-            if (myDSTimer >= 0)
+            for (int i = myDrawScore.Count - 1; i >= 0; i--)
             {
-                myDSTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                if (myDrawScore[i].DrawScoreTimer > 0)
+                {
+                    myDrawScore[i].DrawScoreTimer -= (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                }
+                else
+                {
+                    myDrawScore.RemoveAt(i);
+                }
             }
         }
 
@@ -115,18 +118,52 @@ namespace Super_Mario
             StringManager.DrawStringMid(aSpriteBatch, aFont, "HighScore: " + HighScore.ToString(), new Vector2(Camera.Position.X + (aWindow.ClientBounds.Width / 2), 32), Color.Black, 0.5f);
             StringManager.DrawStringRight(aSpriteBatch, aFont, GameInfo.LevelName, new Vector2(Camera.Position.X + (aWindow.ClientBounds.Width - 32), 32), Color.Black, 0.5f);
 
-            if (myDSTimer >= 0)
+            for (int i = myDrawScore.Count - 1; i >= 0; i--)
             {
-                StringManager.DrawStringMid(aSpriteBatch, aFont, myDrawScore.ToString(), myDrawPos, Color.Black, 0.3f);
+                if (myDrawScore[i].DrawScoreTimer > 0)
+                {
+                    StringManager.DrawStringMid(aSpriteBatch, aFont, myDrawScore[i].DrawScoreValue.ToString(), myDrawScore[i].DrawScorePosition, Color.Black, 0.3f);
+                }
             }
         }
 
         public static void AddScore(Vector2 aPos, int someScore)
         {
-            myDrawPos = new Vector2(aPos.X, aPos.Y - Level.TileSize.Y);
             myScore += someScore;
-            myDrawScore = someScore;
-            myDSTimer = myDSDelay;
+
+            myDrawScore.Add(new DrawScore(new Vector2(aPos.X, aPos.Y - Level.TileSize.Y), 
+                myDrawScoreDelay, someScore));
+        }
+    }
+
+    class DrawScore
+    {
+        private Vector2 myDrawScorePosition;
+        private float myDrawScoreTimer;
+        private int myDrawScoreValue;
+
+        public Vector2 DrawScorePosition
+        {
+            get => myDrawScorePosition;
+            set => myDrawScorePosition = value;
+        }
+        public float DrawScoreTimer
+        {
+            get => myDrawScoreTimer;
+            set => myDrawScoreTimer = value;
+        }
+        public int DrawScoreValue
+        {
+            get => myDrawScoreValue;
+            set => myDrawScoreValue = value;
+        }
+
+
+        public DrawScore(Vector2 aDrawScorePosition, float aDrawScoreTimer, int aDrawScoreValue)
+        {
+            this.myDrawScorePosition = aDrawScorePosition;
+            this.myDrawScoreTimer = aDrawScoreTimer;
+            this.myDrawScoreValue = aDrawScoreValue;
         }
     }
 }

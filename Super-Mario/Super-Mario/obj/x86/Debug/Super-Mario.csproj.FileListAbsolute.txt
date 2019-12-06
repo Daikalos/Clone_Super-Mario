@@ -121,3 +121,4 @@ C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows
 C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-fire_idle.xnb
 C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-fire_climbing.xnb
 C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\mario-fire_jumping.xnb
+C:\Users\Tobias\Documents\GitHub\Super-Mario\Super-Mario\Super-Mario\bin\Windows\x86\Debug\Content\Sprites\fireball.xnb

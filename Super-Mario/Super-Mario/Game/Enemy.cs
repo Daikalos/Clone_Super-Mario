@@ -43,7 +43,7 @@ namespace Super_Mario
 
         public void Update(GameTime aGameTime)
         {
-            myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
+            base.Update();
 
             switch (myEnemyState)
             {

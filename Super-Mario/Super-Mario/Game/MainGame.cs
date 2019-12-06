@@ -76,6 +76,7 @@ namespace Super_Mario
             ResourceManager.AddTexture("Mario-Fire_Jumping", this.Content.Load<Texture2D>("Sprites/mario-fire_jumping"));
             ResourceManager.AddTexture("Mario-Fire_Climbing", this.Content.Load<Texture2D>("Sprites/mario-fire_climbing"));
             ResourceManager.AddTexture("Mario-Fire_Idle", this.Content.Load<Texture2D>("Sprites/mario-fire_idle"));
+            ResourceManager.AddTexture("Fireball", this.Content.Load<Texture2D>("Sprites/fireball"));
 
             ResourceManager.AddTexture("Goomba_Walking", this.Content.Load<Texture2D>("Sprites/goomba_walking"));
             ResourceManager.AddTexture("Goomba_Death", this.Content.Load<Texture2D>("Sprites/goomba_death"));

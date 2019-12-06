@@ -7,6 +7,7 @@
     <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Fonts/8bit_spritefont.spritefont</File>
     <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/background.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/border.png</File>
+    <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/fireball.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/goomba_death.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/goomba_walking.png</File>
     <File>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario_climbing.png</File>
@@ -37,6 +38,7 @@
   </SourceFiles>
   <DestFiles>
     <File>Fonts/8bit.spritefont</File>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -17,10 +18,11 @@ namespace Super_Mario
         private AnimationManager
             myWalkingAnimation,
             myClimbingAnimation;
+        private List<Fireball> myFireballs;
+        private PlayerState myPlayerState;
         private Point
             myBigSize,
             mySaveSize;
-        private PlayerState myPlayerState;
         private SpriteEffects myFlipSprite;
         private bool
             myIsAlive,
@@ -60,6 +62,7 @@ namespace Super_Mario
 
             this.myWalkingAnimation = new AnimationManager(new Point(3, 1), 0.1f, true);
             this.myClimbingAnimation = new AnimationManager(new Point(2, 1), 0.3f, true);
+            this.myFireballs = new List<Fireball>();
             this.myPosition += new Vector2(0, Level.TileSize.Y - mySize.Y);
             this.myBigSize = new Point(mySize.X, mySize.Y * 2);
             this.mySaveSize = mySize;
@@ -72,7 +75,7 @@ namespace Super_Mario
 
         public void Update(GameWindow aWindow, GameTime aGameTime)
         {
-            myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
+            base.Update();
 
             switch (myPlayerState)
             {
@@ -80,17 +83,21 @@ namespace Super_Mario
                     Movement(aWindow, aGameTime, myVelocity.X);
                     Idle();
                     Jump();
+                    Fireball(aGameTime);
                     Collisions();
                     break;
                 case PlayerState.isClimbing:
                     Movement(aWindow, aGameTime, myVelocity.X / 2);
                     Climbing(aGameTime);
                     Idle();
+                    Fireball(aGameTime);
                     Collisions();
                     break;
                 case PlayerState.isFalling:
                     Movement(aWindow, aGameTime, myVelocity.X);
                     Idle();
+                    ThrowFireball();
+                    UpdateFireball(aGameTime);
                     Gravity(aGameTime);
                     Collisions();
                     break;
@@ -141,6 +148,8 @@ namespace Super_Mario
                         break;
                 }
             }
+
+            DrawFireball(aSpriteBatch);
         }
 
         private void Collisions()
@@ -449,13 +458,6 @@ namespace Super_Mario
                 myPlayerState = PlayerState.isFalling;
             }
         }
-        private void ThrowFireball()
-        {
-            if (myIsFireForm)
-            {
-
-            }
-        }
         public void ReduceHealth(int aValue)
         {
             if (!myIsInvincible)
@@ -488,6 +490,55 @@ namespace Super_Mario
                     myIsInvincible = true;
                     myInvincibleTimer = myInvincibleDelay;
                 }
+            }
+        }
+
+        private void Fireball(GameTime aGameTime)
+        {
+            ThrowFireball();
+            UpdateFireball(aGameTime);
+        }
+        private void ThrowFireball()
+        {
+            if (myIsFireForm)
+            {
+                if (KeyMouseReader.KeyPressed(Keys.LeftControl))
+                {
+                    if (myFlipSprite == SpriteEffects.None)
+                    {
+                        Fireball tempFireball = new Fireball(new Vector2(myPosition.X + mySize.X, myPosition.Y + mySize.Y / 2),
+                            new Point(16), new Vector2(3.0f, 0.0f), new Vector2(3.0f, 5.0f), 0.7f, false);
+                        tempFireball.SetTexture("Fireball");
+
+                        myFireballs.Add(tempFireball);
+                    }
+                    if (myFlipSprite == SpriteEffects.FlipHorizontally)
+                    {
+                        Fireball tempFireball = new Fireball(new Vector2(myPosition.X - 16, myPosition.Y + mySize.Y / 2),
+                            new Point(16), new Vector2(3.0f, 0.0f), new Vector2(3.0f, 5.0f), 0.6f, true);
+                        tempFireball.SetTexture("Fireball");
+
+                        myFireballs.Add(tempFireball);
+                    }
+                }
+            }
+        }
+        private void UpdateFireball(GameTime aGameTime)
+        {
+            for (int i = myFireballs.Count - 1; i >= 0; i--)
+            {
+                myFireballs[i].Update(aGameTime);
+                if (!myFireballs[i].IsAlive)
+                {
+                    myFireballs.RemoveAt(i);
+                }
+            }
+        }
+        private void DrawFireball(SpriteBatch aSpriteBatch)
+        {
+            for (int i = myFireballs.Count - 1; i >= 0; i--)
+            {
+                myFireballs[i].Draw(aSpriteBatch);
             }
         }
 

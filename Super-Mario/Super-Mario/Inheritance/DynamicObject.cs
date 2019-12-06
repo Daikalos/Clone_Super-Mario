@@ -31,8 +31,8 @@ namespace Super_Mario
         protected void Gravity(GameTime aGameTime)
         {
             myCurrentVelocity.Y += myGravity;
-            myCurrentVelocity.Y = Math.Min(Math.Max(myCurrentVelocity.Y, -myVelocityThreshold.Y), myVelocityThreshold.Y);
-            
+            MathHelper.Clamp(myCurrentVelocity.Y, -myVelocityThreshold.Y, myVelocityThreshold.Y);
+
             myPosition.Y += myCurrentVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
         }
     }

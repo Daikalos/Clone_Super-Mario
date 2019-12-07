@@ -63,9 +63,11 @@ namespace Super_Mario
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '?'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '*'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '%'),
+                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '"'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '&'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '/'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '^'),
+                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '¤'),
             };
             this.myEditorState = EditorStates.isEditing;
             this.myOffset = new Rectangle(
@@ -206,6 +208,9 @@ namespace Super_Mario
                         {
                             case '/':
                                 mySelectedSource = new Rectangle(0, 0, mySelections[i].Texture.Width / 4, mySelections[i].Texture.Height);
+                                break;
+                            case '¤':
+                                mySelectedSource = new Rectangle(0, 0, mySelections[i].Texture.Width / 4, mySelections[i].Texture.Height / 2);
                                 break;
                             default:
                                 mySelectedSource = new Rectangle(0, 0, mySelections[i].Texture.Width, mySelections[i].Texture.Height);

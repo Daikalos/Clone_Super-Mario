@@ -30,7 +30,7 @@ namespace Super_Mario
         {
             if (SnapToMap(aWindow, aNewPosition))
             {
-                Background.MoveBackground(aWindow, aGameTime, -(aNewPosition / 12));
+                Background.MoveBackground(aGameTime, -(aNewPosition / 12));
                 myPosition.X += aNewPosition * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
             }
         }

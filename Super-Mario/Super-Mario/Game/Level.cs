@@ -211,6 +211,9 @@ namespace Super_Mario
                             case '&':
                                 EnemyManager.AddPatrolEnemy(myTiles[x, y].Position);
                                 break;
+                            case '"':
+                                EnemyManager.AddChaseEnemy(myTiles[x, y].Position);
+                                break;
                         }
                     }
                 }

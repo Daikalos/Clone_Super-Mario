@@ -1,2 +1,1 @@
-HighScore=30400
-HighScore=27300
+HighScore=2400

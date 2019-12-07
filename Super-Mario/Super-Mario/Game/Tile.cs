@@ -7,7 +7,9 @@ namespace Super_Mario
     class Tile : StaticObject
     {
         private List<Tile> myHistory; //Used for pathfinding
-        private AnimationManager myItemBlockAnimation;
+        private AnimationManager 
+            myItemBlockAnimation,
+            myGravityBlockAnimation;
         private bool myIsBlock;
         private char myTileType;
         private int myTileForm;
@@ -46,7 +48,7 @@ namespace Super_Mario
 
             switch(aTileType)
             {
-                case '#': case '/': case '^':
+                case '#': case '/': case '^': case '¤':
                     myIsBlock = true;
                     break;
                 default:
@@ -65,6 +67,9 @@ namespace Super_Mario
             {
                 case '/':
                     myItemBlockAnimation?.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, new Point(32), Color.White, 0.0f, myOrigin, SpriteEffects.None);
+                    break;
+                case '¤':
+                    myGravityBlockAnimation?.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, new Point(32), Color.White, 0.0f, myOrigin, SpriteEffects.None);
                     break;
                 default:
                     if (myTexture != null)
@@ -92,6 +97,9 @@ namespace Super_Mario
                 case '/':
                     myTexture = ResourceManager.RequestTexture("Item_Block");
                     break;
+                case '¤':
+                    myTexture = ResourceManager.RequestTexture("Gravity_Block");
+                    break;
                 case '(':
                     myTexture = ResourceManager.RequestTexture("Empty_Block");
                     break;
@@ -117,12 +125,15 @@ namespace Super_Mario
                 case '/':
                     myItemBlockAnimation = new AnimationManager(new Point(4, 1), 0.3f, true);
                     break;
+                case '¤':
+                    myGravityBlockAnimation = new AnimationManager(new Point(4, 2), 0.07f, true);
+                    break;
                 default:
                     myItemBlockAnimation = null;
+                    myGravityBlockAnimation = null;
                     break;
             }
         }
-
         public void SetTextureEditor()
         {
             switch (myTileType)
@@ -136,14 +147,20 @@ namespace Super_Mario
                 case '%':
                     myTexture = ResourceManager.RequestTexture("Ladder");
                     break;
-                case '^':
-                    myTexture = ResourceManager.RequestTexture("Coin_Block");
-                    break;
                 case '&':
                     myTexture = ResourceManager.RequestTexture("Goomba_Editor");
                     break;
+                case '"':
+                    myTexture = ResourceManager.RequestTexture("Koopa_Editor");
+                    break;
+                case '^':
+                    myTexture = ResourceManager.RequestTexture("Coin_Block");
+                    break;
                 case '/':
                     myTexture = ResourceManager.RequestTexture("Item_Block");
+                    break;
+                case '¤':
+                    myTexture = ResourceManager.RequestTexture("Gravity_Block");
                     break;
                 case '(':
                     myTexture = ResourceManager.RequestTexture("Empty_Block");
@@ -164,8 +181,12 @@ namespace Super_Mario
                 case '/':
                     myItemBlockAnimation = new AnimationManager(new Point(4, 1), 0.3f, true);
                     break;
+                case '¤':
+                    myGravityBlockAnimation = new AnimationManager(new Point(4, 2), 0.07f, true);
+                    break;
                 default:
                     myItemBlockAnimation = null;
+                    myGravityBlockAnimation = null;
                     break;
             }
         }

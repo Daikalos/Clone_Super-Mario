@@ -6,11 +6,13 @@ namespace Super_Mario
 {
     class DynamicObject : GameObject
     {
+        protected static CollisionFlip
+            myTopCollision,
+            myBotCollision;
         protected Vector2 
             myVelocity,
             myCurrentVelocity,
             myVelocityThreshold;
-        protected float myGravity;
 
         public Vector2 Velocity
         {
@@ -21,19 +23,45 @@ namespace Super_Mario
             get => myCurrentVelocity;
         }
         
-        public DynamicObject(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, float aGravity) : base(aPosition, aSize)
+        public DynamicObject(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold) : base(aPosition, aSize)
         {
             this.myVelocity = aVelocity; //Speed of object in x, y-axis
             this.myVelocityThreshold = aVelocityThreshold; //Maximum speed in x, y-axis
-            this.myGravity = aGravity; //Fall speed
+
+            this.myPosition += new Vector2(0, Level.TileSize.Y - mySize.Y); //Adjust spawn position after size
+        }
+
+        protected void SetTopCollisionPosition(GameObject aObject)
+        {
+            if (GameInfo.Gravity > 0)
+            {
+                myPosition.Y = aObject.Position.Y + aObject.Size.Y;
+            }
+            else
+            {
+                myPosition.Y = aObject.Position.Y - mySize.Y;
+            }
+        }
+        protected void SetBotCollisionPosition(GameObject aObject)
+        {
+            if (GameInfo.Gravity > 0)
+            {
+                myPosition.Y = aObject.Position.Y - mySize.Y;
+            }
+            else
+            {
+                myPosition.Y = aObject.Position.Y + aObject.Size.Y;
+            }
         }
 
         protected void Gravity(GameTime aGameTime)
         {
-            myCurrentVelocity.Y += myGravity;
+            myCurrentVelocity.Y += GameInfo.Gravity;
             MathHelper.Clamp(myCurrentVelocity.Y, -myVelocityThreshold.Y, myVelocityThreshold.Y);
 
             myPosition.Y += myCurrentVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
         }
+
+        protected delegate bool CollisionFlip(Rectangle aRectangle1, Rectangle aRectangle2, Vector2 aVelocity);
     }
 }

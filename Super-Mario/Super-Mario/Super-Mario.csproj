@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Functions\AnimationManager.cs" />
     <Compile Include="Functions\CollisionManager.cs" />
+    <Compile Include="Functions\Extensions.cs" />
     <Compile Include="Functions\FileReader.cs" />
     <Compile Include="Functions\KeyMouseReader.cs" />
     <Compile Include="Functions\Pathfinder.cs" />

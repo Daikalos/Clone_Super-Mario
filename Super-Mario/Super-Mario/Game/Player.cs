@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Super_Mario
 {
@@ -15,6 +15,14 @@ namespace Super_Mario
             isDead
         }
 
+        private void ChangeState(PlayerState aNewState)
+        {
+            if (myPlayerState != PlayerState.isDead)
+            {
+                myPlayerState = aNewState;
+            }
+        }
+
         private AnimationManager
             myWalkingAnimation,
             myClimbingAnimation;
@@ -22,8 +30,12 @@ namespace Super_Mario
         private PlayerState myPlayerState;
         private Point
             myBigSize,
+            myFrameSize,
             mySaveSize;
-        private SpriteEffects myFlipSprite;
+        private SpriteEffects 
+            myFlipVertical,
+            myFlipHorizontal,
+            myFlipSprite;
         private bool
             myIsAlive,
             myIsMoving,
@@ -53,7 +65,7 @@ namespace Super_Mario
             get => myIsAlive;
         }
 
-        public Player(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, float aGravity, float aInvincibleDelay, float aSuperPowerUpDelay, float aFirePowerUpDelay, int someLives) : base(aPosition, aSize, aVelocity, aVelocityThreshold, aGravity)
+        public Player(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, float aInvincibleDelay, float aSuperPowerUpDelay, float aFirePowerUpDelay, int someLives) : base(aPosition, aSize, aVelocity, aVelocityThreshold)
         {
             this.myLives = someLives;
             this.myInvincibleDelay = aInvincibleDelay;
@@ -63,47 +75,52 @@ namespace Super_Mario
             this.myWalkingAnimation = new AnimationManager(new Point(3, 1), 0.1f, true);
             this.myClimbingAnimation = new AnimationManager(new Point(2, 1), 0.3f, true);
             this.myFireballs = new List<Fireball>();
-            this.myPosition += new Vector2(0, Level.TileSize.Y - mySize.Y);
             this.myBigSize = new Point(mySize.X, mySize.Y * 2);
+            this.myFrameSize = new Point(32);
             this.mySaveSize = mySize;
             this.myPlayerState = PlayerState.isWalking;
             this.myFlipSprite = SpriteEffects.None;
             this.myIsAlive = true;
             this.myDrawSprite = true;
             this.myDrawPlayerDelay = 0.10f; //Fixed value
+
+            myTopCollision = CollisionManager.CheckAbove;
+            myBotCollision = CollisionManager.CheckBelow;
         }
 
-        public void Update(GameWindow aWindow, GameTime aGameTime)
+        public void Update(GameTime aGameTime)
         {
             base.Update();
 
             switch (myPlayerState)
             {
                 case PlayerState.isWalking:
-                    Movement(aWindow, aGameTime, myVelocity.X);
+                case PlayerState.isClimbing:
+                case PlayerState.isFalling:
                     Idle();
-                    Jump();
                     Fireball(aGameTime);
+                    OutsideBounds();
                     Collisions();
+                    break;
+            }
+
+            switch (myPlayerState)
+            {
+                case PlayerState.isWalking:
+                    Movement(aGameTime, myVelocity.X);
+                    Jump();
                     break;
                 case PlayerState.isClimbing:
-                    Movement(aWindow, aGameTime, myVelocity.X / 2);
+                    Movement(aGameTime, myVelocity.X / 2);
                     Climbing(aGameTime);
-                    Idle();
-                    Fireball(aGameTime);
-                    Collisions();
                     break;
                 case PlayerState.isFalling:
-                    Movement(aWindow, aGameTime, myVelocity.X);
-                    Idle();
-                    ThrowFireball();
-                    UpdateFireball(aGameTime);
+                    Movement(aGameTime, myVelocity.X);
                     Gravity(aGameTime);
-                    Collisions();
                     break;
                 case PlayerState.isDead:
                     Gravity(aGameTime);
-                    if (myPosition.Y - mySize.Y > aWindow.ClientBounds.Height)
+                    if (myPosition.Y - mySize.Y > Level.MapSize.Y || myPosition.Y + mySize.Y < 0)
                     {
                         myIsAlive = false;
                     }
@@ -111,7 +128,9 @@ namespace Super_Mario
             }
 
             Timer(aGameTime);
-            TextureState(); //Create post-update instead?
+
+            FlipState(); //Create post-update instead?
+            TextureState(); 
         }
 
         public void Draw(SpriteBatch aSpriteBatch, GameTime aGameTime)
@@ -123,7 +142,7 @@ namespace Super_Mario
                     case PlayerState.isWalking:
                         if (myIsMoving)
                         {
-                            myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, mySize, Color.White, 0.0f, myOrigin, myFlipSprite);
+                            myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, myFrameSize, Color.White, 0.0f, myOrigin, myFlipSprite);
                         }
                         else
                         {
@@ -133,11 +152,11 @@ namespace Super_Mario
                     case PlayerState.isClimbing:
                         if (myIsClimbing)
                         {
-                            myClimbingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, mySize, Color.White, 0.0f, myOrigin, SpriteEffects.None);
+                            myClimbingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, myFrameSize, Color.White, 0.0f, myOrigin, myFlipSprite);
                         }
                         else
                         {
-                            aSpriteBatch.Draw(myTexture, myBoundingBox, new Rectangle(0, 0, mySize.X, mySize.Y), Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
+                            aSpriteBatch.Draw(myTexture, myBoundingBox, new Rectangle(0, 0, myTexture.Width / 2, myTexture.Height), Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                         }
                         break;
                     case PlayerState.isFalling:
@@ -157,6 +176,7 @@ namespace Super_Mario
             IsFalling();
             CollisionCoinBlock();
             CollisionItemBlock();
+            CollisionGravityBlock();
             CollisionBlock();
             CollisionLadder();
             CollisionEnemy();
@@ -167,18 +187,32 @@ namespace Super_Mario
             bool tempFall = true;
             foreach (Tile tile in Level.TilesAround(this))
             {
-                Rectangle tempColRectBelow = new Rectangle(myBoundingBox.X, myBoundingBox.Y, myBoundingBox.Width, myBoundingBox.Height + (mySize.Y / 4));
-                if (CollisionManager.Collision(tempColRectBelow, tile.BoundingBox))
+                if (GameInfo.Gravity > 0)
                 {
-                    if (tile.IsBlock)
+                    Rectangle tempColRectBelow = new Rectangle(myBoundingBox.X, myBoundingBox.Y, myBoundingBox.Width, myBoundingBox.Height + (mySize.Y / 4));
+                    if (CollisionManager.Collision(tempColRectBelow, tile.BoundingBox))
                     {
-                        tempFall = false;
+                        if (tile.IsBlock)
+                        {
+                            tempFall = false;
+                        }
+                    }
+                }
+                else
+                {
+                    Rectangle tempColRectAbove = new Rectangle(myBoundingBox.X, myBoundingBox.Y - (mySize.Y / 4), myBoundingBox.Width, myBoundingBox.Height);
+                    if (CollisionManager.Collision(tempColRectAbove, tile.BoundingBox))
+                    {
+                        if (tile.IsBlock)
+                        {
+                            tempFall = false;
+                        }
                     }
                 }
             }
             if (tempFall && myPlayerState != PlayerState.isClimbing)
             {
-                myPlayerState = PlayerState.isFalling;
+                ChangeState(PlayerState.isFalling);
             }
         }
         private void CollisionCoinBlock()
@@ -187,7 +221,7 @@ namespace Super_Mario
             {
                 if (tile.TileType == '^')
                 {
-                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         tile.TileType = '(';
                         tile.IsBlock = true;
@@ -204,14 +238,15 @@ namespace Super_Mario
             {
                 if (tile.TileType == '/')
                 {
-                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         tile.TileType = '(';
                         tile.IsBlock = true;
                         tile.SetTexture();
 
-                        Tile tempTile = Level.TileAtPos(new Vector2(tile.GetCenter().X, tile.GetCenter().Y - Level.TileSize.Y)).Item1;
-                        if (tempTile.TileType == '-')
+
+                        Tile tempTile = Level.TileAtPos(new Vector2(tile.GetCenter().X, tile.GetCenter().Y - Level.TileSize.Y * Extensions.Signum(GameInfo.Gravity))).Item1;
+                        if (tempTile?.TileType == '-')
                         {
                             switch (StaticRandom.RandomNumber(0, 3))
                             {
@@ -231,30 +266,55 @@ namespace Super_Mario
                 }
             }
         }
+        private void CollisionGravityBlock()
+        {
+            foreach (Tile tile in Level.TilesAround(this))
+            {
+                if (tile.TileType == '¤')
+                {
+                    if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    {
+                        GameInfo.Gravity *= -1;
+                        myFlipSprite = SpriteEffects.FlipVertically;
+
+                        if (GameInfo.Gravity > 0)
+                        {
+                            myTopCollision = CollisionManager.CheckAbove;
+                            myBotCollision = CollisionManager.CheckBelow;
+                        }
+                        else
+                        {
+                            myTopCollision = CollisionManager.CheckBelow;
+                            myBotCollision = CollisionManager.CheckAbove;
+                        }
+                    }
+                }
+            }
+        }
         private void CollisionBlock()
         {
             foreach (Tile tile in Level.TilesAround(this))
             {
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = 0.0f;
-                        myPosition.Y = tile.Position.Y + tile.Size.Y;
+                        SetTopCollisionPosition(tile);
 
-                        if (myIsSuperForm)
+                        if (myIsSuperForm && tile.TileType == '(')
                         {
                             tile.TileType = '-';
                             tile.IsBlock = false;
                             tile.SetTexture();
                         }
                     }
-                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myBotCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = 0.0f;
-                        myPosition.Y = tile.Position.Y - mySize.Y;
+                        SetBotCollisionPosition(tile);
 
-                        myPlayerState = PlayerState.isWalking;
+                        ChangeState(PlayerState.isWalking);
                     }
                 }
             }
@@ -278,18 +338,18 @@ namespace Super_Mario
                 {
                     if (KeyMouseReader.KeyHold(Keys.Up) && (!CollisionManager.Collision(tempColRectAbove, tile.BoundingBox) || tile.TileType != '#'))
                     {
-                        myPlayerState = PlayerState.isClimbing;
+                        ChangeState(PlayerState.isClimbing);
                         myCurrentVelocity.Y = 0.0f;
                     }
                     if (KeyMouseReader.KeyHold(Keys.Down) && (!CollisionManager.Collision(tempColRectBelow, tile.BoundingBox) || tile.TileType != '#'))
                     {
-                        myPlayerState = PlayerState.isClimbing;
+                        ChangeState(PlayerState.isClimbing);
                         myCurrentVelocity.Y = 0.0f;
                     }
                 }
                 else if (myPlayerState == PlayerState.isClimbing)
                 {
-                    myPlayerState = PlayerState.isFalling;
+                    ChangeState(PlayerState.isFalling);
                 }
             }
         }
@@ -299,32 +359,48 @@ namespace Super_Mario
             {
                 if (!enemy.HasCollided)
                 {
-                    if (CollisionManager.CheckBelow(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
+                    bool tempCheckCollision = false;
+                    if (GameInfo.Gravity > 0)
                     {
-                        enemy.IsAlive = false;
-                        enemy.HasCollided = true;
-                        myCurrentVelocity.Y = -myVelocityThreshold.Y;
-
-                        GameInfo.AddScore(enemy.BoundingBox.Center.ToVector2(), 100);
-
-                        break;
+                        if (myBoundingBox.Bottom > enemy.BoundingBox.Top)
+                        {
+                            tempCheckCollision = true;
+                        }
                     }
                     else
                     {
-                        if (myBoundingBox.Bottom + myCurrentVelocity.Y > enemy.BoundingBox.Top)
+                        if (myBoundingBox.Top < enemy.BoundingBox.Bottom)
                         {
-                            if (CollisionManager.CheckAbove(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
-                            {
-                                ReduceHealth(1);
-                            }
-                            else if (CollisionManager.CheckLeft(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
-                            {
-                                ReduceHealth(1);
-                            }
-                            else if (CollisionManager.CheckRight(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
-                            {
-                                ReduceHealth(1);
-                            }
+                            tempCheckCollision = true;
+                        }
+                    }
+
+                    if (!tempCheckCollision)
+                    {
+                        if (myBotCollision(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
+                        {
+                            enemy.IsAlive = false;
+                            enemy.HasCollided = true;
+                            myCurrentVelocity.Y = -myVelocityThreshold.Y * Extensions.Signum(GameInfo.Gravity);
+
+                            GameInfo.AddScore(enemy.BoundingBox.Center.ToVector2(), 100);
+
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (myTopCollision(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
+                        {
+                            ReduceHealth(1);
+                        }
+                        else if (CollisionManager.CheckLeft(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
+                        {
+                            ReduceHealth(1);
+                        }
+                        else if (CollisionManager.CheckRight(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
+                        {
+                            ReduceHealth(1);
                         }
                     }
                 }
@@ -389,36 +465,29 @@ namespace Super_Mario
             return false;
         }
 
-        private void Movement(GameWindow aWindow, GameTime aGameTime, float aSpeed)
+        private void Movement(GameTime aGameTime, float aSpeed)
         {
             if (KeyMouseReader.KeyHold(Keys.Left))
             {
                 myCurrentVelocity.X = -(aSpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-                if (!OutsideBounds() && CanMoveHorizontal())
+                if (CanMoveHorizontal())
                 {
                     myPosition.X += myCurrentVelocity.X;
 
                     myIsMoving = true;
                     myIsClimbing = true;
-                    myFlipSprite = SpriteEffects.FlipHorizontally;
                 }
             }
             if (KeyMouseReader.KeyHold(Keys.Right))
             {
                 myCurrentVelocity.X = (aSpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-                if (!OutsideBounds() && CanMoveHorizontal())
+                if (CanMoveHorizontal())
                 {
                     myPosition.X += myCurrentVelocity.X;
 
                     myIsMoving = true;
                     myIsClimbing = true;
-                    myFlipSprite = SpriteEffects.None;
                 }
-            }
-
-            if (myPosition.Y > aWindow.ClientBounds.Height)
-            {
-                ReduceHealth(1);
             }
         }
         private void Climbing(GameTime aGameTime)
@@ -426,16 +495,24 @@ namespace Super_Mario
             if (KeyMouseReader.KeyHold(Keys.Up) && CanMoveVertical())
             {
                 myCurrentVelocity.Y = -(myVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-                myPosition.Y += myCurrentVelocity.Y;
+                if (CanMoveVertical())
+                {
+                    myPosition.Y += myCurrentVelocity.Y;
 
-                myIsClimbing = true;
+                    myIsMoving = true;
+                    myIsClimbing = true;
+                }
             }
             if (KeyMouseReader.KeyHold(Keys.Down) && CanMoveVertical())
             {
                 myCurrentVelocity.Y = (myVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-                myPosition.Y += myCurrentVelocity.Y;
+                if (CanMoveVertical())
+                {
+                    myPosition.Y += myCurrentVelocity.Y;
 
-                myIsClimbing = true;
+                    myIsMoving = true;
+                    myIsClimbing = true;
+                }
             }
         }
         private void Idle()
@@ -454,35 +531,18 @@ namespace Super_Mario
         {
             if (KeyMouseReader.KeyPressed(Keys.Space))
             {
-                myCurrentVelocity.Y = -myVelocityThreshold.Y;
-                myPlayerState = PlayerState.isFalling;
+                myCurrentVelocity.Y = -myVelocityThreshold.Y * Extensions.Signum(GameInfo.Gravity);
+                ChangeState(PlayerState.isFalling);
             }
         }
-        public void ReduceHealth(int aValue)
+        private void OutsideBounds()
         {
-            if (!myIsInvincible)
+            if (myPosition.Y > Level.MapSize.Y || myPosition.Y + mySize.Y < -Level.MapSize.Y)
             {
-                if (!myIsSuperForm && !myIsFireForm)
-                {
-                    myLives -= aValue;
+                myLives--;
+                LifeCheck();
 
-                    if (myLives > 0)
-                    {
-                        myIsInvincible = true;
-                        myInvincibleTimer = myInvincibleDelay;
-
-                        myPosition = Level.PlayerSpawn;
-                        myPosition += new Vector2(0, -mySize.Y);
-                    }
-                    else
-                    {
-                        myLives = 0;
-
-                        myCurrentVelocity.Y = myVelocityThreshold.Y * 0.8f;
-                        myPlayerState = PlayerState.isDead;
-                    }
-                }
-                else
+                if (myIsSuperForm || myIsFireForm)
                 {
                     mySuperPowerUpTimer = 0;
                     myFirePowerUpTimer = 0;
@@ -504,18 +564,18 @@ namespace Super_Mario
             {
                 if (KeyMouseReader.KeyPressed(Keys.LeftControl))
                 {
-                    if (myFlipSprite == SpriteEffects.None)
+                    if (myFlipHorizontal == SpriteEffects.None)
                     {
                         Fireball tempFireball = new Fireball(new Vector2(myPosition.X + mySize.X, myPosition.Y + mySize.Y / 2),
-                            new Point(16), new Vector2(3.0f, 0.0f), new Vector2(3.0f, 5.0f), 0.7f, false);
+                            new Point(16), new Vector2(3.0f, 0.0f), new Vector2(3.0f, 4.0f), true);
                         tempFireball.SetTexture("Fireball");
 
                         myFireballs.Add(tempFireball);
                     }
-                    if (myFlipSprite == SpriteEffects.FlipHorizontally)
+                    if (myFlipHorizontal == SpriteEffects.FlipHorizontally)
                     {
                         Fireball tempFireball = new Fireball(new Vector2(myPosition.X - 16, myPosition.Y + mySize.Y / 2),
-                            new Point(16), new Vector2(3.0f, 0.0f), new Vector2(3.0f, 5.0f), 0.6f, true);
+                            new Point(16), new Vector2(3.0f, 0.0f), new Vector2(3.0f, 4.0f), false);
                         tempFireball.SetTexture("Fireball");
 
                         myFireballs.Add(tempFireball);
@@ -542,20 +602,59 @@ namespace Super_Mario
             }
         }
 
-        private bool OutsideBounds()
+        public void ReduceHealth(int aValue)
         {
-            if (myPosition.X + myCurrentVelocity.X < 0)
+            if (!myIsInvincible)
             {
-                myPosition.X = 0;
-                return true;
+                if (!myIsSuperForm && !myIsFireForm)
+                {
+                    myLives -= aValue;
+                    LifeCheck();
+                }
+                else
+                {
+                    mySuperPowerUpTimer = 0;
+                    myFirePowerUpTimer = 0;
+
+                    myIsInvincible = true;
+                    myInvincibleTimer = myInvincibleDelay;
+                }
             }
-            if (myPosition.X + myCurrentVelocity.X + mySize.X > Level.MapSize.X)
-            {
-                myPosition.X = Level.MapSize.X - mySize.X;
-                return true;
-            }
-            return false;
         }
+        private void LifeCheck()
+        {
+            if (myLives > 0)
+            {
+                myIsInvincible = true;
+                myInvincibleTimer = myInvincibleDelay;
+
+                myPosition = Level.PlayerSpawn;
+                myPosition += new Vector2(0, Level.TileSize.Y - mySize.Y);
+
+                myCurrentVelocity.Y = 0;
+
+                GameInfo.Gravity *= Extensions.Signum(GameInfo.Gravity);
+
+                if (GameInfo.Gravity > 0)
+                {
+                    myTopCollision = CollisionManager.CheckAbove;
+                    myBotCollision = CollisionManager.CheckBelow;
+                }
+                else
+                {
+                    myTopCollision = CollisionManager.CheckBelow;
+                    myBotCollision = CollisionManager.CheckAbove;
+                }
+            }
+            else
+            {
+                myLives = 0;
+
+                myCurrentVelocity.Y = -myVelocityThreshold.Y * 0.8f * Extensions.Signum(GameInfo.Gravity);
+                ChangeState(PlayerState.isDead);
+            }
+        }
+
         private bool CanMoveHorizontal()
         {
             foreach (Tile tile in Level.TilesAround(this))
@@ -573,6 +672,16 @@ namespace Super_Mario
                         return false;
                     }
                 }
+            }
+            if (myPosition.X + myCurrentVelocity.X < 0)
+            {
+                myPosition.X = 0;
+                return false;
+            }
+            if (myPosition.X + mySize.X + myCurrentVelocity.X > Level.MapSize.X)
+            {
+                myPosition.X = Level.MapSize.X - mySize.X;
+                return false;
             }
             return true;
         }
@@ -635,7 +744,10 @@ namespace Super_Mario
 
                 myDrawSprite = true;
 
-                myPosition.Y += (myBigSize.Y - mySize.Y);
+                if (GameInfo.Gravity > 0)
+                {
+                    myPosition.Y += (myBigSize.Y - mySize.Y);
+                }
             }
         }
         private void FirePowerUp(GameTime aGameTime)
@@ -656,7 +768,10 @@ namespace Super_Mario
 
                 myDrawSprite = true;
 
-                myPosition.Y += (myBigSize.Y - mySize.Y);
+                if (GameInfo.Gravity > 0)
+                {
+                    myPosition.Y += (myBigSize.Y - mySize.Y);
+                }
             }
         }
         private void DrawPlayer(GameTime aGameTime)
@@ -672,20 +787,45 @@ namespace Super_Mario
             }
         }
 
+        private void FlipState()
+        {
+            if (KeyMouseReader.KeyHold(Keys.Left))
+            {
+                myFlipHorizontal = SpriteEffects.FlipHorizontally;
+            }
+            if (KeyMouseReader.KeyHold(Keys.Right))
+            {
+                myFlipHorizontal = SpriteEffects.None;
+            }
+
+            if (GameInfo.Gravity > 0)
+            {
+                myFlipVertical = SpriteEffects.None;
+            }
+            else
+            {
+                myFlipVertical = SpriteEffects.FlipVertically;
+            }
+
+            myFlipSprite = myFlipVertical | myFlipHorizontal;
+        }
         private void TextureState()
         {
             if (myIsSuperForm)
             {
                 myLoadTexture = "-Super";
+                myFrameSize = new Point(32, 64);
             }
             if (myIsFireForm)
             {
                 myLoadTexture = "-Fire";
+                myFrameSize = new Point(32, 64);
             }
 
             if (!myIsSuperForm && !myIsFireForm)
             {
                 myLoadTexture = string.Empty;
+                myFrameSize = new Point(32);
             }
 
             switch (myPlayerState)

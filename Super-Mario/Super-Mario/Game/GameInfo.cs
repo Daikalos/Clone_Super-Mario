@@ -10,15 +10,40 @@ namespace Super_Mario
     static class GameInfo
     {
         private static List<DrawScore> myDrawScore;
+        private static bool myIsPaused;
+        private static float 
+            myDrawScoreDelay,
+            myGravity;
+        private static int[] myHighScores;
+        private static int myScore;
         private static string
             myLevelName,
             myFolderLevels,
             myFolderHighScores;
-        private static int[] myHighScores;
-        private static int myScore;
-        private static float myDrawScoreDelay;
-        private static bool myIsPaused;
 
+        public static bool IsPaused
+        {
+            get => myIsPaused;
+            set => myIsPaused = value;
+        }
+        public static float Gravity
+        {
+            get => myGravity;
+            set => myGravity = value;
+        }
+        public static int[] HighScores
+        {
+            get => myHighScores;
+        }
+        public static int HighScore
+        {
+            get => myHighScores.Max();
+        }
+        public static int Score
+        {
+            get => myScore;
+            set => myScore = value;
+        }
         public static string LevelName
         {
             get => myLevelName;
@@ -34,28 +59,11 @@ namespace Super_Mario
             get => myFolderHighScores;
             set => myFolderHighScores = value;
         }
-        public static int[] HighScores
-        {
-            get => myHighScores;
-        }
-        public static int Score
-        {
-            get => myScore;
-            set => myScore = value;
-        }
-        public static int HighScore
-        {
-            get => myHighScores.Max();
-        }
-        public static bool IsPaused
-        {
-            get => myIsPaused;
-            set => myIsPaused = value;
-        }
 
-        public static void Initialize(float aDrawScoreDelay)
+        public static void Initialize(float aDrawScoreDelay, float aGravity)
         {
             myDrawScoreDelay = aDrawScoreDelay;
+            myGravity = aGravity;
 
             myDrawScore = new List<DrawScore>();
             myScore = 0;
@@ -131,7 +139,7 @@ namespace Super_Mario
         {
             myScore += someScore;
 
-            myDrawScore.Add(new DrawScore(new Vector2(aPos.X, aPos.Y - Level.TileSize.Y), 
+            myDrawScore.Add(new DrawScore(new Vector2(aPos.X, aPos.Y - Level.TileSize.Y * Extensions.Signum(myGravity)), 
                 myDrawScoreDelay, someScore));
         }
     }

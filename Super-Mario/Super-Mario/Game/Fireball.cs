@@ -20,20 +20,12 @@ namespace Super_Mario
             set => myIsAlive = value;
         }
 
-        public Fireball(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, float aGravity, bool aDirection) : base(aPosition, aSize, aVelocity, aVelocityThreshold, aGravity)
+        public Fireball(Vector2 aPosition, Point aSize, Vector2 aVelocity, Vector2 aVelocityThreshold, bool aDirection) : base(aPosition, aSize, aVelocity, aVelocityThreshold)
         {
             this.myDirection = aDirection;
 
             this.myIsAlive = true;
-            switch (myDirection)
-            {
-                case true:
-                    this.myRotationSpeed = -15.0f; //Set value
-                    break;
-                case false:
-                    this.myRotationSpeed = 15.0f; //Set value
-                    break;
-            }
+            this.myRotationSpeed = 15.0f; //Fixed value
         }
 
         public void Update(GameTime aGameTime)
@@ -41,17 +33,20 @@ namespace Super_Mario
             base.Update();
             myDrawBox = new Rectangle(myBoundingBox.X + (int)myOrigin.X, myBoundingBox.Y + (int)myOrigin.Y, myBoundingBox.Width, myBoundingBox.Height);
 
-            myRotation += myRotationSpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
 
             switch (myDirection)
             {
                 case true:
-                    myCurrentVelocity.X = -(myVelocity.X * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-                    myPosition.X += myCurrentVelocity.X;
-                    break;
-                case false:
                     myCurrentVelocity.X = myVelocity.X * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                     myPosition.X += myCurrentVelocity.X;
+
+                    myRotation += myRotationSpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    break;
+                case false:
+                    myCurrentVelocity.X = -(myVelocity.X * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
+                    myPosition.X += myCurrentVelocity.X;
+
+                    myRotation -= myRotationSpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                     break;
             }
 
@@ -77,6 +72,8 @@ namespace Super_Mario
                         myIsAlive = false;
 
                         GameInfo.AddScore(enemy.BoundingBox.Center.ToVector2(), 100);
+
+                        break;
                     }
                 }
             }
@@ -87,10 +84,15 @@ namespace Super_Mario
             {
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
-                        myPosition.Y = tile.BoundingBox.Y - mySize.Y;
-                        myCurrentVelocity.Y = -myVelocityThreshold.Y;
+                        myCurrentVelocity.Y = 0;
+                        SetTopCollisionPosition(tile);
+                    }
+                    if (myBotCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    {
+                        myCurrentVelocity.Y = -myVelocityThreshold.Y * Extensions.Signum(GameInfo.Gravity);
+                        SetBotCollisionPosition(tile);
                     }
 
                     if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myDirection)
@@ -113,6 +115,11 @@ namespace Super_Mario
                         myIsAlive = false;
                     }
                 }
+            }
+
+            if (myPosition.X + mySize.X < 0 || myPosition.X > Level.MapSize.X || myPosition.Y > Level.MapSize.Y)
+            {
+                myIsAlive = false;
             }
         }
 

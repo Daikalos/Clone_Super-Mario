@@ -38,17 +38,17 @@ namespace Super_Mario
             }
         }
 
-        public static void AddPatrolEnemy(Vector2 aPos)
-        {
-            myEnemies?.Add(new Patrol(aPos, new Point(32), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 5.0f), 0.4f));
-        }
         public static void AddChaseEnemy(Vector2 aPos)
         {
-            myEnemies?.Add(new Chase(aPos, new Point(32), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 5.0f), 0.4f));
+            myEnemies?.Add(new Chase(aPos, new Point(32, 48), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 5.0f)));
+        }
+        public static void AddPatrolEnemy(Vector2 aPos)
+        {
+            myEnemies?.Add(new Patrol(aPos, new Point(32), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 5.0f)));
         }
         public static void RemoveAll()
         {
-
+            myEnemies.RemoveAll(e => e.IsAlive);
         }
 
         public static void SetTexture()
@@ -57,7 +57,7 @@ namespace Super_Mario
             {
                 if (enemy is Chase)
                 {
-                    enemy.SetTexture("Goomba_Walking");
+                    enemy.SetTexture("Koopa_Walking");
                 }
                 if (enemy is Patrol)
                 {

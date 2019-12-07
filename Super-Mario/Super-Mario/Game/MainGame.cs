@@ -33,7 +33,7 @@ namespace Super_Mario
 
             ResourceManager.Initialize();
 
-            GameInfo.Initialize(0.5f);
+            GameInfo.Initialize(0.5f, 0.4f);
             GameInfo.FolderLevels = "../../../../Levels/";
             GameInfo.FolderHighScores = "../../../../HighScores/";
 
@@ -56,6 +56,7 @@ namespace Super_Mario
             ResourceManager.AddTexture("Ladder", this.Content.Load<Texture2D>("Tileset/ladder"));
             ResourceManager.AddTexture("Coin_Block", this.Content.Load<Texture2D>("Tileset/coin_block"));
             ResourceManager.AddTexture("Item_Block", this.Content.Load<Texture2D>("Tileset/item_block"));
+            ResourceManager.AddTexture("Gravity_Block", this.Content.Load<Texture2D>("Tileset/gravity_block"));
             ResourceManager.AddTexture("Empty_Block", this.Content.Load<Texture2D>("Tileset/empty_block"));
             ResourceManager.AddTexture("Mushroom-00", this.Content.Load<Texture2D>("Tileset/mushroom-00"));
             ResourceManager.AddTexture("Mushroom-01", this.Content.Load<Texture2D>("Tileset/mushroom-01"));
@@ -81,6 +82,10 @@ namespace Super_Mario
             ResourceManager.AddTexture("Goomba_Walking", this.Content.Load<Texture2D>("Sprites/goomba_walking"));
             ResourceManager.AddTexture("Goomba_Death", this.Content.Load<Texture2D>("Sprites/goomba_death"));
             ResourceManager.AddTexture("Goomba_Editor", this.Content.Load<Texture2D>("Tileset/goomba_editor"));
+
+            ResourceManager.AddTexture("Koopa_Walking", this.Content.Load<Texture2D>("Sprites/koopa_walking"));
+            ResourceManager.AddTexture("Koopa_Death", this.Content.Load<Texture2D>("Sprites/koopa_death"));
+            ResourceManager.AddTexture("Koopa_Editor", this.Content.Load<Texture2D>("Tileset/koopa_editor"));
 
             ResourceManager.AddTexture("Border", this.Content.Load<Texture2D>("Sprites/border"));
             ResourceManager.AddTexture("Background", this.Content.Load<Texture2D>("Sprites/background"));

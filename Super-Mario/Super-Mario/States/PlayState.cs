@@ -16,7 +16,7 @@ namespace Super_Mario
 
             EnemyManager.Initialize();
 
-            GameInfo.Score = 0;
+            GameInfo.Initialize(0.5f, 0.4f);
             GameInfo.LoadHighScore(GameInfo.LevelName);
 
             Level.LoadLevel(new Point(32), GameInfo.LevelName);
@@ -24,7 +24,7 @@ namespace Super_Mario
             Background.Reset();
             Camera.Reset();
 
-            myPlayer = new Player(Level.PlayerSpawn, new Point(32), new Vector2(4.0f, 2.0f), new Vector2(4.0f, 9.0f), 0.4f, 2.0f, 20.0f, 15.0f, 3);
+            myPlayer = new Player(Level.PlayerSpawn, new Point(32), new Vector2(4.0f, 2.0f), new Vector2(4.0f, 9.0f), 2.0f, 20.0f, 15.0f, 3);
             myBackButton = new Button(new Vector2(aWindow.ClientBounds.Width - 128 - 16, aWindow.ClientBounds.Height - 48 - 16),
                     new Point(128, 48),
                     new Button.OnClick(() => Button.Back(aGame, aWindow)),
@@ -39,7 +39,7 @@ namespace Super_Mario
                 Camera.FollowObject(aWindow, aGameTime, myPlayer);
                 EnemyManager.Update(aGameTime);
                 GameInfo.Update(aGameTime);
-                myPlayer.Update(aWindow, aGameTime);
+                myPlayer.Update(aGameTime);
 
                 if (myPlayer.CollisionFlag())
                 {

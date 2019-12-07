@@ -48,7 +48,7 @@ namespace Super_Mario
             }
         }
 
-        public static void MoveBackground(GameWindow aWindow, GameTime aGameTime, float aNewPosition)
+        public static void MoveBackground(GameTime aGameTime, float aNewPosition)
         {
             myPosition.X += aNewPosition * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
         }

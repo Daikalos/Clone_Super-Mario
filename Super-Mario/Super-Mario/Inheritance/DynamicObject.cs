@@ -6,7 +6,7 @@ namespace Super_Mario
 {
     class DynamicObject : GameObject
     {
-        protected static CollisionFlip
+        protected static CollisionFlip //Used to flip collision checking when gravity is reversed
             myTopCollision,
             myBotCollision;
         protected Vector2 
@@ -31,7 +31,7 @@ namespace Super_Mario
             this.myPosition += new Vector2(0, Level.TileSize.Y - mySize.Y); //Adjust spawn position after size
         }
 
-        protected void SetTopCollisionPosition(GameObject aObject)
+        protected void SnapTopCollision(GameObject aObject)
         {
             if (GameInfo.Gravity > 0)
             {
@@ -42,7 +42,7 @@ namespace Super_Mario
                 myPosition.Y = aObject.Position.Y - mySize.Y;
             }
         }
-        protected void SetBotCollisionPosition(GameObject aObject)
+        protected void SnapBotCollision(GameObject aObject)
         {
             if (GameInfo.Gravity > 0)
             {
@@ -56,7 +56,7 @@ namespace Super_Mario
 
         protected void Gravity(GameTime aGameTime)
         {
-            myCurrentVelocity.Y += GameInfo.Gravity;
+            myCurrentVelocity.Y += GameInfo.Gravity * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
             MathHelper.Clamp(myCurrentVelocity.Y, -myVelocityThreshold.Y, myVelocityThreshold.Y);
 
             myPosition.Y += myCurrentVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;

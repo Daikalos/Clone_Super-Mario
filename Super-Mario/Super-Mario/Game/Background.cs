@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Super_Mario
 {
@@ -28,8 +27,8 @@ namespace Super_Mario
         {
             for (int i = -2; i < (Level.MapSize.X / mySize.X) + 2; i++)
             {
-                aSpriteBatch.Draw(myTexture, 
-                    new Rectangle(myBoundingBox.X + mySize.X * i, myBoundingBox.Y, myBoundingBox.Width, myBoundingBox.Height), 
+                aSpriteBatch.Draw(myTexture,
+                    new Rectangle(myBoundingBox.X + mySize.X * i, myBoundingBox.Y, myBoundingBox.Width, myBoundingBox.Height),
                     null, Color.White);
             }
         }
@@ -50,7 +49,7 @@ namespace Super_Mario
 
         public static void MoveBackground(GameTime aGameTime, float aNewPosition)
         {
-            myPosition.X += aNewPosition * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+            myPosition.X += aNewPosition;
         }
 
         public static void SetTexture(string aName)

@@ -11,7 +11,7 @@ namespace Super_Mario
     {
         private static List<DrawScore> myDrawScore;
         private static bool myIsPaused;
-        private static float 
+        private static float
             myDrawScoreDelay,
             myGravity;
         private static int[] myHighScores;
@@ -139,7 +139,7 @@ namespace Super_Mario
         {
             myScore += someScore;
 
-            myDrawScore.Add(new DrawScore(new Vector2(aPos.X, aPos.Y - Level.TileSize.Y * Extensions.Signum(myGravity)), 
+            myDrawScore.Add(new DrawScore(new Vector2(aPos.X, aPos.Y - Level.TileSize.Y * Extensions.Signum(myGravity)),
                 myDrawScoreDelay, someScore));
         }
     }

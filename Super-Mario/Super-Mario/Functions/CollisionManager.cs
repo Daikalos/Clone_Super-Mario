@@ -6,11 +6,7 @@ namespace Super_Mario
     {
         public static bool Collision(Rectangle aRectangle1, Rectangle aRectangle2)
         {
-            if (aRectangle1.Intersects(aRectangle2))
-            {
-                return true;
-            }
-            return false;
+            return aRectangle1.Intersects(aRectangle2);
         }
 
         public static bool CheckAbove(Rectangle aRectangle1, Rectangle aRectangle2, Vector2 aVelocity)

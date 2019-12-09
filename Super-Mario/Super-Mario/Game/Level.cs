@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -47,6 +46,8 @@ namespace Super_Mario
             }
             return new Tuple<Tile, bool>(myTiles[0, 0], false);
         }
+
+        //These methods only works at high frame-rates, useless at < 60 due to higher speed on objects being larger than the tile size
         public static List<Tile> TilesOn(DynamicObject aObject)
         {
             List<Tile> tempTiles = new List<Tile>();
@@ -128,7 +129,7 @@ namespace Super_Mario
             }
 
             return tempTiles;
-        }
+        } //Make more dynamic, adjust tile checking area after speed on object
         public static List<Tile> TilesOnAndAround(DynamicObject aObject)
         {
             List<Tile> tempTiles = new List<Tile>();
@@ -203,7 +204,7 @@ namespace Super_Mario
                             new Vector2(x * myTileSize.X, y * myTileSize.Y),
                             myTileSize, myLevelBuilder[y][x]);
 
-                        switch(myTiles[x, y].TileType)
+                        switch (myTiles[x, y].TileType)
                         {
                             case '?':
                                 myPlayerSpawn = myTiles[x, y].Position;
@@ -288,7 +289,7 @@ namespace Super_Mario
         }
         public static bool CheckIn(int anX, int anY)
         {
-            return 
+            return
                 anX >= 0 &&
                 anX < myTiles.GetLength(0) &&
                 anY >= 0 &&

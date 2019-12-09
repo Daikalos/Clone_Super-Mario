@@ -25,7 +25,7 @@ namespace Super_Mario
             myFlipVertical,
             myFlipHorizontal,
             myFlipSprite;
-        protected bool 
+        protected bool
             myIsAlive,
             myHasCollided;
         protected float myIsDeadDelay;
@@ -78,8 +78,9 @@ namespace Super_Mario
                     break;
             }
 
-            CollisionBlock();
             IsFalling();
+            CollisionBlock();
+            OutsideBounds();
 
             FlipState();
         }
@@ -88,22 +89,6 @@ namespace Super_Mario
 
         protected abstract void Behaviour(GameTime aGameTime);
 
-        protected void CollisionBlock()
-        {
-            foreach (Tile tile in Level.TilesAround(this))
-            {
-                if (tile.IsBlock)
-                {
-                    if (myBotCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
-                    {
-                        myCurrentVelocity.Y = 0.0f;
-                        SetBotCollisionPosition(tile);
-
-                        ChangeState(EnemyState.isActing);
-                    }
-                }
-            }
-        }
         protected void IsFalling()
         {
             bool tempFall = true;
@@ -136,6 +121,30 @@ namespace Super_Mario
             if (tempFall)
             {
                 ChangeState(EnemyState.isFalling);
+            }
+        }
+        protected void CollisionBlock()
+        {
+            foreach (Tile tile in Level.TilesAround(this))
+            {
+                if (tile.IsBlock)
+                {
+                    if (myBotCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    {
+                        myCurrentVelocity.Y = 0.0f;
+                        SnapBotCollision(tile);
+
+                        ChangeState(EnemyState.isActing);
+                    }
+                }
+            }
+        }
+
+        private void OutsideBounds()
+        {
+            if (myPosition.Y > Level.MapSize.Y || myPosition.Y + mySize.Y < -Level.MapSize.Y)
+            {
+                myIsAlive = false;
             }
         }
 
@@ -209,10 +218,10 @@ namespace Super_Mario
                     switch (myDirection)
                     {
                         case true:
-                            tempColRect = new Rectangle((int)myPosition.X, (int)myPosition.Y + mySize.Y, (mySize.X / 4), (mySize.Y / 8));
+                            tempColRect = new Rectangle((int)myPosition.X, (int)myPosition.Y + mySize.Y, 1, (mySize.Y / 8));
                             break;
                         case false:
-                            tempColRect = new Rectangle((int)myPosition.X + (mySize.X) - (mySize.X / 4), (int)myPosition.Y + mySize.Y, (mySize.X / 4), (mySize.Y / 8));
+                            tempColRect = new Rectangle((int)myPosition.X + (mySize.X) - 1, (int)myPosition.Y + mySize.Y, 1, (mySize.Y / 8));
                             break;
                     }
                 }
@@ -221,10 +230,10 @@ namespace Super_Mario
                     switch (myDirection)
                     {
                         case true:
-                            tempColRect = new Rectangle((int)myPosition.X, (int)myPosition.Y - (mySize.Y / 8), (mySize.X / 4), (mySize.Y / 8));
+                            tempColRect = new Rectangle((int)myPosition.X, (int)myPosition.Y - (mySize.Y / 8), 1, (mySize.Y / 8));
                             break;
                         case false:
-                            tempColRect = new Rectangle((int)myPosition.X + (mySize.X) - (mySize.X / 4), (int)myPosition.Y - (mySize.Y / 8), (mySize.X / 4), (mySize.Y / 8));
+                            tempColRect = new Rectangle((int)myPosition.X + (mySize.X) - 1, (int)myPosition.Y - (mySize.Y / 8), 1, (mySize.Y / 8));
                             break;
                     }
                 }
@@ -368,10 +377,10 @@ namespace Super_Mario
                     switch (myDirection)
                     {
                         case true:
-                            tempColRect = new Rectangle((int)myPosition.X, (int)myPosition.Y + mySize.Y, (mySize.X / 4), (mySize.Y / 8));
+                            tempColRect = new Rectangle((int)myPosition.X, (int)myPosition.Y + mySize.Y, 1, (mySize.Y / 8));
                             break;
                         case false:
-                            tempColRect = new Rectangle((int)myPosition.X + (mySize.X) - (mySize.X / 4), (int)myPosition.Y + mySize.Y, (mySize.X / 4), (mySize.Y / 8));
+                            tempColRect = new Rectangle((int)myPosition.X + (mySize.X) - 1, (int)myPosition.Y + mySize.Y, 1, (mySize.Y / 8));
                             break;
                     }
                 }
@@ -380,10 +389,10 @@ namespace Super_Mario
                     switch (myDirection)
                     {
                         case true:
-                            tempColRect = new Rectangle((int)myPosition.X, (int)myPosition.Y - (mySize.Y / 8), (mySize.X / 4), (mySize.Y / 8));
+                            tempColRect = new Rectangle((int)myPosition.X, (int)myPosition.Y - (mySize.Y / 8), 1, (mySize.Y / 8));
                             break;
                         case false:
-                            tempColRect = new Rectangle((int)myPosition.X + (mySize.X) - (mySize.X / 4), (int)myPosition.Y - (mySize.Y / 8), (mySize.X / 4), (mySize.Y / 8));
+                            tempColRect = new Rectangle((int)myPosition.X + (mySize.X) - 1, (int)myPosition.Y - (mySize.Y / 8), 1, (mySize.Y / 8));
                             break;
                     }
                 }

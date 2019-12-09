@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Super_Mario
 {
@@ -31,7 +30,7 @@ namespace Super_Mario
             if (SnapToMap(aWindow, aNewPosition))
             {
                 Background.MoveBackground(aGameTime, -(aNewPosition / 12));
-                myPosition.X += aNewPosition * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                myPosition.X += aNewPosition;
             }
         }
 

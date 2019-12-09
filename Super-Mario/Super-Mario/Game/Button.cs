@@ -54,8 +54,8 @@ namespace Super_Mario
 
         public bool IsClicked()
         {
-            return 
-                KeyMouseReader.LeftClick() && 
+            return
+                KeyMouseReader.LeftClick() &&
                 myBoundingBox.Contains(KeyMouseReader.CurrentMouseState.Position);
         }
         public bool IsHold()
@@ -80,10 +80,6 @@ namespace Super_Mario
         public static void Exit(MainGame aGame)
         {
             aGame.Exit();
-        }
-        public static void LoadLevel()
-        {
-
         }
 
         public void LoadContent()

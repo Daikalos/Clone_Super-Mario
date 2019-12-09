@@ -119,11 +119,11 @@ namespace Super_Mario
                     Gravity(aGameTime);
                     break;
                 case PlayerState.isDead:
-                    Gravity(aGameTime);
                     if (myPosition.Y - mySize.Y > Level.MapSize.Y || myPosition.Y + mySize.Y < 0)
                     {
                         myIsAlive = false;
                     }
+                    Gravity(aGameTime);
                     break;
             }
 
@@ -246,7 +246,7 @@ namespace Super_Mario
 
 
                         Tile tempTile = Level.TileAtPos(new Vector2(tile.GetCenter().X, tile.GetCenter().Y - Level.TileSize.Y * Extensions.Signum(GameInfo.Gravity))).Item1;
-                        if (tempTile?.TileType == '-')
+                        if (tempTile.TileType == '-')
                         {
                             switch (StaticRandom.RandomNumber(0, 3))
                             {
@@ -300,7 +300,7 @@ namespace Super_Mario
                     if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = 0.0f;
-                        SetTopCollisionPosition(tile);
+                        SnapTopCollision(tile);
 
                         if (myIsSuperForm && tile.TileType == '(')
                         {
@@ -312,7 +312,7 @@ namespace Super_Mario
                     if (myBotCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = 0.0f;
-                        SetBotCollisionPosition(tile);
+                        SnapBotCollision(tile);
 
                         ChangeState(PlayerState.isWalking);
                     }
@@ -470,7 +470,8 @@ namespace Super_Mario
             if (KeyMouseReader.KeyHold(Keys.Left))
             {
                 myCurrentVelocity.X = -(aSpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-                if (CanMoveHorizontal())
+
+                if (CanMoveHorizontally())
                 {
                     myPosition.X += myCurrentVelocity.X;
 
@@ -481,7 +482,8 @@ namespace Super_Mario
             if (KeyMouseReader.KeyHold(Keys.Right))
             {
                 myCurrentVelocity.X = (aSpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-                if (CanMoveHorizontal())
+
+                if (CanMoveHorizontally())
                 {
                     myPosition.X += myCurrentVelocity.X;
 
@@ -492,10 +494,10 @@ namespace Super_Mario
         }
         private void Climbing(GameTime aGameTime)
         {
-            if (KeyMouseReader.KeyHold(Keys.Up) && CanMoveVertical())
+            if (KeyMouseReader.KeyHold(Keys.Up))
             {
                 myCurrentVelocity.Y = -(myVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-                if (CanMoveVertical())
+                if (CanMoveVertically())
                 {
                     myPosition.Y += myCurrentVelocity.Y;
 
@@ -503,10 +505,10 @@ namespace Super_Mario
                     myIsClimbing = true;
                 }
             }
-            if (KeyMouseReader.KeyHold(Keys.Down) && CanMoveVertical())
+            if (KeyMouseReader.KeyHold(Keys.Down))
             {
                 myCurrentVelocity.Y = (myVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
-                if (CanMoveVertical())
+                if (CanMoveVertically())
                 {
                     myPosition.Y += myCurrentVelocity.Y;
 
@@ -566,7 +568,7 @@ namespace Super_Mario
                 {
                     if (myFlipHorizontal == SpriteEffects.None)
                     {
-                        Fireball tempFireball = new Fireball(new Vector2(myPosition.X + mySize.X, myPosition.Y + mySize.Y / 2),
+                        Fireball tempFireball = new Fireball(new Vector2(myPosition.X + mySize.X, myPosition.Y),
                             new Point(16), new Vector2(3.0f, 0.0f), new Vector2(3.0f, 4.0f), true);
                         tempFireball.SetTexture("Fireball");
 
@@ -574,7 +576,7 @@ namespace Super_Mario
                     }
                     if (myFlipHorizontal == SpriteEffects.FlipHorizontally)
                     {
-                        Fireball tempFireball = new Fireball(new Vector2(myPosition.X - 16, myPosition.Y + mySize.Y / 2),
+                        Fireball tempFireball = new Fireball(new Vector2(myPosition.X - 16, myPosition.Y),
                             new Point(16), new Vector2(3.0f, 0.0f), new Vector2(3.0f, 4.0f), false);
                         tempFireball.SetTexture("Fireball");
 
@@ -635,16 +637,8 @@ namespace Super_Mario
 
                 GameInfo.Gravity *= Extensions.Signum(GameInfo.Gravity);
 
-                if (GameInfo.Gravity > 0)
-                {
-                    myTopCollision = CollisionManager.CheckAbove;
-                    myBotCollision = CollisionManager.CheckBelow;
-                }
-                else
-                {
-                    myTopCollision = CollisionManager.CheckBelow;
-                    myBotCollision = CollisionManager.CheckAbove;
-                }
+                myTopCollision = CollisionManager.CheckAbove;
+                myBotCollision = CollisionManager.CheckBelow;
             }
             else
             {
@@ -655,7 +649,7 @@ namespace Super_Mario
             }
         }
 
-        private bool CanMoveHorizontal()
+        private bool CanMoveHorizontally()
         {
             foreach (Tile tile in Level.TilesAround(this))
             {
@@ -685,7 +679,7 @@ namespace Super_Mario
             }
             return true;
         }
-        private bool CanMoveVertical()
+        private bool CanMoveVertically()
         {
             foreach (Tile tile in Level.TilesAround(this))
             {

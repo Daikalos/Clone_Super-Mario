@@ -25,7 +25,10 @@ namespace Super_Mario
         /// 2 = Flag|*;
         /// 3 = Ladder|%;
         /// 4 = Goomba|And;
-        /// 5 = Item_Block|/;
+        /// 6 = Koopa|";
+        /// 7 = Coin_Block|^;
+        /// 8 = Item_Block|/;
+        /// 9 = Gravity_Block|¤;
         /// </summary>
         private Tile[] mySelections;
         private Button[] myLevels;
@@ -65,8 +68,8 @@ namespace Super_Mario
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '%'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '"'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '&'),
-                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '/'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '^'),
+                new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '/'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '¤'),
             };
             this.myEditorState = EditorStates.isEditing;
@@ -226,20 +229,28 @@ namespace Super_Mario
         {
             if (KeyMouseReader.LeftHold() && mySelectedTile != ' ' && myTimer <= 0)
             {
-                Tile tempTile = Level.TileAtPos(Camera.Position + KeyMouseReader.CurrentMouseState.Position.ToVector2()).Item1;
-                tempTile.TileType = mySelectedTile;
-                tempTile.TileForm = 0;
-                tempTile.SetTextureEditor();
+                Tuple<Tile, bool> tempTile = Level.TileAtPos(Camera.Position + KeyMouseReader.CurrentMouseState.Position.ToVector2());
+
+                if (tempTile.Item2)
+                {
+                    tempTile.Item1.TileType = mySelectedTile;
+                    tempTile.Item1.TileForm = 0;
+                    tempTile.Item1.SetTextureEditor();
+                }
             }
             if (KeyMouseReader.RightHold())
             {
                 mySelectedTile = '-';
                 myTile = -1;
 
-                Tile tempTile = Level.TileAtPos(Camera.Position + KeyMouseReader.CurrentMouseState.Position.ToVector2()).Item1;
-                tempTile.TileType = mySelectedTile;
-                tempTile.TileForm = 0;
-                tempTile.SetTextureEditor();
+                Tuple<Tile, bool> tempTile = Level.TileAtPos(Camera.Position + KeyMouseReader.CurrentMouseState.Position.ToVector2());
+
+                if (tempTile.Item2)
+                {
+                    tempTile.Item1.TileType = mySelectedTile;
+                    tempTile.Item1.TileForm = 0;
+                    tempTile.Item1.SetTextureEditor();
+                }
             }
         }
 

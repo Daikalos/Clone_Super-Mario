@@ -1,16 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Super_Mario
 {
     class Fireball : DynamicObject
     {
         private Rectangle myDrawBox;
-        private bool 
+        private bool
             myIsAlive,
             myDirection;
-        private float 
+        private float
             myRotation,
             myRotationSpeed;
 
@@ -25,7 +24,7 @@ namespace Super_Mario
             this.myDirection = aDirection;
 
             this.myIsAlive = true;
-            this.myRotationSpeed = 15.0f; //Fixed value
+            this.myRotationSpeed = 0.25f; //Fixed value
         }
 
         public void Update(GameTime aGameTime)
@@ -33,20 +32,19 @@ namespace Super_Mario
             base.Update();
             myDrawBox = new Rectangle(myBoundingBox.X + (int)myOrigin.X, myBoundingBox.Y + (int)myOrigin.Y, myBoundingBox.Width, myBoundingBox.Height);
 
-
             switch (myDirection)
             {
                 case true:
                     myCurrentVelocity.X = myVelocity.X * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                     myPosition.X += myCurrentVelocity.X;
 
-                    myRotation += myRotationSpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    myRotation += myRotationSpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 case false:
                     myCurrentVelocity.X = -(myVelocity.X * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds);
                     myPosition.X += myCurrentVelocity.X;
 
-                    myRotation -= myRotationSpeed * (float)aGameTime.ElapsedGameTime.TotalSeconds;
+                    myRotation -= myRotationSpeed * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
                     break;
             }
 
@@ -87,12 +85,12 @@ namespace Super_Mario
                     if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = 0;
-                        SetTopCollisionPosition(tile);
+                        SnapTopCollision(tile);
                     }
                     if (myBotCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = -myVelocityThreshold.Y * Extensions.Signum(GameInfo.Gravity);
-                        SetBotCollisionPosition(tile);
+                        SnapBotCollision(tile);
                     }
 
                     if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myDirection)

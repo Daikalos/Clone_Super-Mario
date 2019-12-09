@@ -30,7 +30,7 @@ namespace Super_Mario
         public void Update(GameTime aGameTime)
         {
             base.Update();
-            myDrawBox = new Rectangle(myBoundingBox.X + (int)myOrigin.X, myBoundingBox.Y + (int)myOrigin.Y, myBoundingBox.Width, myBoundingBox.Height);
+            myDrawBox = new Rectangle(DestRect.X + (int)myOrigin.X, DestRect.Y + (int)myOrigin.Y, DestRect.Width, DestRect.Height);
 
             switch (myDirection)
             {
@@ -63,7 +63,7 @@ namespace Super_Mario
             {
                 if (!enemy.HasCollided)
                 {
-                    if (CollisionManager.Collision(myBoundingBox, enemy.BoundingBox))
+                    if (CollisionManager.PixelCollision(this, enemy))
                     {
                         enemy.IsAlive = false;
                         enemy.HasCollided = true;
@@ -78,39 +78,30 @@ namespace Super_Mario
         }
         private void CollisionBlock()
         {
-            foreach (Tile tile in Level.TilesAround(this))
+            foreach (Tile tile in Level.TilesOnAndAround(this))
             {
                 if (tile.IsBlock)
                 {
-                    if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
-                    {
-                        myCurrentVelocity.Y = 0;
-                        SnapTopCollision(tile);
-                    }
-                    if (myBotCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
-                    {
-                        myCurrentVelocity.Y = -myVelocityThreshold.Y * Extensions.Signum(GameInfo.Gravity);
-                        SnapBotCollision(tile);
-                    }
-
-                    if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myDirection)
-                    {
-                        myIsAlive = false;
-                    }
-                    if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && !myDirection)
+                    if (CollisionManager.PixelCollision(this, tile))
                     {
                         myIsAlive = false;
                     }
                 }
             }
 
-            foreach (Tile tile in Level.TilesOnAndAround(this))
+            foreach (Tile tile in Level.TilesAround(this))
             {
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.Collision(myBoundingBox, tile.BoundingBox))
+                    if (myTopCollision(this, tile, myCurrentVelocity))
                     {
-                        myIsAlive = false;
+                        myCurrentVelocity.Y = 0;
+                        SnapTopCollision(tile);
+                    }
+                    if (myBotCollision(this, tile, myCurrentVelocity))
+                    {
+                        myCurrentVelocity.Y = -myVelocityThreshold.Y * Extensions.Signum(GameInfo.Gravity);
+                        SnapBotCollision(tile);
                     }
                 }
             }
@@ -129,6 +120,8 @@ namespace Super_Mario
         public override void SetTexture(string aName)
         {
             myTexture = ResourceManager.RequestTexture(aName);
+            SetColorData();
+
             SetOrigin(new Point(1, 1));
         }
     }

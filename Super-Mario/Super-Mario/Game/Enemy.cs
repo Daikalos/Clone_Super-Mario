@@ -129,7 +129,7 @@ namespace Super_Mario
             {
                 if (tile.IsBlock)
                 {
-                    if (myBotCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myBotCollision(this, tile, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = 0.0f;
                         SnapBotCollision(tile);
@@ -186,7 +186,7 @@ namespace Super_Mario
                     break;
             }
 
-            if (CanMoveHorizontal())
+            if (CanMoveHorizontally())
             {
                 myPosition.X += myCurrentVelocity.X;
             }
@@ -199,10 +199,10 @@ namespace Super_Mario
             switch (myEnemyState)
             {
                 case EnemyState.isDead:
-                    aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
+                    aSpriteBatch.Draw(myTexture, DestRect, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                     break;
                 default:
-                    myKoopaAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, new Point(32, 64), Color.White, 0.0f, myOrigin, myFlipSprite);
+                    myKoopaAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, DestRect, new Point(32, 64), Color.White, 0.0f, myOrigin, myFlipSprite);
                     break;
             }
         }
@@ -240,11 +240,11 @@ namespace Super_Mario
 
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myDirection)
+                    if (CollisionManager.CheckLeft(this, tile, myCurrentVelocity) && myDirection)
                     {
                         tempSwitchDirection = true;
                     }
-                    if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && !myDirection)
+                    if (CollisionManager.CheckRight(this, tile, myCurrentVelocity) && !myDirection)
                     {
                         tempSwitchDirection = true;
                     }
@@ -277,18 +277,18 @@ namespace Super_Mario
             }
         }
 
-        private bool CanMoveHorizontal()
+        private bool CanMoveHorizontally()
         {
             foreach (Tile tile in Level.TilesAround(this))
             {
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (CollisionManager.CheckLeft(this, tile, myCurrentVelocity))
                     {
                         myPosition.X = tile.BoundingBox.X + tile.Size.X;
                         return false;
                     }
-                    if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (CollisionManager.CheckRight(this, tile, myCurrentVelocity))
                     {
                         myPosition.X = tile.BoundingBox.X - mySize.X;
                         return false;
@@ -345,7 +345,7 @@ namespace Super_Mario
                     break;
             }
 
-            if (CanMoveHorizontal())
+            if (CanMoveHorizontally())
             {
                 myPosition.X += myCurrentVelocity.X;
             }
@@ -358,10 +358,10 @@ namespace Super_Mario
             switch (myEnemyState)
             {
                 case EnemyState.isDead:
-                    aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
+                    aSpriteBatch.Draw(myTexture, DestRect, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                     break;
                 default:
-                    myGoombaAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, new Point(32), Color.White, 0.0f, myOrigin, myFlipSprite);
+                    myGoombaAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, DestRect, new Point(32), Color.White, 0.0f, myOrigin, myFlipSprite);
                     break;
             }
         }
@@ -399,11 +399,11 @@ namespace Super_Mario
 
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && myDirection)
+                    if (CollisionManager.CheckLeft(this, tile, myCurrentVelocity) && myDirection)
                     {
                         tempSwitchDirection = true;
                     }
-                    if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && !myDirection)
+                    if (CollisionManager.CheckRight(this, tile, myCurrentVelocity) && !myDirection)
                     {
                         tempSwitchDirection = true;
                     }
@@ -436,18 +436,18 @@ namespace Super_Mario
             }
         }
 
-        private bool CanMoveHorizontal()
+        private bool CanMoveHorizontally()
         {
             foreach (Tile tile in Level.TilesAround(this))
             {
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (CollisionManager.CheckLeft(this, tile, myCurrentVelocity))
                     {
                         myPosition.X = tile.BoundingBox.X + tile.Size.X;
                         return false;
                     }
-                    if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (CollisionManager.CheckRight(this, tile, myCurrentVelocity))
                     {
                         myPosition.X = tile.BoundingBox.X - mySize.X;
                         return false;

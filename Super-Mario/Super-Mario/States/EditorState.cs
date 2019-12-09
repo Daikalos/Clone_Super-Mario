@@ -72,6 +72,7 @@ namespace Super_Mario
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '/'),
                 new Tile(new Vector2(aWindow.ClientBounds.Width - 64, 32), new Point(32), '¤'),
             };
+
             this.myEditorState = EditorStates.isEditing;
             this.myOffset = new Rectangle(
                 -Level.TileSize.X / 16, -Level.TileSize.Y / 16, 
@@ -173,11 +174,11 @@ namespace Super_Mario
 
             if (KeyMouseReader.KeyHold(Keys.Left))
             {
-                Camera.MoveCamera(aWindow, aGameTime, -12.0f);
+                Camera.MoveCamera(aWindow, -12.0f);
             }
             if (KeyMouseReader.KeyHold(Keys.Right))
             {
-                Camera.MoveCamera(aWindow, aGameTime, 12.0f);
+                Camera.MoveCamera(aWindow, 12.0f);
             }
 
             if (myTimer > 0)

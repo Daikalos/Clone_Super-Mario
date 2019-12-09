@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/mushroom-01.png</SourceFile>
-  <SourceTime>2019-12-04T16:37:04.3693973+01:00</SourceTime>
-  <DestFile>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Tileset/mushroom-01.xnb</DestFile>
-  <DestTime>2019-12-05T16:48:52.0300087+01:00</DestTime>
+  <SourceFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Tileset/mushroom-01.png</SourceFile>
+  <SourceTime>2019-12-04T12:14:51.9836939+01:00</SourceTime>
+  <DestFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Tileset/mushroom-01.xnb</DestFile>
+  <DestTime>2019-12-09T12:44:57.7559585+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

@@ -36,7 +36,7 @@ namespace Super_Mario
             if (!GameInfo.IsPaused)
             {
                 Level.Update();
-                Camera.FollowObject(aWindow, aGameTime, myPlayer);
+                Camera.FollowObject(aWindow, myPlayer);
                 EnemyManager.Update(aGameTime);
                 GameInfo.Update(aGameTime);
                 myPlayer.Update(aGameTime);

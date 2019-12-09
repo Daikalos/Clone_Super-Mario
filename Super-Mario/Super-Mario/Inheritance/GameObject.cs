@@ -6,6 +6,7 @@ namespace Super_Mario
     class GameObject
     {
         protected Texture2D myTexture;
+        protected Color[] myColorData;
         protected Vector2
             myPosition,
             myOrigin;
@@ -21,10 +22,18 @@ namespace Super_Mario
             get => myPosition;
             set => myPosition = value;
         }
-        public Rectangle BoundingBox
+        public virtual Rectangle BoundingBox
         {
             get => myBoundingBox;
             set => myBoundingBox = value;
+        }
+        public virtual Rectangle DestRect
+        {
+            get => new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
+        }
+        public virtual Rectangle SourceRect
+        {
+            get => new Rectangle(0, 0, myTexture.Width, myTexture.Height);
         }
         public Point Size
         {
@@ -50,9 +59,26 @@ namespace Super_Mario
             aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White);
         }
 
+        public Color GetPixel(int aCol, int aRow)
+        {
+            int tempCol = aCol - DestRect.X + SourceRect.X;
+            int tempRow = aRow - DestRect.Y + SourceRect.Y;
+            return myColorData[tempRow * myTexture.Width + tempCol];
+        }
+
+        public void SetColorData()
+        {
+            myColorData = new Color[myTexture.Width * myTexture.Height];
+            myTexture.GetData(myColorData);
+        }
+
         public virtual void SetTexture(string aName)
         {
-            myTexture = ResourceManager.RequestTexture(aName);
+            if (myTexture != ResourceManager.RequestTexture(aName))
+            {
+                myTexture = ResourceManager.RequestTexture(aName);
+                SetColorData();
+            }
         }
 
         public void SetOrigin(Point aFrameSize)

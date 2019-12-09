@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario-fire_climbing.png</SourceFile>
-  <SourceTime>2019-12-05T20:42:55.0538837+01:00</SourceTime>
-  <DestFile>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Sprites/mario-fire_climbing.xnb</DestFile>
-  <DestTime>2019-12-05T20:43:56.9283189+01:00</DestTime>
+  <SourceFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/mario-fire_climbing.png</SourceFile>
+  <SourceTime>2019-12-09T12:44:12.1664536+01:00</SourceTime>
+  <DestFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Sprites/mario-fire_climbing.xnb</DestFile>
+  <DestTime>2019-12-09T12:44:57.2560762+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

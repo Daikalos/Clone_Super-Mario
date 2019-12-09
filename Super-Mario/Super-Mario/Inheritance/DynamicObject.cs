@@ -62,6 +62,6 @@ namespace Super_Mario
             myPosition.Y += myCurrentVelocity.Y * 60 * (float)aGameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        protected delegate bool CollisionFlip(Rectangle aRectangle1, Rectangle aRectangle2, Vector2 aVelocity);
+        protected delegate bool CollisionFlip(GameObject aObject1, GameObject aObject2, Vector2 aVelocity);
     }
 }

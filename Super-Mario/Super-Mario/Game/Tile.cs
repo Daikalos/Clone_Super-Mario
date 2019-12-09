@@ -39,7 +39,7 @@ namespace Super_Mario
 
         public Vector2 GetCenter()
         {
-            return new Rectangle(myBoundingBox.X - (int)myOrigin.X, myBoundingBox.Y - (int)myOrigin.Y, mySize.X, mySize.Y).Center.ToVector2();
+            return new Rectangle(DestRect.X - (int)myOrigin.X, DestRect.Y - (int)myOrigin.Y, mySize.X, mySize.Y).Center.ToVector2();
         }
 
         public Tile(Vector2 aPosition, Point aSize, char aTileType) : base(aPosition, aSize)
@@ -133,6 +133,11 @@ namespace Super_Mario
                     myGravityBlockAnimation = null;
                     break;
             }
+
+            if (myTexture != null)
+            {
+                SetColorData();
+            }
         }
         public void SetTextureEditor()
         {
@@ -188,6 +193,11 @@ namespace Super_Mario
                     myItemBlockAnimation = null;
                     myGravityBlockAnimation = null;
                     break;
+            }
+
+            if (myTexture != null)
+            {
+                SetColorData();
             }
         }
     }

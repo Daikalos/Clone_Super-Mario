@@ -2,3 +2,5 @@ HighScore=1600
 HighScore=1400
 HighScore=1600
 HighScore=700
+HighScore=1600
+HighScore=1300

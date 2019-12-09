@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/border.png</SourceFile>
-  <SourceTime>2019-11-23T00:35:47.0032818+01:00</SourceTime>
-  <DestFile>C:/Users/Tobias/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Sprites/border.xnb</DestFile>
-  <DestTime>2019-12-05T16:48:51.9951023+01:00</DestTime>
+  <SourceFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/Sprites/border.png</SourceFile>
+  <SourceTime>2019-11-25T12:59:19.2152107+01:00</SourceTime>
+  <DestFile>C:/Users/tobia/Documents/GitHub/Super-Mario/Super-Mario/Super-Mario/Content/bin/Windows/Content/Sprites/border.xnb</DestFile>
+  <DestTime>2019-12-09T12:44:56.9124065+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T17:35:54+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

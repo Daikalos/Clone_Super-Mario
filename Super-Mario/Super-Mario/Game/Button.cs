@@ -31,7 +31,7 @@ namespace Super_Mario
 
         public override void Update()
         {
-            myBoundingBox = new Rectangle((int)myPosition.X, (int)myPosition.Y, mySize.X, mySize.Y);
+            base.Update();
 
             if (IsClicked())
             {
@@ -45,8 +45,8 @@ namespace Super_Mario
 
         public override void Draw(SpriteBatch aSpriteBatch)
         {
-            Rectangle tempDrawRect = new Rectangle((int)Camera.Position.X + myBoundingBox.X, myBoundingBox.Y,
-                myBoundingBox.Width, myBoundingBox.Height);
+            Rectangle tempDrawRect = new Rectangle((int)Camera.Position.X + DestRect.X, DestRect.Y,
+                DestRect.Width, DestRect.Height);
 
             aSpriteBatch.Draw(myTexture, tempDrawRect, null, Color.White);
             StringManager.DrawStringMid(aSpriteBatch, my8bitFont, myDisplayText, tempDrawRect.Center.ToVector2(), Color.Black, myTextSize);

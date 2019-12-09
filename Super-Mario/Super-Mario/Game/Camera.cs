@@ -25,33 +25,33 @@ namespace Super_Mario
             myPosition = Vector2.Zero;
         }
 
-        public static void MoveCamera(GameWindow aWindow, GameTime aGameTime, float aNewPosition)
+        public static void MoveCamera(GameWindow aWindow, float aNewPosition)
         {
             if (SnapToMap(aWindow, aNewPosition))
             {
-                Background.MoveBackground(aGameTime, -(aNewPosition / 12));
+                Background.MoveBackground(-(aNewPosition / 12));
                 myPosition.X += aNewPosition;
             }
         }
 
-        public static void FollowObject(GameWindow aWindow, GameTime aGameTime, DynamicObject aObject)
+        public static void FollowObject(GameWindow aWindow, DynamicObject aObject)
         {
             if (aObject.Position.X - (aWindow.ClientBounds.Width / 8) < myPosition.X)
             {
-                MoveCamera(aWindow, aGameTime, -Math.Abs(aObject.CurrentVelocity.X));
+                MoveCamera(aWindow, -Math.Abs(aObject.CurrentVelocity.X));
             }
             if (aObject.Position.X + aObject.Size.X + (aWindow.ClientBounds.Width / 4) > myPosition.X + aWindow.ClientBounds.Width)
             {
-                MoveCamera(aWindow, aGameTime, Math.Abs(aObject.CurrentVelocity.X));
+                MoveCamera(aWindow, Math.Abs(aObject.CurrentVelocity.X));
             }
 
             if (aObject.Position.X < myPosition.X)
             {
-                MoveCamera(aWindow, aGameTime, -aObject.Velocity.X * 3);
+                MoveCamera(aWindow, -aObject.Velocity.X * 3);
             }
             if (aObject.Position.X + aObject.Size.X > myPosition.X + aWindow.ClientBounds.Width)
             {
-                MoveCamera(aWindow, aGameTime, aObject.Velocity.X * 3);
+                MoveCamera(aWindow, aObject.Velocity.X * 3);
             }
         }
 

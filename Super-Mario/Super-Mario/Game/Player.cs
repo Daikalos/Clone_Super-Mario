@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 
 namespace Super_Mario
 {
@@ -97,7 +97,6 @@ namespace Super_Mario
                 case PlayerState.isWalking:
                 case PlayerState.isClimbing:
                 case PlayerState.isFalling:
-                    Idle();
                     Fireball(aGameTime);
                     OutsideBounds();
                     Collisions();
@@ -109,14 +108,17 @@ namespace Super_Mario
                 case PlayerState.isWalking:
                     Movement(aGameTime, myVelocity.X);
                     Jump();
+                    Idle();
                     break;
                 case PlayerState.isClimbing:
                     Movement(aGameTime, myVelocity.X / 2);
                     Climbing(aGameTime);
+                    Idle();
                     break;
                 case PlayerState.isFalling:
                     Movement(aGameTime, myVelocity.X);
                     Gravity(aGameTime);
+                    Idle();
                     break;
                 case PlayerState.isDead:
                     if (myPosition.Y - mySize.Y > Level.MapSize.Y || myPosition.Y + mySize.Y < 0)
@@ -142,28 +144,28 @@ namespace Super_Mario
                     case PlayerState.isWalking:
                         if (myIsMoving)
                         {
-                            myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, myFrameSize, Color.White, 0.0f, myOrigin, myFlipSprite);
+                            myWalkingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, DestRect, myFrameSize, Color.White, 0.0f, myOrigin, myFlipSprite);
                         }
                         else
                         {
-                            aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
+                            aSpriteBatch.Draw(myTexture, DestRect, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                         }
                         break;
                     case PlayerState.isClimbing:
                         if (myIsClimbing)
                         {
-                            myClimbingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, myBoundingBox, myFrameSize, Color.White, 0.0f, myOrigin, myFlipSprite);
+                            myClimbingAnimation.DrawSpriteSheet(aSpriteBatch, aGameTime, myTexture, DestRect, myFrameSize, Color.White, 0.0f, myOrigin, myFlipSprite);
                         }
                         else
                         {
-                            aSpriteBatch.Draw(myTexture, myBoundingBox, new Rectangle(0, 0, myTexture.Width / 2, myTexture.Height), Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
+                            aSpriteBatch.Draw(myTexture, DestRect, new Rectangle(0, 0, myTexture.Width / 2, myTexture.Height), Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                         }
                         break;
                     case PlayerState.isFalling:
-                        aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
+                        aSpriteBatch.Draw(myTexture, DestRect, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                         break;
                     case PlayerState.isDead:
-                        aSpriteBatch.Draw(myTexture, myBoundingBox, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
+                        aSpriteBatch.Draw(myTexture, DestRect, null, Color.White, 0.0f, myOrigin, myFlipSprite, 0.0f);
                         break;
                 }
             }
@@ -221,7 +223,7 @@ namespace Super_Mario
             {
                 if (tile.TileType == '^')
                 {
-                    if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myTopCollision(this, tile, myCurrentVelocity))
                     {
                         tile.TileType = '(';
                         tile.IsBlock = true;
@@ -238,7 +240,7 @@ namespace Super_Mario
             {
                 if (tile.TileType == '/')
                 {
-                    if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myTopCollision(this, tile, myCurrentVelocity))
                     {
                         tile.TileType = '(';
                         tile.IsBlock = true;
@@ -272,7 +274,7 @@ namespace Super_Mario
             {
                 if (tile.TileType == '¤')
                 {
-                    if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myTopCollision(this, tile, myCurrentVelocity))
                     {
                         GameInfo.Gravity *= -1;
                         myFlipSprite = SpriteEffects.FlipVertically;
@@ -297,7 +299,7 @@ namespace Super_Mario
             {
                 if (tile.IsBlock)
                 {
-                    if (myTopCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myTopCollision(this, tile, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = 0.0f;
                         SnapTopCollision(tile);
@@ -309,7 +311,7 @@ namespace Super_Mario
                             tile.SetTexture();
                         }
                     }
-                    if (myBotCollision(myBoundingBox, tile.BoundingBox, myCurrentVelocity))
+                    if (myBotCollision(this, tile, myCurrentVelocity))
                     {
                         myCurrentVelocity.Y = 0.0f;
                         SnapBotCollision(tile);
@@ -377,7 +379,7 @@ namespace Super_Mario
 
                     if (!tempCheckCollision)
                     {
-                        if (myBotCollision(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
+                        if (myBotCollision(this, enemy, myCurrentVelocity))
                         {
                             enemy.IsAlive = false;
                             enemy.HasCollided = true;
@@ -390,15 +392,7 @@ namespace Super_Mario
                     }
                     else
                     {
-                        if (myTopCollision(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
-                        {
-                            ReduceHealth(1);
-                        }
-                        else if (CollisionManager.CheckLeft(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
-                        {
-                            ReduceHealth(1);
-                        }
-                        else if (CollisionManager.CheckRight(myBoundingBox, enemy.BoundingBox, myCurrentVelocity))
+                        if (CollisionManager.PixelCollision(this, enemy))
                         {
                             ReduceHealth(1);
                         }
@@ -655,12 +649,12 @@ namespace Super_Mario
             {
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckLeft(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && KeyMouseReader.KeyHold(Keys.Left))
+                    if (CollisionManager.CheckLeft(this, tile, myCurrentVelocity) && KeyMouseReader.KeyHold(Keys.Left))
                     {
                         myPosition.X = tile.BoundingBox.X + tile.Size.X;
                         return false;
                     }
-                    if (CollisionManager.CheckRight(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && KeyMouseReader.KeyHold(Keys.Right))
+                    if (CollisionManager.CheckRight(this, tile, myCurrentVelocity) && KeyMouseReader.KeyHold(Keys.Right))
                     {
                         myPosition.X = tile.BoundingBox.X - mySize.X;
                         return false;
@@ -685,12 +679,12 @@ namespace Super_Mario
             {
                 if (tile.IsBlock)
                 {
-                    if (CollisionManager.CheckAbove(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && KeyMouseReader.KeyHold(Keys.Up))
+                    if (CollisionManager.CheckAbove(this, tile, myCurrentVelocity) && KeyMouseReader.KeyHold(Keys.Up))
                     {
                         myPosition.Y = tile.Position.Y + tile.Size.Y;
                         return false;
                     }
-                    if (CollisionManager.CheckBelow(myBoundingBox, tile.BoundingBox, myCurrentVelocity) && KeyMouseReader.KeyHold(Keys.Down))
+                    if (CollisionManager.CheckBelow(this, tile, myCurrentVelocity) && KeyMouseReader.KeyHold(Keys.Down))
                     {
                         myPosition.Y = tile.Position.Y - mySize.Y;
                         return false;
@@ -827,21 +821,21 @@ namespace Super_Mario
                 case PlayerState.isWalking:
                     if (myIsMoving)
                     {
-                        myTexture = ResourceManager.RequestTexture("Mario" + myLoadTexture + "_Walking");
+                        SetTexture("Mario" + myLoadTexture + "_Walking");
                     }
                     else
                     {
-                        myTexture = ResourceManager.RequestTexture("Mario" + myLoadTexture + "_Idle");
+                        SetTexture("Mario" + myLoadTexture + "_Idle");
                     }
                     break;
                 case PlayerState.isClimbing:
-                    myTexture = ResourceManager.RequestTexture("Mario" + myLoadTexture + "_Climbing");
+                    SetTexture("Mario" + myLoadTexture + "_Climbing");
                     break;
                 case PlayerState.isFalling:
-                    myTexture = ResourceManager.RequestTexture("Mario" + myLoadTexture + "_Jumping");
+                    SetTexture("Mario" + myLoadTexture + "_Jumping");
                     break;
                 case PlayerState.isDead:
-                    myTexture = ResourceManager.RequestTexture("Mario_Death");
+                    SetTexture("Mario_Death");
                     break;
             }
         }

@@ -34,16 +34,14 @@ namespace Super_Mario
 
         public static Tuple<Tile, bool> TileAtPos(Vector2 aPos)
         {
-            if (aPos.X > 0 && aPos.Y > 0)
+            int tempX = (int)(aPos.X / myTileSize.X);
+            int tempY = (int)(aPos.Y / myTileSize.Y);
+
+            if (CheckIn(tempX, tempY))
             {
-                if (((int)aPos.X / myTileSize.X) >= 0 && ((int)aPos.Y / myTileSize.Y) >= 0)
-                {
-                    if (((int)aPos.X / myTileSize.X) < myTiles.GetLength(0) && ((int)aPos.Y / myTileSize.Y) < myTiles.GetLength(1))
-                    {
-                        return new Tuple<Tile, bool>(myTiles[(int)aPos.X / myTileSize.X, (int)aPos.Y / myTileSize.Y], true);
-                    }
-                }
+                return new Tuple<Tile, bool>(myTiles[tempX, tempY], true);
             }
+
             return new Tuple<Tile, bool>(myTiles[0, 0], false);
         }
 
@@ -283,10 +281,6 @@ namespace Super_Mario
             }
         }
 
-        public static bool CheckIfWon()
-        {
-            return false;
-        }
         public static bool CheckIn(int anX, int anY)
         {
             return
